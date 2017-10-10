@@ -1,0 +1,133 @@
+---
+title: "IC - Construindo um Sniffer com a Libpcap"
+layout: default
+---
+<h1 class="ui header">Construindo um Sniffer com a Libpcap</h1>
+<h2>Conceitos Iniciais</h2>
+
+<h3>Captura de Pacotes</h3>
+
+<p>Captura de pacotes é a açao de coletar dados que trafegam pela rede. Sniffers são um exemplo de sistema de captura de pacote.</p>
+
+<p>Sempre que uma placa de rede recebe um frame Ethernet ela checa se o endereço MAC de destino é o seu prório. Se for, ela gera uma interrupção. A rotina que se encarrega de lidar com esssa interrupção é o drive de rede do sistema.</p>
+
+<p>O drive de rede dá um timestamp para o dado recebido e copia do buffer da placa para um bloco de memória no <i>kernel space</i>. Em seguida, determina qual o tipo de pacote foi recebido olhando no campo <b>ether-type</b> do cabeçalho Ethernet e passa para uma rotina de tratamento do protocolo especifico na pilha de protocolo. Normalmente o frame contem um datagrama IPv4. São realizadas operações até que se atinja os dados da camada de aplicação.</p>
+
+<p>Ao utilizar um sniffer, os pacotes passam pelo mesmo processo descrito, porém com uma diferença: o drive de rede também envia uma cópia de todo pacote recebido ou transmitido a uma parte do kernel chamado filtro de pacote (<b>packet filter</b>). Os filtros de pacotes são o fazem possível a captura de pacotes.</p>
+
+<img class= "ui centered image" src="{{site.imageurl | append: 'ic/captura_pacote.png' }}" alt="">
+
+<h2>Libpcap</h2>
+
+<p>A libpcap é uma biblioteca open source que fornece uma interface de alto-nível a sistemas de captura de pacote. Foi criada como uma parte de um projeto na Universidade da California em Berkeley para invertigar melhorias no TCP e performance na Internet Gateway.</p>
+
+<p>A primeira coisa que é necessária para capturar pacotes é de um interface de rede onde se possa "ouvi-los". Podemos especificar uma interface ou deixar a libpcap pegar uma.</p>
+
+<p>A função <a href="http://www.tcpdump.org/manpages/pcap_lookupdev.3pcap.html" target="_blank">pcap_lookupdev()</a> retorna um ponteiro para uma string contendo o nome da primeira interface de rede que pode ser utilizada para a captura de pacote. O argumento <b>errbuf</b> é um buffer que a libpcap usa para armazenar uma mensagem de erro caso algo dê errado. Ao alocar esse buffer temos que lembrar que ele tem que guardar pelo menos PCAP_ERRBUF_SIZE bytes.</p>
+
+<pre><code>
+  char errbuf[PCAP_ERRBUF_SIZE];
+  char *pcap_lookupdev(char *errbuf);
+
+</code></pre>
+
+<p>Uma vez que temos o nome da interface, temos que abrí-la com a função <a href="http://www.tcpdump.org/manpages/pcap_open_live.3pcap.html" target="_blank">pcap_open_live()</a> faz essa operação de abertura.</p>
+
+<pre><code>
+  pcap_t *pcap_open_live (const char *device, // string com o nome da interface a ser aberta, se null, captura pacote de todas as interfaces
+                          int snaplen, // tamanho máximo em bytes a ser capturado
+                          int promisc, // especifica se a interface será colocada em modo promíscuo
+                          int to_ms, // define quantos milisegundos o kernel deve esperar para copiar as informações capturadas para o user space
+                          char *errbuf);
+
+</code></pre>
+
+<div class="ui inverted segment">
+  Mudanças de contexto são caras. Se formos capturar uma grande quantidade de dados, é melhor deixar o kernel agrupar alguns pacotes antes de realizar a cópia. Um valor zero em <i>to_ms</i> fará com que as operações read fiquem esperando para sempre até que pacotes suficientes tenham chegado a interface de rede.
+</div>
+
+<p>Uma vez com a interface aberta, temos que dizer a pcap para iniciar a captura. Para isso temos as seguintes opções:</p>
+
+<pre><code>
+struct pcap_pkthdr {
+    struct timeval 	ts; // timestamp da captura
+    bpf_u_int32 	caplen; // Numero de bytes armazenados
+    bpf_u_int32 	len; // Tamanho total do pacote
+}
+
+  /*A função pcap_next() usa o handler pcap_t retornado pelo
+  pcap_open_live(), um ponteiro para uma estrutura do tipo pcap_pkthdr()
+  e retorna o primeiro pacote que chegou na interface.*/
+ const u_char *pcap_next(pcap_t *p, struct pcap_pkthdr *h);
+
+</code></pre>
+
+<pre><code>
+typedef void (*pcap_handler)(u_char *user,
+                             const struct pcap_pkthdr *h,
+                             const u_char *bytes);
+
+int pcap_loop(pcap_t *p,
+              int cnt,
+              pcap_handler callback,
+              u_char *user);
+
+int pcap_dispatch(pcap_t *p,
+                  int cnt,
+                  pcap_handler callback,
+                  u_char *user);
+</code></pre>
+<p></p>
+<pre><code class="c">
+  /* Para compilar: gcc sniffer.c -o sniffer -lpcap */
+  #include &ltpcap.h&gt
+  #include &ltstring.h&gt
+  #include &ltstdlib.h&gt
+
+  #define MAX_BYTES_2_CAPTURE 2048
+
+  void process_packet(u_char *arg, const struct pcap_pkthdr *pkthdr, u_char *packet){
+    int i = 0, *counter = (int*) arg;
+
+    printf("Contador de pacotes: %d\n", ++(*counter));
+    printf("Tamanho do pacote recebido: %d\n", pkthdr->len);
+    printf("Payload: \n");
+
+    for(i = 0; i < pkthdr->len; i++){
+
+      if(isprint(packet[i])) {
+        printf("%c ", packet[i]);
+      }
+      else {
+        printf(". ");
+      }
+
+      if((i%16 == 0 && i != 0) || i == pkthdr->len - 1){
+        printf("\n");
+      }
+    }
+
+    return;
+  }
+
+  int main(int argc, char const *argv[]) {
+    int i = 0, count = 0;
+    pcap_t *descr = NULL;
+    char errbuf[PCAP_ERRBUF_SIZE], *device = NULL;
+    memset(errbuf, 0, PCAP_ERRBUF_SIZE);
+    /*Recupera o nome do primeiro dispositivo de rede disponivel para captura*/
+    device = pcap_lookupdev(errbuf);
+
+    printf("Abrindo dispositivo %s\n", device);
+
+    /*Abre o dispositivo em modo pomiscuo*/
+    descr = pcap_open_live(device, MAX_BYTES_2_CAPTURE, 1, 512, errbuf);
+
+    printf("%s\n", errbuf);
+
+    /*Loop para aplicar a funcao process_packet para cada pacote capturado*/
+    pcap_loop(descr, -1, process_packet, (u_char *) &count);
+
+    return 0;
+  }
+</code></pre>

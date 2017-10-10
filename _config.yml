@@ -1,0 +1,30 @@
+title: Resumo 2017-2
+email: sampaio.motion@gmail.com
+description: "Esse site tem o objetivo de reunir um resumo de todo o conteúdo das disciplinas do sexto semestre do curso de Ciência da Computação da UFSCar."
+include: ['_pages']
+baseurl: "http://127.0.0.1:3000/" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+permalink: pretty
+
+pageurl: /_pages/
+
+imageurl: /assets/images/
+
+# Build settings
+theme: minima
+highlighter: rouge
+
+plugins:
+  - jekyll-feed
+
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+# exclude:
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/

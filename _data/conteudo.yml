@@ -1,0 +1,64 @@
+disciplinas:
+  - nome: Computação Gráfica
+    alias: CG
+    color: red
+    conteudo:
+      - titulo: Introdução
+        url: cg/1_introducao
+      - titulo: Preenchimento de Polígonos
+        url: cg/7_preenchimento_poligono
+      - titulo: WebGl
+        url: cg/10_webgl
+
+  - nome: Inteligência Artificial
+    alias: IA
+    color: orange
+    conteudo:
+      - titulo: Introduçao
+        url: ia/1_introducao
+      - titulo: Resolução de Problemas por Busca
+        url: ia/2_resolucao_por_busca
+        conteudo:
+          - titulo: Busca Desinformada
+            url: ia/2_1_busca_desinformada
+          - titulo: Busca Informada
+            url: ia/2_2_busca_informada
+
+  - nome: Metodologias e Desenvolvimento de Sistemas
+    alias: MDS
+    color: yellow
+
+  - nome: Projeto e Análise de Algoritmos
+    alias: PAA
+    color: green
+    conteudo:
+      - titulo: Introdução
+        url: paa/1_introducao
+      - titulo: Fundamentos Matemáticos
+        url: paa/2_fundamentos_matematicos
+      - titulo: Fundamentos da Análise da Eficiência de Algoritmos
+        url: paa/3_fundamentos_analise_algoritmos
+      - titulo: Força Bruta e Busca Exaustiva
+        url: paa/4_forca_bruta
+
+  - nome: Redes de Computadores
+    alias: Redes
+    color: teal
+    conteudo:
+      - titulo: Rede de Computadores e a Internet
+        url: redes/1_rede_de_computadores_e_a_internet
+
+  - nome: Sistemas Operacionais
+    alias: SO2
+    color: blue
+    conteudo:
+      - titulo: Programação
+        url: so2/3_programacao
+      - titulo: Chamadas de Sistema
+        url: so2/4_chamadas_de_sistema
+      - titulo: Gerenciamento de Processos
+        url: so2/5_gerenciamento_de_processos
+      - titulo: Gerenciamento de Memória
+        url: so2/6_gerenciamento_de_memoria
+      - titulo: IPC - Interprocess Communication
+        url: so2/7_interprocess_communication

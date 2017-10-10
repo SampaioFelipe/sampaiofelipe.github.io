@@ -1,0 +1,67 @@
+---
+title: "AI - Busca Informada"
+layout: "default"
+---
+<h1 class="ui header">2.2 Busca Informada (Heurística)</h1>
+
+<p>Estratégias de busca que consideram informação prévia sobre o problema, na forma de heurísticas. Os estados são avaliados em funão do seu conteúdo, considerando a situação específica que representam.</p>
+
+<p>A informação sobre o problema é usada no momento de selecionar qual o próximo nó a ser expandido.</p>
+
+<h3>Heurísticas</h3>
+
+<p>São regras simples ("dicas") utilizadas para avaliar rapidamente uma situação específica. Nos métodos de busca são usadas para escolher os caminhos em um espaço de estados que tem mais chance de levar a uma solução, evitando a busca exaustiva.</p>
+
+<p>DEve ser expressas na forma de função, que vai ser aplicada a cada estado.</p>
+
+<h4>Situações em que heurísticas são usadas em IA</h4>
+
+<ul>
+  <li>Um problema não tem uma solução exata</li>
+  <li>Um problema tem uma solução exata mas o custo computacional é proibitivo.</li>
+</ul>
+
+<h4>Limitações</h4>
+
+<ul>
+  <li>Busca sujeita a falhas</li>
+  <li>Tentativa de adivinhar o melhor caminho</li>
+  <li>Baseada em experiência e intuição</li>
+  <li>Pode levar a uma solução sub-ótima ou pode não encontrar a solução.</li>
+</ul>
+
+<h2>Algoritmo Best-First - Busca pela melhor escolha</h2>
+
+<p>Utiliza conhecimento específico do problema para selecionar o próximo nó a ser expandido. Esse conhecimento é expresso através de uma Função de Avaliação</p>
+
+<div class="ui inverted segment">
+  <h4>Função de Avaliação</h4>
+  <p>Retorna um número que tenta exprimir o quanto é desejável expandir um nó, tipicamente usam uma medida estimada do custo da solução.</p>
+  <p>No algoritmo de busca, é aplicada a cada nó no momento em que ele é gerado. Em alguns algoritmos, um nó pode ter valores diferentes de avaliação, dependendo do caminho utilizado para chegar até ele no processo de busca.</p>
+</div>
+
+<p>O best-first utiliza uma lista de nós abertos (OPEN) e fechados (CLOSED). Os nós são armazenados nas listas com seus valores de avaliação.</p>
+
+<ul>
+  <li><b>OPEN:</b> nós gerados, mas não expandidos (lista ordenada a cada iteração, por ordem crescente de valores de avaliação)</li>
+  <li><b>CLOSED:</b> nós já expandidos</li>
+</ul>
+
+<p>O próximo nó a ser expandido é escolhido com base no seu valor de avaliação, independente do nível ou do raamo em que se encontra esse nó.</p>
+
+[ALGORITMO + EXEMPLOS]
+
+<h3>Estrutura de Dados para nós</h3>
+
+<p>Os algoritmos de busca realizam uma busca em grafos. Os nós dos grafos devem ser estruturas de dados que representam as informações necessárias para realizar a busca e para retornar a solução econtrada</p>
+
+<p>Componentes da ED:</p>
+<ul>
+  <li><b>Estado:</b> estado no espaço de estados a que o nó corresponde.</li>
+  <li><b>Nó-pai:</b> o nó do grafo de busca que gerou esse nó</li>
+  <li><b>Ação:</b> ação que foi aplicada ao pai para gerar esse nó</li>
+  <li><b>Custo do caminho:</b> custo do caminho do estado inicial até o nó</li>
+  <li><b>Profundidade:</b> número de passos do caminho desde onó inicial até esse nó</li>
+</ul>
+
+<p>Dependendo da implementação, os campos para os nós filhos podem ou não ser representados explícitamente.</p>

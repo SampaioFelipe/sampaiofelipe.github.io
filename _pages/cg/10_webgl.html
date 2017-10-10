@@ -1,0 +1,83 @@
+---
+title: "WebGl"
+layout: default
+---
+
+<h1 class="ui header">10. WebGl</h1>
+
+<h2>Introdução</h2>
+<p>O WebGl é uma biblioteca gráfica em javascript para exibição de gráficos interativos em browsers.</p>
+<p>Os elemntos de webgl são combinados com elementos html</p>
+<p>Os programas consistem de código escrito em javascript e shaders.</p>
+
+<p>canvas</p>
+
+<p>O resultado de uma renderização 3D são imagens 2D.</p>
+
+<p>Utilização das bibliotecas jQuery e glMatrix</p>
+
+<h2>iniciaWebGL</h2>
+
+<pre><code class="js">
+  function iniciaWebGL() {
+    var canvas = $('#canvas-webgl')[0];
+    iniciarGL(canvas); //Definir como um canvas 3D
+    iniciarShaders(); // Obter e processar os Shaders
+    iniciarBuffers(); // Enviar o triângulo e quadrado na GPU
+    iniciarAmbiente(); // Definir background e cor do objeto
+    desenharCena(); // Usar os itens anteriores e desenhar
+  }
+</code></pre>
+
+<h2>Contexto WebGl</h2>
+
+<pre><code>
+  function iniciarGL(canvas) {
+    try {
+      gl = canvas.getContext("webgl") || canvas.getContext("experimentalwebgl");
+
+      gl.viewportWidth = canvas.width; gl.viewportHeight = canvas.height;
+    }
+    catch(e) {
+      if(!gl) alert("Não pode inicializar WebGL, desculpe");
+    }
+  }
+</code></pre>
+
+<h2>Shaders</h2>
+
+<p>O shader será uma descrição textual, usando GLSL (OpenGel Shading Language) de como um simples conjunto de vértices se converterão em fragmentos (candidatos a pixels), definindo suas cores baseados em cálculos.</p>
+
+<pre><code class="javascript">
+  attribute vec3 aVertexPosition; \\ posição do vértice
+  uniform mat4 uMMatrix; \\ matriz de modelo
+  uniform mat4 uVMatrix; \\ matriz de visualização
+  uniform mat4 uPMatrix; \\ matriz de projeção
+  void main(void) {
+    gl_Position = uPMatrix * uVMatrix *
+    uMMatrix * vec4(aVertexPosition, 1.0);
+  }
+</code></pre>
+
+<h4>Função iniciarShaders</h4>
+
+<h2>Buffers</h2>
+
+<p>Buffers são barramentos para armazenar informações vitais dos objetos a serem exibidos na tela na GPU;</p>
+
+<p>Os buffers armazenam as informações de posicionamento e cor dos vértices dos objetos na GPU;</p>
+
+<p>Estruturas importantes relacionadas aos buffers são:</p>
+
+<ul>
+  <li><b>Vertex Buffer Object (VBO):</b></li>
+  <li><b>Vertex Array Object (VAO):</b></li>
+</ul>
+
+<h4>Função iniciarBuffers</h4>
+
+<h2>Desenhando a Cena</h2>
+
+<h4>Função iniciarAmbiente</h4>
+
+<h2>Desenhando Objetos</h2>

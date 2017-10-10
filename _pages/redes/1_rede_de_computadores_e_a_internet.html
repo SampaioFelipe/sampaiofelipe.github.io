@@ -1,0 +1,220 @@
+---
+title: "Redes-Rede de Computadores e a Internet"
+layout: default
+---
+<h1 class="ui header">1. Rede de Computadores e a Internet</h1>
+
+<h2>O que é a Internet?</h2>
+
+<h3>Nuts and Bolts View</h3>
+
+<p>Bilhões de dispositivos computacionais conectados por rede a nível global. Cada um desses dipositivos são denominados <b>host</b> ou <b>end system</b>.</p>
+
+<div class="image">
+  <img src="{{ site.imageurl | append: 'redes/componentes_internet.png'}}" alt="">
+</div>
+
+<p><i>End systems</i> estão interconectados pela rede de <b><i>communication links</i></b> e <b><i>packets switches</i></b>. Diferentes links podem transmitir dados em diferentes taxas, como a <b>taxa de transmissão</b> de um link medida em <b>bits/seg</b>.</p>
+
+<p>Quando um <i>end system</i> tem dados para enviar para outro, ele segmenta esses dados e adiciona bytes de cabeçalho para cada um desses segmentos (<b>pacotes</b>). Cada pacote, então, é enviado pela rede ao dispositivo destino, que "remonta" os dados originais.</p>
+
+<p>Um <b>switch de pacote</b> (roteadores, switches) recebem um pacote que chegou por um de seus links de entrada e redireciona-o para um de seus links de saída.</p>
+
+<p>A sequência de links e switches de pacotes por onde um pacote passou até chegar no seu destino é chamado de <b><i>route</i></b> ou <b><i>path</i></b>.</p>
+
+<p>Podemos fazer a seguinte analogia: pacotes são caminhões, links de comunicação são estradas e ruas, switches de pacotes são intersectções e os end systems são os prédios de onde as cargas saem e entram.</p>
+
+<p>End systems acessão a internet por meio de <b>Internet Service Providers (ISPs)</b>, incluindo os ISPs residenciais, como companias de telefonia locais, ISPs corporativos, ISPs de universidades, ... ISPs fornecem uma variedade de tipos de acesso a internet aos end systems.</p>
+
+<p>Para poder fornecer internet, os ISPs precisam estar interconectados. Os ISPs de nível inferior são conectados através de ISPs nacionais e internacionais de nível superior. Um ISP de nível superior consiste de roteadores de alta velocidade interconectados com links de fibra ótica de alta velocidade.</p>
+
+<p>End systems, switches e outros componentes da internet rodam <b>protocolos</b> que controlam o envio e recebimento de informações.</p>
+
+<p>É importante que todas as partes consigam se operar em conjunto. Para isso temos os <b>Internet Standards</b>, desenvolvidos pela <b>IETF (Internet Engineering Task Force)</b>. Os documentos de padrões da IETF são chamados <b>Requests do Comments (RFCs).</b></p>
+
+<h3>Service View</h3>
+
+<p>Diferente da visão anterior, podemos ver a internet como <i>uma infraestrutura que fornece serviços para aplicações.</i> Essas aplicações são ditas <b>aplicações distribuídas</b> pois envolvem multiplos dispositivos que trocam dados entre si.</p>
+
+<p>End systems ligados a internet fornecem uma <b>Application Programmin Interface (API)</b> que especifica como um programa executando em um end system ira se comunicar pela infraestrutura da internet com um outro programa destino que está sendo executado em outro dispositivo. A internet "possui" uma API que programas que enviam dados devem seguir para que a internet possa entregar os dados para o destino correto.</p>
+
+<h3>O que é um Protocolo?</h3>
+
+<div class="image">
+  <img src="{{ site.imageurl | append: 'redes/protocolo_analogia.png' }}" alt="">
+</div>
+
+<p>Há mensagens específicas que nós enviamos, e ações específicas que executamos em reação a mensagens recebidas ou outros eventos.</p>
+
+<p>Toda atividade na internet que envolve comunicação entre entidades remotas é governado por protocolos.</p>
+
+<div class="ui inverted segment">
+  Um <b>protocolo</b> define o formato e a ordem da troca de mensagens entre duas ou mais entidades, assim como as ações que são tomadas na transmissão e/ou recebimento de uma mensagem ou outro evento.
+</div>
+
+<h2>A "borda" da Internet</h2>
+
+<p>Os end system tem esse nome porque residem na borda da internet. Esses dispositivos também podem ser chamados de hosts, pois "hospedam" aplicações (como um brwoser ou um servidor web). Esses Hosts são divididos em duas categorias: <b>clientes</b> e <b>servidores</b>.</p>
+
+<h3>Redes de Acesso</h3>
+
+<p>O acesso a internet se dá primeiramente por uma rede que conecta fisicamente um host ao primeiro roteador (<b>roteador de borda</b>).</p>
+
+<h4>Acesso Residencial</h4>
+
+<table class="ui inverted celled structured unstackable table">
+  <thead class="center aligned">
+    <tr>
+      <th rowspan="2">Tecnologia</th>
+      <th rowspan="2">Descrição</th>
+      <th colspan="2">Taxas de Transmissão</th>
+    </tr>
+    <tr>
+      <th>Downstream</th>
+      <th>Upstream</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DSL</td>
+      <td>Digital Subscriber Line: o acesso é obtido pelo mesmo local onde onde um companhia de telefonia fornece a linha de telefone. Cada cliente possui um modem DSL que traduz os dados digitais em tons de alta-frequência que são transmitidos pela linha telefonica até uma central. A linha consegue carregar tanto dados quanto o sinal telefonico simultaneamente em diferentes frequências. Devido a diferença entre as taxas de downstream e upstream, o acesso é dito <b>assimétrico</b>.</td>
+      <td>24 Mbps</td>
+      <td>2.5 Mbps</td>
+    </tr>
+
+    <tr>
+      <td>Cabo</td>
+      <td>Faz uso dos cabos de companhias de televisão a cabo. Fibras ótica conectam a central a uma junção em nível de vizinhança, de onde cabos coaxiais são usados para conectar cada individuo na vizinhança (<b>HFC:</b> hybrid fiber coax). Necessita de um modem para tornar o sinal analógico em digital e vice-versa. O acesso é <b>assimétrico</b>. <b>Shared Boradcast Medium</b>: todo pacote enviado pela central passa pelo canal de downstream de todas as casas conectadas, todo pacote enviado para a central passa no canal de upstream.
+      </td>
+      <td>42.8 Mbps</td>
+      <td>30.7 Mbps</td>
+    </tr>
+
+    <tr>
+      <td>FTTH</td>
+      <td><b>Fiber To The Home</b>: fornece uma caminho de fibra ótica da central diretamente até a casa do cliente (arquiteturas PONs e AONs).</td>
+      <td>? Gbps</td>
+      <td>? Gbps</td>
+    </tr>
+
+    <tr>
+      <td>Dial-Up</td>
+      <td>Similar ao DSL</td>
+      <td>~56 kbps</td>
+      <td>~56 kbps</td>
+    </tr>
+
+    <tr>
+      <td>Satelite</td>
+      <td></td>
+      <td>~1 Mbps</td>
+      <td>~1 Mbps</td>
+    </tr>
+  </tbody>
+</table>
+
+[IMAGENS]
+
+<h4>Acesso Empresarial (e residencial): Ethernet e WiFi</h4>
+
+<p>Nas organiações e campos universitários, e recentemente em configurações residenciais, uma LAN (Local Area Network) é usada para conectar hosts aos roteadores de borda. Existem diversos tipos de tecnologia LAN, o <b>Ethernet</b> é o tecnologia mais usada (~ 100 Mbps de taxa de transmissão).</p>
+
+<p>Recentemente as pessoas estão acessando a internet por meio da <b>Wireless LAN</b> (WiFi - IEEE 802.11). -> Transmissão compartilhada de 54 Mbps.</p>
+
+<h4>Wide-Area Wireless: 3G/4G e LTE</h4>
+
+<h3>O envio de pacotes</h3>
+
+<ol>
+  <li>O host pega a mensagem da aplicação</li>
+  <li>Quebra em vários blocos (chunks), conhecidos como <b>pacotes</b>, com o tamanho de $L$ bits</li>
+  <li>Transmite o pacote por uma rede de acesso a uma <b>taxa de transmissão de</b> $R$ (taxa de transmissão = capacidade = largura de banda)</li>
+</ol>
+
+<p>O atraso (<i>delay</i>) na transmissão de um pacote é o tempo necessário para transmitir um pacote de $L$-bit por um link.</p>
+
+$$ L {(bits)} \over R {(bits/sec)} $$
+
+<h3>Mídia Física</h3>
+<ul>
+  <li><b>Bit:</b> se propaga entre o par transmissor/receptor</li>
+  <li><b>Link físico:</b> o que está entre o transmissor e o receptor</li>
+  <li><b>Mídia guiada:</b> os sinais se propagam em uma mídia física: cobre, fibra, coaxial</li>
+  <li><b>Mídia não guiada:</b> sinais se propagam livremente -> rádio.</li>
+</ul>
+
+<ul>
+  <li><b>Fio de par-trançado:</b> dois fios de cobre isolados
+    <ul>
+      <li>Categoria 5: 100 Mbps - 1 Gbps Ethernet</li>
+      <li>Categoria 6: 10 Gbps</li>
+    </ul>
+  </li>
+  <li><b>Cabo Coaxial:</b> dois condutores de cobre concentricos
+    <ul>
+      <li>Bidirecional</li>
+      <li>Multiplos canais em um cabo -> broadband</li>
+    </ul>
+  </li>
+  <li><b>Fibra Ótica:</b> fibra de vidro que carrega pulsos luminosos, cada pulso é um bit.
+    <ul>
+      <li>Operações de alta velocidade: 10 - 100 Gbps</li>
+      <li>Taxa de erros baixa: imune a interferências eletromagnéticas</li>
+    </ul>
+  </li>
+  <li><b>Rádio:</b> sinal é transportado em um espectro eletromagnético, sem a necessidade de um fio físico.
+    <ul>
+      <li>Bidirecional</li>
+      <li>A propagação é afetada pelo ambiente</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Núcleo da Rede</h2>
+
+<p>O núcleo da Internet é uma malha de switches de pacotes e links que interconectam os hosts da internet.</p>
+
+<h3>Roteamento de Pacotes</h3>
+
+<p>O host envia mensagens no formato de pacotes. Esses pacotes são redirecionados de um roteador para outro, através de links ao longodo caminho do host origem até o host destino. Cada pacote é transmitido na capacidade máxima do link.</p>
+
+<h4>Transmissão Store-and-Forward</h4>
+
+<p>Leva $L / R$ segundos para se transmitir um pacote de $L$-bits em um link a $R$ bps. Na transmissão store-and-forward o pacote inteiro deve chegar ao roteador antes de ser transmitido ao próximo link. Isso é feito realizando um armazenamento temporário do pacote em um buffer, quando o roteador receber o pacote inteiro, ele começa a transmití-lo.</p>
+
+[IMAGEM]
+
+<h4>Atraso de enfileiramento e perda</h4>
+
+<p>Se a taxa de chegada de bits exceder a taxa de transmissão do link por um período de tempo, os pacotes serão enfileirados, e ficarão aguardando até serem transmitidos.</p>
+
+<p>Se a quantidad de memória (do buffer) encher, novos pacotes serão descartados (perdidos).</p>
+
+[IMAGEM]
+
+<h4>Tabelas de Redirecionamento e Protocolos de Roteamento</h4>
+
+<p>Quando um pacote chega em um roteador, o roteador examina uma porção do endereço de destino do pacote (IP dest) e redireciona o pacote a um roteador adjacente. Mais especificamente, cada roteador possui uma tabela de redirecionamento que mapeia endereços de destino (ou porções do endereço) aos links de saída (exemplo do motorista de carro que não usa mapa e prefere perguntar por direções).</p>
+
+<p>Mas como essas tabelas sabem para onde um pacote deve ir? -> protocolos de roteamento atualizam automaticamente essas tabelas (captulo 4)</p>
+
+<h3>Circuit Switching</h3>
+
+<p>Os recuros ao longo do caminho (buffers, taxa de transmissão) que fornecem a comunicação entre dois hosts são reservados pela duração da sessão de comunicação.</p>
+
+[IMAGEM]
+
+<h4>Multiplexação</h4>
+<ul>
+  <li><b>FDM (frequency-division Multiplexing)</b></li>
+  <li><b>TDM (time-division multiplexing)</b></li>
+</ul>
+
+[IMAGEM]
+
+<h4>Packet Switchig vs Circuit Switching</h3>
+
+<ul>
+  <li>Packet switching permite que mais usuários posam usar a rede</li>
+  <li>No packet switching há maior delay e perda de pacotes.</li>
+</ul>

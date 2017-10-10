@@ -1,0 +1,80 @@
+---
+title: "AI - Busca Desinformada"
+layout: "default"
+---
+<h1 class="ui header">2.1 Busca Desinformada</h1>
+
+<p>As estratégias de busca não possuem informação adicional sobre o problema, além da definição do problema. Podem apenas gerar sucessores a partir de um dado estado e testar se um estado é o estado objetivo ou não.</p>
+
+<p>Todas as estratégias dessa categoria são determinadas pela ordem em que os nós são expandidos.</p>
+
+<h2>BFS - Busca em Largura</h2>
+
+<p>Explora o espaço nível por nível: primeiro, o nó inicial é expandido, depois seus sucessores, depois os sucessores desses e assim por diante.</p>
+
+<p>Assim, todos os nós de um detrminado nível são expandidos antes de iniciar a expansão dos nós do nível seguinte.</p>
+
+<p>Encontra sempre o caminho mais curto para a solução. Caso existam caminhos alternativos para atingir um nó da fronteira, esse caminho deve ser no mínimo tão longo quanto o que já foi encontrado antes. O caminho mais curto será o caminho ótimo se todos os movimentos tiverem o mesmo custo.</p>
+
+<h2>DFS - Busca em Profundidade</h2>
+
+<p>Explora o espaço de estados ramo por ramo. Expande o nó no nível mais interno entre os nós da fronteira, até que o nó desse ramo não tenha mais sicessores. Depois a busca retrocede ao próximo nó mais profundo que ainda tenha sucessores não explorados.</p>
+
+<p>Não garante o caminho mais curto nem a soluão ótima, mesmo se as ações tiverem o mesmo custo.</p>
+
+<h4>Variações:</h4>
+<ul>
+  <li><b>DFS limitado:</b> define previamente um limitante de nível para expansão dos nós, mesmo que ainda existam sucessores a serem expandidos. Caso o objetivo esteja abaixo desse limite, não será encontrado.</li>
+  <li><b>Backtracking:</b> os filhos de ca nó são gerados um por vez, enão todos ao mesmo tempo como no DFS padrão.</li>
+</ul>
+
+<h2>Busca de Custo Uniforme</h2>
+
+<p>Utiliza a função de custo $g$, definida como:</p>
+
+<ul>
+  <li>$g(n)$ é o custo do caminho do nó inicial até o nó n.</li>
+  <li>$g(n)$ é calculada pela soma dos custos da aplicação de cada uma das ações no caminho.</li>
+</ul>
+
+<p>Expande primeiro o nó n que tenha o menor custo de caminho $g(n)$. A fronteira é armazenada como uma lisra de prioridades ordenada por $g$.</p>
+
+<p>O teste do objetivo é aplicado quando o nó é selecionado para expansão, já que o primeiro nó objetivo gerado pode estar em um caminho subótimo. Um teste deve ser asicionado para verificar se um novo caminho até um nó que já estava na fronteira é melhor (menor custo) do que o anterior.</p>
+
+<p>Na busca de custo uniforme, não importa o tamnaho sa solução, e sim o seu custo. Encontra sempre a solução ótima (menor custo).</p>
+
+<h3>Algoritmo</h3>
+
+<pre><code>
+uniform_cost_search() {
+  Open = [Start];
+  Closed = [];
+
+  while (open != []) {
+    X = pop(Open); // pegue e remova o estado mais à esquerda de Open
+
+    if (X é um objetivo){
+      return sucesso;
+    }
+
+    gere todos os filhos de x;
+    push(Closed, X);
+
+    for (cada filho de X) {
+      if (o filho não está em Open nem em Closed) {
+        atribua um valor de avaliação a este estado;
+        adicione a Open;
+      }
+      else if (o filho já está em Open) {
+        if (o estado foi atingido com um valor de custo menor){
+          de a esse estado em Open es valor menor
+        }
+      }
+      else {
+        descarte o estado;
+      }
+    }
+    reordene os estados em Open de acordo com o valor de custo
+  }
+}
+</code></pre>

@@ -1,0 +1,31 @@
+<div class="ui fixed menu">
+    <div class="ui container">
+      <a href="{{ site.baseurl }}" class="item">Página inicial</a>
+      {% for disciplina in site.data.conteudo.disciplinas %}
+      <div class="ui dropdown item">
+        <span class="text">{{ disciplina.alias }}</span>
+        <i class="dropdown icon"></i>
+          <div class="menu">
+            {% for conteudo in disciplina.conteudo %}
+              {% if conteudo.conteudo %}
+                <div class="item">
+                  <i class="dropdown icon"></i>
+                  <a href="{{ site.pageurl | append: conteudo.url }}" class="text">{{ conteudo.titulo }}</a>
+                  <div class="menu">
+                    {% for conteudo in conteudo.conteudo %}
+                    <a class="item" href="{{ site.pageurl | append: conteudo.url }}">{{ conteudo.titulo }}</a>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% else %}
+                <a class="item" href="{{ site.pageurl | append: conteudo.url }}">{{ conteudo.titulo }}</a>
+              {% endif %}
+            {% endfor %}
+          </div>
+      </div>
+      {% endfor %}
+      <div class="right item">
+        <a id="pendencias" class="ui green button">Tarefas</a>
+      </div>
+    </div>
+  </div>

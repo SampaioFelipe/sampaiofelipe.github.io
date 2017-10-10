@@ -1,0 +1,197 @@
+---
+title: "CG - Preenchimento de Polígonos"
+layout: default
+---
+<h1 class="ui header">7. Preenchimento de Polígonos</h1>
+<p>A tarefa de prencher polígonos possui duas etapas:</p>
+
+<ol>
+  <li>Decidir qual pixel pintar</li>
+  <li>Decidir com qual valor pintar</li>
+</ol>
+
+<p>Veremos o algoritmos incremental <b>Scan Line</b></p>
+
+<h2>Introdução</h2>
+
+[IMAGEM: retangulo em uma grade de pixels]
+
+<p>Em uma linha de varredura, pinta-se cada pixel da esquerda para a direita de um ponoto inicial (Xmin) até um ponto final (Xmax) (com $Xmin < Xmax$)</p>
+
+<p>O problema surge quando temos que decidir qual pixel de fato escolher.</p>
+
+[IMAGEM: mostrar esse problema]
+
+<p>A estratégia é explorar a <b>coerência espacial</b>: frequentemente não há alterações nas primitivas de um pixel para outro dentro de um bloco ou de uma linha de varredura para a próxima linha de varredura.</p>
+
+<p>Essa coerência será utilizada para buscar apenas os pixels com mudança. Vamos usar um retângulo como exemplo, ele tem:</p>
+
+<ul>
+  <li><b>Coerência de blocos:</b> todos os pixels dentro de um bloco são pintados na mesma cor.</li>
+  <li><b>Coerência de linhas de varredura:</b> linhas de varreduras consecutivas que interceptam um retângulo são idênticas.</li>
+</ul>
+
+<h2>Coerência e Algoritmo de Preenchimento de Retângulo</h2>
+
+<ul>
+  <li>Diminuição de tempo para gravar pixels no Frame Buffer.</li>
+  <li>Necessidade de menos acesso a memória</li>
+</ul>
+
+<p>Para evitar duplicatas na pintura de pixels em retângulos é necessário definir um critério que diga onde a qual primitiva um pixel pertence (nenhum pixel pode pertencer a mais de um polígono). Dessa forma, um pixel pertence a uma primitiva se ele etá em seu interior.</p>
+
+<p>Porém, o que fazemos com a borda? A solução é adotar uma regra de preenchimento:</p>
+
+<ul>
+  <li>Os pixels que estão nas arestas esquerdas e inferiores pertencem a primitiva (são desenhadas).</li>
+  <li>Os pixels das arestas direita e superior não pertencem a primitiva (não são desenhados).</li>
+</ul>
+
+<h2>Polígonos</h2>
+
+<p>Existem diferentes tipos de polígonos:</p>
+
+<ul>
+  <li>Convexo</li>
+  <li>Côncavo</li>
+  <li>Com alto-intersecção</li>
+  <li>Com buracos</li>
+</ul>
+
+<p>É necessário que o algoritmo de preenchimento possa contemplar todos os tipos de polígonos.</p>
+
+[IMAGEM: tipos de poligonos]
+
+<h3>Como determinar qual pixel faz parte de um polígono?</h3>
+
+<div class="image">
+  <img src="http://www.e-cartouche.ch/content_reg/cartouche/graphics/en/image/filling_poly/poly_fill.gif" alt="">
+</div>
+
+<h4>Algoritmo Scan-line de Preenchimento de Polígonos</h4>
+
+<p>Opera computando blocos entre as arestas esquerda e direitas do polígono. Os extremos do bloco são computados através de um algoritmo incremental: dado a intersecção com a linha de varredura anterior, o algoritmo calcula de maneira incremental a próxima intersecção do plígono com a linha de varredura.</p>
+
+<h4>Passos do Algoritmo</h4>
+
+<ol>
+  <li>Obter a interseção da linha de varredura com todos os lados do polígono</li>
+  <li>Ordenar os pontos de interseção</li>
+  <li>Preencher os pixels entre pares de pontos</li>
+</ol>
+
+<p>O que fazer caso a interseção for:</p>
+<ol>
+  <li><b>Valor fracionário:</b>
+    <ul>
+      <li>Se for a borda esquerda, paridade par: arredonda para cima</li>
+      <li>Se for a borda direita, paridade impar: arredonda para baixo</li>
+    </ul>
+  </li>
+  <li><b>Valor inteiro:</b>
+    <ul>
+      <li>Se borda esquerda, paridade par: pinta</li>
+      <li>Se borda direita, paridade impar: não pinta</li>
+    </ul>
+  </li>
+</ol>
+
+<h4>Regra da paridade para desenhar pixels</h4>
+
+<ul>
+  <li>Usar paridade para saber se pixel é interno ou não</li>
+  <li>No início de cada lilnha de varredura a paridade inicial é par</li>
+  <li>Cada intersecção com uma aresta inverte bit de paridade</li>
+  <li class="duvida">Desenha na paridade impar (Q?)</li>
+  <li>Execeção: Pontos de Ymax de arestas não invertem paridade</li>
+</ul>
+
+<h4>E como tratar arestas horizontais?</h4>
+
+<p>Simples, você não trata. O próprio algoritmo desenha naturalmente elas (deviso a varredura da linha já criar uma linha horizontal).</p>
+
+<h4>Observações sobre o algoritmo Scan-Line</h4>
+<ol>
+  <li>Não desenha pixels das arestas superiores, nem das arestas da direita</li>
+  <li>Não desenha pixels sobre o topo de u polígono côncavo em forma de U</li>
+  <li>Não desenha os pixels que são pontos máximos locais</li>
+  <li>Em vez de desenhar pixels em lugares não apropriados, os pixels não são desenhados.</li>
+  <li><b>Slivers:</b> para polígonos muito finos, o algoritmo pode levar a aparência serrilhada. A solução é aplicar técnicas de anti-serrlilhamento</li>
+</ol>
+
+<h4>Coerência de Arestas</h4>
+<p>Muitos lados do polígono interceptados pela linha $i$ também são pela linha $i + 1$. Dado que $x_i$ foi o ponto de intersecção na linha i, então podemos determinar a próxima intersecção usando:</p>
+
+$$ y_i + 1 = {y_i + m (x_{i+1} - x_i)} $$
+
+$$ x_{i+1} = {x_i + {1 \over m}} $$
+
+$$ m = {y_{max} - y_{min} \over {x_{max} - x_{min}}} $$
+
+<p><b>m</b> é a inclinação da reta.</p>
+
+<h4>Determinação do próximo valor de x (sem calcular fração)</h4>
+
+<p>Traçamos $(x_{min}$, $y_{min})$ e a medida que y é incrementado, adicionamos $1/m$ à $x_{min}$.</p>
+
+<p>Não precisamos calcular essa fração pois o aumento terá sempre uma parte inteira e outra em ponto flutuante que será utilizado na próxima iteração, sendo que com a repetição a parte fracionário vai se tornar maior que 1 e a parte inteira será incrementada.</p>
+
+<pre><code class="java">
+void leftEdgeScan(int xmin, int ymin, int xmax, int ymax, int valor) {
+      int x, y;
+
+      x = xmin;
+      y = ymin;
+
+      int numerador = xmax - xmin;
+      int denominador = ymax - ymin;
+      int incremento = denominador;
+
+      for (y = ymin; y <= ymax; y++) {
+          pintaPixel(x,y,valor);
+
+          incremento += numerador;
+
+          if (incremento > denominador){
+              x++;
+              incremento -= denominador;
+          }
+      }
+  }
+</code></pre>
+
+<h4>Estruturas de Dados Utilizadas</h4>
+
+<ul>
+  <li><b>AET:</b> Active Edge Table (tabela de lados ativos)
+    <ul>
+      <li>Armazena o conjunto de arestas interceptadas pela linha de varredura corrente, ordenados pela coordenada x</li>
+    </ul>
+  </li>
+  <li><b>ET:</b> Edge Table
+    <ul>
+      <li>Criada para que a inclusão de lados na AET seja eficiente</li>
+      <li>Tabela com p posições, uma para cada linha de varredura</li>
+      <li>Cada posição y tem uma lista encadeada de lados com as arestas que possuem $y_{min} = y$</li>
+      <li>Arestas ordenadas por ordem crescente do x de seu extremo inferior</li>
+    </ul>
+  </li>
+</ul>
+
+<h4>Emfim, o algoritmo</h4>
+
+<ol>
+  <li>Inicializa a <b>AET</b> como vazia</li>
+  <li>Obtem o valor da primeira posição não vazia da <b>ET</b></li>
+  <li>Repita até que a <b>ET</b> e a <b>AET</b> estejam vazias:
+    <ol>
+      <li>Transfere o cesto $y$ da <b>ET</b> para a <b>AET</b> cujo $y_{min} = y$, mantendo a AET ordenada em $x$</li>
+      <li>Remove as arestas cujo $y_{max} = y$ (y corrente)</li>
+      <li>Desenhe os pixels usando os pares de coordenadas da AET</li>
+      <li>Incremente $y$</li>
+      <li>Atualize os valores de x para o novo valor de $y$ na AET, mantendo a mesma ordenada</li>
+    </ol>
+  </li>
+</ol>
+
+<p>* Cada nó da tabela contém a seguinte informação $[y_{max}, x_0, {\Delta x / \Delta y} ]$, onde $x_0$ é a componente $x$ do ponto de $y$ mínimo.</p>

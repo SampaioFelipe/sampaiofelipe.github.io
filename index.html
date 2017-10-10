@@ -1,0 +1,25 @@
+---
+layout: default
+---
+
+<h1 class="ui header">Guia de Conteúdo</h1>
+<div class="ui segments">
+  {% for disciplina in site.data.conteudo.disciplinas %}
+  <div class="ui {{ disciplina.color }} segment">
+    <h3>{{ disciplina.nome }}</h3>
+    <ol class="ui ordered list">
+      {% for conteudo in disciplina.conteudo %}
+      <li><a href="{{ site.pageurl | append: conteudo.url }}" class="item">{{ conteudo.titulo }}</a>
+        {% if conteudo.conteudo %}
+        <ol>
+          {% for conteudo in conteudo.conteudo %}
+          <li><a href="{{ site.pageurl | append: conteudo.url }}" class="item">{{ conteudo.titulo }}</a></li>
+          {% endfor %}
+        </ol>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,63 @@
+---
+title: "SO2-Programação"
+layout: default
+---
+
+<h1 class="ui header">3. Programação</h1>
+
+<h2>Introdução</h2>
+
+<p>As <b>chamadas de sistema</b>, que compõem o conjunto de serviços oferecidos pelo SO aos programas, normalmente são padronizadas. No caso do linux, temos o padrão POSIX.</p>
+
+<p>Cabe ao SO que oferece chamadas de sistema POSIX implementar os serviços associados de acordo com suas estruturas internas e funcionalidades.</p>
+
+<h2>vi/vim</h2>
+
+<h2>GCC</h2>
+<p>Uso: <i>gcc [-Wall] prog.c [-o prog] [bib.o] [-Iinc_dir] [-Llib_dir] [-llink_bib]</i></p>
+
+<p>When you invoke GCC, it normally does preprocessing, compilation, assembly and linking.  The "overall options" allow you to stop this process at an intermediate stage.  For example, the -c option says not to run the linker.  Then the output consists of object files output by the assembler.</p>
+
+<h2>3.4 CPP - C preprocessor</h2>
+
+<p>O cpp é um processador de macros que é utilizado automaticamente pelo compilador C para transformar os programas antes da compilação.</p>
+
+<h2>3.5 Link e Bibliotecas</h2>
+<h3>DESCRIÇÃO AQUI</h3>
+
+sys/types.h
+sys/wait.h
+unistd.h
+stdio.h
+stdlib.h
+errno.h
+
+{% highlight shell %}
+gcc ... -lbib # inclui biblioteca libbib.a  (*)
+gcc ... -Llib_dir # especifica caminho de busca
+{% endhighlight %}
+
+<p>Localização das bibliotecas:</p>
+<p>Link Estático: /usr/lib</p>
+<p>Link Dinâmico: /lib; /usr/lib; (/etc/ld.so.conf)</p>
+<p>Compilação com link dinâmico (shared objects) - default:</p>
+<pre><code>
+  gcc ... -static  // previne ligação com bibliotecas dinâmicas
+  gcc ... -shared  // produz objeto compartilhado que pode ser ”linkado” com outros objetos para formar um programa.
+  ldd: exibe dependências de bibliotecas dinâmicas // man ldd
+  ldconfig: configura ajustes para links dinâmicos // man ldconfig
+</code></pre>
+
+<h2>3.6 Make</h2>
+
+<p>Utilitário para manutenção de grupos de programas.</p>
+<p>Usa informações de um arquivo de configuração (GNUmakefile, makefile, Makefile, ou outro especificado).</p>
+<p>Ações baseadas em regras e na data de última modificação de cada um dos arquivos de dependência.</p>
+<p>Executa comandos no makefile para atualizar um ou mais targets, tipicamente programas.</p>
+
+<pre><code>
+  target:  componentes
+  -><i>tab</i> regra
+</code></pre>
+
+<h2>3.7 Depuração</h2>

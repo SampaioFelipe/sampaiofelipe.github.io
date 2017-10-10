@@ -1,0 +1,56 @@
+---
+title: "PAA - Fundamentos da Análise da Eficiência de Algoritmos"
+layout: default
+---
+<h1 class="ui header">3. Fundamentos da Análise da Eficiência de Algoritmos</h1>
+
+<h2>O Framework de Análise</h2>
+
+<p>Há dois tipos de eficiência: eficiência temporal e eficiência espacial. <b>Eficiência Temporal</b>, também chamada de complexidade temporal, indica o quão rápido um algoritmo em quatão executa. <b>Eficiência Espacial</b>, também chamado de complexidade espacial, se refere a quantidade de memória requerida pelo algoritmo em adição ao espaço necessário para sua entrada e saída.</p>
+
+<h3>Medindo o Tamanho da Entrada</h3>
+
+<p>Escolha de uma métrica adequada</p>
+
+<h3>Unidades para Medição do Tempo de Execução</h3>
+
+<p>Temos que identificar a operação mais importante (custosa), chamada de <b>operação básica</b>, em nosso algoritmo e computar a quantidade de vezes que essa operação é executada (em função ao tamanho $n$ da entrada).</p>
+
+<h3>Ordem de Grandeza</h3>
+
+<table class="ui inverted blue celled table">
+  <thead>
+    <tr>
+      <th>$n$</th>
+      <th>$\log_2n$</th>
+      <th>$n$</th>
+      <th>$n \log_2n$</th>
+    </tr>
+  </thead>
+</table>
+
+<h3>Eficiência no Pior-caso, Melhor-caso e Caso Médio</h3>
+
+<p>A eficiência no <b>pior-caso</b> de um algoritmo é a eficiência no pior caso da entrada de tamanho $n$, no qual o algoritmo executa a maior quantidade de operações possíveis para aquele tamanho de entrada.</p>
+
+<p>A eficiencia no <b>melhor-caso</b> de um algoritmo é a eficiência do melhor caso da entrada de tamanho $n$, no qual o algoritmo executa com a maior rapidez possível a entrada de tamanho $n$.</p>
+
+<p>A eficiência do <b>caso-médio</b> fornece uma medida mais completa, se referindo ao caso "típico" ou "aleatório" no tamanho da entrada. Para realizar essa análise, é necessário levar em conta algumas suposições a respeito das possíveis entradas se tamanho n e analisar probabilísticamente.</p>
+
+<h2>Notações Assintóticas e Classes Básicas de Eficiência</h2>
+
+<p>Para comparar e ranquear as ordens de grandezas dos algoritmos, nós usamos três notações: $O$ (big oh), (big omega) e (big teta). Nas proximas seções usaremos a notação $t(n)$ e $g(n)$ (funções não negativas definidas no conjunto dos números naturais) para representar o tempo de execução do algoritmo e para comparar com a função de tempo de execução, respectivamente.</p>
+
+<h3>Introdução Informal</h3>
+
+<p>Informalmente, $O(g(n))$ é o conjunto de todas as funções com ordem de grandeza inferior ou igual a $g(n)$.</p>
+
+<p>$\Omega(g(n))$ representa o conjunto de todas as funções com ordem de grandeza superior ou igual a $g(n)$.</p>
+
+<p>Finalmente, $\Theta(g(n))$ é o conjunto de todas as funções que possuem a mesma ordem de grandeza de $g(n)$.</p>
+
+<h3>Notação $O$</h3>
+
+<h3>Notação $\Omega$</h3>
+
+<h3>Notação $\Theta$</h3>

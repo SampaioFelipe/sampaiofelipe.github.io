@@ -1,0 +1,174 @@
+---
+title: "SO2-Gerenciamento de Processos"
+layout: default
+---
+<h1 class="ui header">5. Gerenciamento de Processos</h1>
+
+<h3>Criação e encerramento de processos</h3>
+
+<p>Ao executar a chamada fork o SO faz uma cópia do processo atual. Para fazer isso, é preciso alocar um novo descritor de processos que, no Linux, chama-se task-struct. Também é preciso determinar um PID único para esse novo processo, que terá o valor de PPID igual ao PID do processo que executou a chamada, seu pai.</p>
+
+<p>Além do PID, o SO mantém vários identificadores associados a um processo, como ppid, pgid, uid e gid, que indicam o processo pai, o grupo de processo (process group), o usuário e o grupo base associados ao processo. As permissões são herdadas do usuário ao qual o processo está associado, a menos que o arquivo executável tenha o atributo setuid ou setgid, que o fazem herdar os privilégios associados ao dono ou ao grupo do arquivo.</p>
+
+<p>Prioridades, identificadores da política de escalonamento, contadores de uso de recursos, referências a threads associadas ao processo, e outras tantas informações, são mantidas pelo SO na task_struct de um processo. Outras informações importantes incluem o vetor de arquivos abertos e uma estrutura para tratamento de sinais.</p>
+
+<p>Como num ambiente multitarefa há um isolamento entre as áreas de memória dos processos, usando memória virtual, é preciso alocar áreas de memória para o processo filho sendo criado. Assim, o SO cria uma nova page table, que será usada pela MMU do processador para traduzir endereços lógicos em endereços físicos. Para acelerar as traduções de endereço, é comum que as informações da page table sejam armazenadas numa memória de acesso rápido chamada TLB (translation lookaside buffer), ajustada pelo SO nas trocas de contexto.</p>
+
+<p>Se o processo filho é uma cópia do pai, o SO deve copiar informações do descritor (task_struct) do processo pai para o descritor do processo filho. Também é preciso copiar áreas de memória de código e dados (segmento de dados, variáveis estáticas, heap e pilha). Para melhorar o tempo de criação de processos, contudo, o Linux usa uma estratégia chamada copy-on-write. Neste caso, o SO apenas copia a tabela de páginas do processo pai para o filho, apontando para as mesmas páginas de memória. Deste modo, se o processo filho terminar em seguida ou se fizer uma chamada para sobrepor sua área de código com a função exec, não houve gasto desnecessário com duplicações de memória. Por outro lado, se o processo filho ou o pai tentarem modificar qualquer página, é preciso gerar uma cópia desta página para o filho antes.</p>
+
+<p>De maneira resumida, o fork cria uma cópia do processo atual. Após a criação, os 2 processos vão para a fila de processos prontos e, quando selecionados pelo escalonador, voltam à execução na instrução seguinte à chamada fork. </p>
+
+<p>A chamada exec mantém o descritor do processo atual, seu identificador de processo, e várias outras informações, mas substitui a área de código e dados, zera a área de pilha e ajusta o contexto para a execução do novo processo.</p>
+
+<p>Se um processo é criado com a chamada fork(), como ele termina? Salvo nas condições de erro, em que um processo é terminado pelo tratamento de um sinal (que também pode ser gerado por outro processo), um processo deve fazer uma chamada explícita ao SO para terminar. Na prática, em programas C, o simples retorno da função main() vai ser tratado pelo compilador com a inclusão de uma chamada da função exit(3). Também é possível terminar o processo chamando explicitamente a função C exit(3), ou a chamada de sistema _exit(2). Nesses casos, o SO termina o processo, liberando os recursos que ele tinha alocado.</p>
+
+<h3>Prioridades e escalonamento</h3>
+<p>Processos e threads são entidades criadas pelo SO para possibilitar a execução de blocos de código que compartilham os recursos de um computador. Usando o conceito de contexto de execução, associado principalmente ao estado dos registradores do hardware na execução de um processo ou thread, o SO consegue promover a alternância dessas entidades no uso do(s) processador(es). O acesso a outros recursos, como unidades de armazenamento, é tipicamente oferecido por demanda.</p>
+
+<p>De maneira geral, sabemos que o SO promove o compartilhamento eficiente do uso dos recursos sobrepondo as ações dos controladores de dispositivos nas operações de entrada e saída com a execução de instruções pelo(s) processador(es). Chamada de  multiprogramação, essa técnica evita que o processador fique ocioso aguardando a conclusão de uma transferência de dados realizada por um controlador de E/S. Para tanto, o SO instrui o controlador a fazer a leitura ou escrita necessária e direciona o processador para a execução de código de outro processo ou thread prontos. Usando técnicas de acesso direto à memória (DMA), um controlador consegue transferir dados lidos de um dispositivo, através de um barramento, para a memória, e também enviar para um dispositivo dados lidos de áreas de memória usadas como buffers pelo SO.</p>
+
+<p>Outra forma de compartilhar o uso de um processador são as fatias de tempo. Um dispositivo de timer programável (programmable interrupt timer - PIT) presente na motherboard é usado pelo SO para a geração periódica de interrupções. Com essas interrupções, o SO retoma o controle da CPU em intervalos regulares, independentemente do fluxo de instruções do processo atual. Cabe ao SO determinar a frequência de ocorrência dessas interrupções, de acordo com a precisão dos eventos de temporização tratados. </p>
+
+<p>Ao retomar o controle, além de verificar se há eventos agendados para tratar, o SO tem a chance de promover a alternância do uso deste processador. Para tanto, fatias de tempo (processor time slices) são definidas para os processos na forma e um número de time ticks do gerador de interrupções periódicas. A cada interrupção do timer, um contador associado ao tempo de execução de um processo (ou thread) é decrementado. Zerado o contador, isso significa o fim da fatia de tempo deste processo na CPU.</p>
+
+<p>Há várias questões, contudo, que tornam o uso de interrupções periódicas não apropriado. Inicialmente, a escolha da frequência das interrupções deve ser considerada. Intervalos mais curtos permitem maior precisão nos eventos de temporização mas, por outro lado, geram elevada sobrecarga com o processamento das interrupções. Além disso, interrupções periódicas impedem que o processador fique ocioso, mesmo quando não há nada efetivo a executar. Com isso, desperiça-se a chance de desativar o processador e economizar energia.</p>
+
+<p>Assim, o modelo de interrupção periódica tem dado lugar a tickless kernels. Nesses SOs, como ocorre com Linux, uma interrupção do timer é programada especificamente para o próximo evento. Embora isso gere um aumento na complexidade do tratamento de eventos de temporização, há possibilidade de economia significativa de energia.</p>
+
+<p>Definido que um processo ou thread deve deixar a CPU momentaneamente, é preciso selecionar o próximo a ocupá-la. Essa seleção é chamada escalonamento de curto prazo de processos, ou simplesmente escalonamento (scheduling). Se processos podem deixar a CPU antes de suas conclusões para dar lugar a outros, tem-se um mecanismo de escalonamento denominado preemptivo. Em sistemas não preemptivos, um processo é executado até ser concluído ou até explicitamente liberar a CPU.</p>
+
+<p>As chamada de sistema nice(2) e setpriority(2) permitem ajustar a prioridade estática de processos e grupos de processos.</p>
+
+<p>Diferentes algoritmos de escalonamento podem ser implementados por um SO. O padrão POSIX, por exemplo, especifica as seguintes políticas para processos que não possuem restrições de tempo real:</p>
+
+<ul>
+  <li>SCHED_OTHER the standard round-robin time-sharing policy</li>
+  <li>SCHED_BATCH for "batch" style execution of processes</li>
+  <li>SCHED_IDLE for running very low priority background jobs</li>
+</ul>
+
+<p>Para processos em tempo real:</p>
+
+<ul>
+  <li>SCHED_FIFO a first-in, first-out policy</li>
+  <li>SCHED_RR a round-robin policy</li>
+</ul>
+
+<p>Alguns atributos mantidos pelo SO para cada processo ou thread permitem ajustar seus escalonamentos. Embora a política de escalonamento SCHED_OTHER seja associada por padrão a todo processo, a função sched_setcheduler(2), por exemplo, permite alterar a política de escalonamento. Vale observar, contudo, que é preciso privilégio de super usuário para alterar a política de escalonamento para SCHED_FIFO ou SCHED_RR, que conferem propriedades de suporte a tempo real a um processo. A chamada sched_getscheduler(2) permite consultar parâmetros do escalonamento de um processo.</p>
+
+<hr>
+<p>Migrate: o faz o controle de carga...</p>
+<p>Real time priority:</p>
+<p>Para um sistema de tempo real: o somatório dos tempos de cpu sob o periodo deve ser menor que o número de core.</p>
+<p>Completly fairness schedule (política do linux)</p>
+<p>Tempo de cpu/tempo de vida = fração de uso da CPU</p>
+<p>Quanto menor a fração do uso da CPU mais prioritário é o processo</p>
+<p>Virtual (view?) Runtime</p>
+<p>Valor de goodness* --> criação de 140 filas diferentes para cada valor de prioridade (algoritmo O(1)) (porém não evitava starvation) --> criação de mais um vetor de fila (active vs not active)</p>
+
+<h3>Afinidade de CPUs</h3>
+
+<p>O SO mantém informação sobre quais CPUs um processo pode ser executado.</p>
+<p><b>set_affinity():</b> configura uma máscara de bits que indica em quais CPUs um processo pode executar.</p>
+
+<p>Existem 3 níveis de cache: ... O SO mantém filas separadas para cada core do processador para que o cache de cada core possa ser utilizado ao máximo.</p>
+
+<h3>Consumo de Recursos</h3>
+
+<p>O SO mantém uma estrutura com informações sobre o uso de recursos (struct rusage).</p>
+
+<pre><code>struct rusage {
+   struct timeval ru_utime; /* user time used */
+   struct timeval ru_stime; /* system time used */
+   long ru_maxrss; /* max resident set size */
+   long ru_ixrss; /* integral shared text memory size */
+   long ru_idrss; /* integral unshared data size */
+   long ru_isrss; /* integral unshared stack size */
+   long ru_minflt; /* page reclaims */
+   long ru_majflt; /* page faults */
+   long ru_nswap; /* swaps */
+   long ru_inblock; /* block input operations */
+   long ru_oublock; /* block output operations */
+   long ru_msgsnd; /* messages sent */
+   long ru_msgrcv; /* messages received */
+   long ru_nsignals; /* signals received */
+   long ru_nvcsw; /* voluntary context switches */
+   long ru_nivcsw; /* involuntary context switches */
+};</code></pre>
+
+<p>Como calcular o user time?</p>
+<p>Como calcular o system time? esse valor é o tempo em que o SO ficou prestando serviço para esse processo</p>
+<p>Como medir o consumo? gettimeofday() e getrusage().</p>
+
+<pre><code class="c">struct timeval inic,fim;
+struct rusage r1, r2;
+
+// determina o instante atual (gettimeofday)
+// int gettimeofday(struct timeval *tv, struct timezone *tz);
+gettimeofday(&inic, 0);
+
+// determina quanto foi consumido de recursos até aqui (getrusage)
+getrusage(RUSAGE_SELF, &r1);
+
+// aqui entra a função cujo tempo se quer avaliar
+
+// determina o instante atual (gettimeofday)
+gettimeofday(&fim,0); // tempo decorrido
+
+// determina quanto foi consumido de recursos até aqui (getrusage)
+getrusage(RUSAGE_SELF, &r2);
+
+// diferença entre r2 e r1 (ru_utime e ru_stime) indica consumo de recursos para o trecho de código
+// diferença entre fim e inic inica o tempo decorrido (elapsed time)
+</code></pre>
+
+<p>Limites: o SO pode limitar o consumo de recursos por um processo e seus descendentes.</p>
+<p>setrlimit() e getrlimit()</p>
+<p>ulimit -a e ulimit -t</p>
+
+<h3>Tratamento de Sinais</h3>
+
+<p>Sinais são um mecanismo de notificações para processos (ou grupo se processos), comumente associados a eventos ocorridos durante suas execuções. Esse sinais são enviados de forma implícita ou explícita (enviando o sinal através do chamada de sistema kill(2)).</p>
+
+<p>De acordo com o padrão POSIX, há 2 grupos de sinais:</p>
+
+<ul>
+  <li><b>Reliable signals:</b> são os sinais normais. Estão associados a eventos pré-definidos e têm números associados de 1 a 31 (não são cumulativos, de forma que pode haver apenas uma pendência de cada sinal);</li>
+  <li><b>Real-time signals:</b> definidos pelas macros SIGRTMIN e SIGRTMAX, podem ser gerados de acordo com a lógica do programa que os utiliza (pode haver várias ocorrências pendentes).</li>
+</ul>
+
+<p>Para poder tratar o envio e recebimento de sinais, o SO mantém estruturas de dados de controle de sinais para cada processo. Essas estruturas permitem que um processo ignore o recebimento de um sinal específico, que seja instalada uma rotina de tratamento para um sinal, ou que o recebimento de um sinal seja bloqueado explicitamente (apenas os sinais SIGKILL e SIGSTOP não podem ser capturados, ignorados ou bloqueados)</p>
+
+<p>Sinais que não são tratados por um processo possuem ações pré-definidas pelo SO. Dependendo do sinal, essas ações podem terminar a execução do processo, terminar a execução e gerar um arquivo com a imagem do processo na memória (core dump), ou simplesmente ignorar.</p>
+
+<p>De acordo com os padrões POSIX, <b>threads</b> de um processo compartilham o tratamento de sinais do processo ao qual estão associadas, mas cada uma pode ter sua própria máscara de recebimento de sinais. Na programação com threads POSIX é possível ainda enviar sinais para threads específicas de um processo, usando a função <b>pthread_kill(3)</b>, que no linux é implementada sobre a chamada de sistema <b>tgkill(2)</b>. A função <b>raise(3)</b> permite enviar um sinal para a thread corrente. Para o envio de sinais de tempo real para threads é possível usar a função <b>sigqueue(3)</b></p>.
+
+<p>É possível bloquear a thread (ou processo) atual à espera de um sinal. A chamada de sistema <b>pause(2)</b> bloqueia o processo (ou thread) atual à espera do recebimento de algum sinal. O mesmo ocorre com a chamada <b>sigsuspend(2)</b>, que permite esperar pelo recebimento de um sinal ao mesmo tempo em que uma máscara temporária bloqueia sinais não desejados.</p>
+
+<p>O recebimento efetivo de um sinal ocorre quando o processo já teve seu contexto restaurado depois de ter sido selecionado para execução pelo escalonador. Isso corre porque é preciso ajustar o contexto do processo alvo, restaurando sua tabela de páginas e ponteiros de código e pilha, além de retornar o processador ao user mode antes de executar uma rotina de tratamento associada. Assim, exceto pelos sinais SIGKILL E SIGSTOP, os demais sinais, que não foram ignorados por um processo, apenas são marcados como pendentes do envio.</p>
+
+<div class="ui inverted segment">
+  O tratamento apropriado vai ocorrer apenas quando o processo voltar à execução, com contexto restaurado, mas antes de retornar as atividades interrompidas.
+</div>
+
+<p>Como a entrega de sinais é assíncrona, é possível haver reentrância de código usado na função de tratamento de sinal com outras atividades sendo realizadas no fluxo normal de execuçao do processo e de suas threads. Assim, há a preocupação com essa reentrância de código e com segurança devido ao sincronismo <b>(asynchronous safety)</b>. O código de tratamento de um sinal deve poder ser interrompido a qualquer momento sem causar estados inconsistentes no processo.</p>
+
+<hr>
+
+- colocar pthread_kill na tabela de library calls
+
+
+<p>A imagem de processo é armazenada em um arquivo chamado core</p>
+
+
+<p>Como o SO acha um processo? Cada processo está ligado a uma lista com todos os processos e outra com os processos no estado atual do processo.</p>
+
+<p>ps s: mostra o status de sinais</p>
+
+<p>Asynchronous safety</p>
+
+<p>Há diferença no tratamento de exceção (o incremento de PC pode não ser válido, por tanto decrementa 1, ou seja, volta para instrução onde ocorreu a exceção) e interrupção</p>
+
+<p>Segmento BSS</p>
+
+<p>O tratamento de sinais de processo é realizado na restauração do contexto do processo, antes de continuar com a execução normal.</p>

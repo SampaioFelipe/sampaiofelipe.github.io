@@ -1,0 +1,35 @@
+<div class="ui page dimmer">
+  <div class="scrolling content">
+    <div class="center">
+      <div class="ui three column stackable left aligned grid container">
+        <div class="column">
+          <h1>Provas</h1>
+          <div class="ui inverted divider"></div>
+          {% assign provas = (site.data.tarefas.provas | sort: 'date') %}
+          {% for prova in provas%}
+          <p><div class="ui green horizontal label">{{prova.date}}</div> <b>{{prova.content}}</b></p>
+          <div class="ui inverted divider"></div>
+          {% endfor %}
+        </div>
+        <div class="column">
+          <h1>Trabalhos</h1>
+          <div class="ui inverted divider"></div>
+          {% assign trabalhos = (site.data.tarefas.trabalhos | sort: 'date') %}
+          {% for trabalho in trabalhos %}
+          <p><div class="ui blue horizontal label">{{trabalho.date}}</div> <b>{{trabalho.content}}</b></p>
+          <div class="ui inverted divider"></div>
+          {% endfor %}
+        </div>
+        <div class="column">
+          <h1>Outras Atividades</h1>
+          <div class="ui inverted divider"></div>
+          {% assign outros = (site.data.tarefas.outros | sort: 'date') %}
+          {% for outro in outros %}
+          <p><div class="ui orange horizontal label">{{outro.date}}</div> <b>{{outro.content}}</b></p>
+          <div class="ui inverted divider"></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

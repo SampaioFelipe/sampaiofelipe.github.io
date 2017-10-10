@@ -1,0 +1,253 @@
+---
+title: "SO2 - IPC "
+layout: default
+---
+<h1 class="ui header">7. IPC - Interprocess Communication</h1>
+
+<p>Usando o modo de endereçamento protegido e o mecanismo de memória virtual do processador, o SO consegue prover a separação dos espaços de endereçamento dos processos que executam no mesmo sistema computacional. Isso é bom pois previne interferências entre eles.</p>
+
+<p>Por outro lado, ao criar-se uma aplicação que divida suas atividades entre vários processos, pode ser desejável a comunicação entre eles. Para processos que estão em computadores separados (nó), a comunicação em rede é a saída. Por outro lado, para processos sob o comando do mesmo SO, no mesmo nó e, portanto, compartilhando a mesma memória física, é possível realizar a comunicação de maneira mais eficiente.</p>
+
+<p>Uma solução é usar o sistema de arquivos, já que a visão da árvore de diretórios é normalmente a mesma para todos os processos no mesmo nó (<span class="duvida">exceto se foram usados namespaces distintos</span>). Assim, basta que os processos escolham um arquivo num diretório para que um escreva e outro leia dados dali. Essa comunicação pode não ser eficiente, contudo, uma vez que qualquer tranferência entre os processos vai envolver uma série de etapas.</p>
+
+<ul>
+  <li><b>Processo de escrita:</b>
+    <ol>
+      <li>Cópia dos dados da área de memória do processo (user space) para um espaço na área de memória do SO (buffers do sistema de arquivos - kernel space).</li>
+      <li>Cópia dos dados da área de memória do SO para o sistema de arquivos, o que envolve o auxílio de um controlador de disco por exemplo.</li>
+    </ol>
+  </li>
+  <li><b>Processo de leitura:</b>
+    <ol>
+      <li>Se dados não estiverem na memória, cópia dos dados do disco para buffers na área de memória do SO</li>
+      <li>Cópia da área de memória do SO (kernel space) para o espaço de memória do processo (user space)</li>
+    </ol>
+  </li>
+</ul>
+
+<div class="ui red inverted segment">
+  <h4>Por quê fazer a cópia para o kernel space na escrita?</h4>
+  <p>O SO trabalha com blocos, portanto, para compatibilizar as operações de escrita do processo em operações do bloco, é mantido no kernel space uma cópia do bloco. Quando o bloco inteiro ticer sido alterado, ele é então gravado no disco. Se o processo trabalhasse com blocos, isso não seria necessário, porém o processo trabalha com bytes.</p>
+</div>
+
+<p>Por outro lado, há serviços do SO que podem permitir a comunicação entre processos usando estruturas baseadas em memória apenas. Diversas estruturas podem ser usadas para isso: pipes e fifos, filas, filas de mensagens, semáforos, sockets (unix domain) e arquivos mapeados em memória. Algumas dessas estruturas são consideradas mecanismos clássicos de IPC, como as filas de mensagens e os semáforos.</p>
+
+<p>Em todos esses casos, informações sendo enviadas entre processos envolvem ainda a cópia de dados do user space para o kernel space, na escrita, e a cópia de dados do kernel space para o user space na leitura.</p>
+
+<p>Como melhoria para a comunicação entre processos, o SO permite o compartilhamento explícito de áreas de dados entre eles. Para tanto, há chamadas de sistema que tratam da alocação de uma área de memória comprtilhada. Um processo pode pedir ao SO para associar uma variável (ponteiro) à área compartilhada criada. Esse ponteiro é ajustado para apontar para o ínicio de uma página lógica não mapeada pela tabela de páginas. Após isso, o SO ajusta a tablea de páginas para que a página indicada pelo ponteiro aponte para a página física compartilhada. Agora, esse endereço de memória apontado pelo ponteiro indicado serve para comunicação entre processos, sem sequer ser necessário fazer cópia de dados em memória. O que um processo escreve na área de memória compartilhada pode ser lido pelo outro, e vice-versa, sem intermédio do SO. Cabe à lógica da aplicação evitar conflitos de acesso.</p>
+
+<div class="image">
+  <img src="{{site.imageurl | append: 'so2/ipc.png'}}" alt="">
+</div>
+
+<p>Também pode ser relevante haver sincronização entre processos ou threads. Vários mecanismos são disponíveis para isso:</p>
+
+<ul>
+  <li>Arquivos de bloqueio</li>
+  <li>Bloqueio de registros
+    <ul>
+      <li><b>flock(2)</b> - aplica ou remove um aviso de bloqueio em um arquivo aberto
+      </li>
+    </ul>
+  </li>
+  <li>System V semaphores</li>
+  <li>POSIX Semaphores</li>
+  <li>Mutexes</li>
+  <li>Condition Variables</li>
+  <li>Read-write locks</li>
+  <li>Barriers</li>
+  <li>Spins</li>
+</ul>
+
+<p>Na sincronização vale ficar atento para a questão de cópias de dados entre user space e kernel space também.</p>
+
+<h2>Pipes e FIFOS</h2>
+
+<p>Também conhecidos como <b>named pipes</b> são mecanismos para comunicação entre processos, criados sob o demanda no espaço do kernel. Execeto pela forma de criação, pipe e fifo são equivalentes e correspondem a um buffer logicamente contíguo, com armazenamento sequencial de dados. Assim, pipes (e fifos) são usados tipicamente como um canal de dados unidirecional para comunicação entre processos.</p>
+
+<p>A criação de um pipe é feita com as chamadas pipe(2) e pipe2(2), que têm como parâmetro um vetor de 2 posições inteiras.</p>
+
+<pre><code class="c">
+  int pipe (int pipefd[2]);
+  int pipe2 (int pipefd[2], int flags);
+
+</code></pre>
+
+<p>O array pipefd é usado para retornar dois descritores de arquivo (file descriptor) que se referem aos finais do pipe. pipefd[0] se refere ao final de leitura do pipe, enquanto que o pipefd[1] se refere ao final de escrita do pipe. Dados são escritos no final de escrita do pipe e são bufferizados pelo kernel até que sejam lidos no final de leitura do pipe. A leitura e escrita num pipe são realizadas com as chamadas comuns de leitura e escrita de arquivos (<b>read(2)</b> e <b>wirte(2)</b>).</p>
+
+<p>O pipe2() é semelhante a pipe(), adicionando-se a possibilidade de indicar nos flags os parâmetros de não bloqueio nas operações de leitura e escrita (O_NONBLOCK) e o fechamento automático do pipe quando a chamada exec() é realizada (O_CLOEXEC).</p>
+
+<p>Na chamada de criação de um pipe, o SO aloca estruturas apropriadas em sua memória, incluindo espaço para o armazenamento de dados (em sistemas linux, esse espaço é limitado a até 64 KB por pipe). Se a chamada de criação de um pipe for bem sucedida, são geradas 2 novas entradas no vetor de arquivos abertos do processo que fez a chamada. Essas entradas são indicadas pelos valores armazenados nas posições 0 e 1 do vetor de inteiros passado como parâmetro na chamada de criação.</p>
+
+<p>A forma de criação de um pipe, instanciado na área de memória do SO e referenciado pelo vetor de arquivos abertos do processo, faz com que apenas processos com alguma relação de parentesco possam comunicar-se via essa estrutura. Isso ocorre porque a única forma de mais de um processos obterem referência a um pipe é através da <b>herança</b> do vetor de arquivos abertos, realizada na chamada fork(2), com as referências já estabelecidas para o pipe.</p>
+
+<p>Para possibilitar que processos não relacionados usem o mecanismo de pipe para comunicação, deve criar-se um <b>fifo</b>, ou named pipe.</p>
+
+<p>FIFO (First In First Out) é um pipe com nome na árvore do sistema de arquivos. Essa entrada é criada com a chamada <b>mkfifo(3)</b> e é aberta quando um processo realiza a chamada open(2) para abri-lo.</p>
+
+<pre><code class="c">
+  int mkfifo (const char *pathname, mode_t mode);
+
+</code></pre>
+
+<p>Na abertura de um FIFO, é comum que um processo a faça usando a flag O_RDONLY e outro O_WRONLY,  para que um escreva e o outro leia. Assim, quaisquer processos que tiverem permissão de acesso ao FIFO no sistema de arquivo, e as devidas permissões, podem abri-lo, fazendo com que o SO instancie um pipe/FIFO na memória.</p>
+
+<p>Vale observar que, embora FIFO tenha uma entrada no sistema de arquivos, os dados nele escritos não são armazenados no sistema de arquivos, mas são mantidos em memória, como ocorre com pipes.</p>
+
+<p>Uma forma de uso frequente do mecanismo de pipe é o redirecionamento de dados entre processos realizado pelo shell. Para entender como o shell trata isso, é preciso conhecer a chamada de sistema <b>dup2(2)</b>.</p>
+
+<pre><code class="c">
+  int dup2 (int oldfd, int newfd);
+
+</code></pre>
+
+<p>Ao realizar essa chamada, um processo pede ao SO que copie as informações de uma posição do vetor de arquivos abertos para outra. Lembrando então das 3 primeiras posições do vetor de arquivos abertos de um processo, que estão relacionados à leitura e à escrita de dados e mensagens de erro no terminal, é possível usar dup2 para redirecionar STDIN, STDOUT e STDERR de um processo para um arquivo ou para um pipe.</p>
+
+<p>Ao tratar a linha de comando <b>$ prog > saida</b>, o shell cria um processo, abre o arquivo, usa dup2 para redirecionar STDOUT para o arquivo (<b><i>dup2(fd, STDOUT_FILENO)</i></b>), fecha o aquivo e executa o comando exec no processo filho. A mesma lógica vale para pipes. Contudo, no caso do pipe é preciso que o shell crie o pipe primeiro, para passar sua referência por herança aos processos filhos. Assim, o shell cira um pipe, cria o filho 1 e 2, redirecina STDOUT do filho 1 para o pipe (pipefd[1]) e STDIN do filho 2 para o pipefd[0]. Em seguida, fecha as entradas do pipe nos filhos e chama exec neles.</p>
+
+<p>A chamada <b>popen(3)</b> realiza parte dessa funcionalidade, embora não seja usada pelo shell para isso. Com essa chamada, um processo pode ativar outro processo e passar dados para qu este processo os leia via STDIN, ou pode ler os dados que este processo gerar para seu STDOUT. <b>pclose(3)</b> espeta o processo associado ao pipe criado com popen terminar.</p>
+
+<h2>Filas de Mensagem (Message Queues)</h2>
+
+<p>Diferentemente do pipes, que servem como um canal em memória para o fluco de dados entre processos, <b>filas de mensagem (message queues)</b> são um mecanismo de IPC que permite a troca de informações segmentadas. Usando as message queues, processos podem enviar e receber sequências de bytes trataddas separadamente.</p>
+
+<p>Associado a cada mensagem há um atributo que define o seu tipo ou prioridade. Assim, mensagens podem ser revebidas por ordem de envio ou selecionadas por seus atributos. Mantidas pelo SO, as mensagens precisam ser copiadas do <b>user space</b> para o <b>kernel space</b> no envio e vice-versa no recebimento. O mecanismo básico de direitos de acesso de sistemas UNIX se aplica a quem pode escrever e ler mensagnes de uma fila e removê-la.</p>
+
+<p>Considerando limitações de espaço associadas às filas e a espera por mensagens, as operações de envio e recebimento podem resultar no bloqueio do processo que as realiza. Deste modo, filas de mensagens e primitivas para suas manipulações são tipicamente oferecidas pelo SO.</p>
+
+<p>Duas APIs permitem a criação e a troca de mensagnes com o mecanismo de filas.</p>
+
+<h3>System V Menssage Queues</h3>
+
+<h4>Criação de uma nova fila</h4>
+
+<p>Cria uma fila de mensagens nova, ou retorna o identificador de uma fila existente, identificada pelo parâmetro key. Uma nova fila é criada se key é IPC_PRIVATE ou se IPC_CREATE está especificado em msgflg e uma nova chave especificada ainda não existe.</p>
+
+<pre><code class="c">
+  /* Criação de uma nova fila */
+  int msgget (key_t key, int msgflg);
+
+</code></pre>
+
+<h4>Envio de Mensagens</h4>
+
+<p>Definido através de uma estrutura de dados, o envio de mensagens para a fila é feito com a chamada msgsnd(2). O tamanho da mensagem sendo enviada é especificada em msgsz e está limitado por parâmetros definidos pelo SO.</p>
+
+<pre><code class="c">
+  struct msgbuf {
+      long mtype;  // message type: deve ser > 0 no envio
+     char mtext[1];  // message data: como é último campo, permite envio de msgs maiores
+  };
+
+  int msgsnd (int msqid, const void *msgp, size_t msgsz, int msgflg);
+
+</code></pre>
+
+<h4>Recebimento de Mensagens</h4>
+
+<p>Feito com msgrcv. O parâmetro msgtype permite identificar mensagem desejada. Assim, chamada normalmente retorna a mensagem mais antiga de qualquer prioridade especificada.</p>
+
+<p>Mensagens maiores que msgsz são truncadas e o restante é descartado, caso o valor MSG_NOERROR for especificado nas flags. Caso contrário ocorre um erro.</p>
+
+<p>O recebimento normalmente é bloqueante, salvo quando o valor IPC_NOWAIT for especificado. No recebimento, valor msgtype permite especificar atributo da mensagem a receber.</p>
+
+<ul>
+  <li>Se msgtype == 0, primeira mensagem da fila é retornada</li>
+  <li>Se msgtype &gt 0, retorna primeira mensagem deste tipo, salvo quando MSG_EXCEPT está especificado em msgflg, o que gera o retorno da primeira msg com valor diferente</li>
+  <li>se msgtype &lt 0, retorna primeira mensagem com mtype &lt= ao módulo do valor informado</li>
+</ul>
+
+<pre><code class="c">
+  ssize_t msgrcv (int msqid, void *msgp, size_t msgsz, long msgtype, int msgflg);
+
+</code></pre>
+
+<h4>Controle de fila</h4>
+
+<pre><code>
+  // libera fila de mensagem
+  int msgctl (int msqid, int cmd, struct msqid_ds *buf);
+
+</code></pre>
+
+<h3>POSIX Message Queues</h3>
+
+<p>Fila de mensagem POSIX também permitem a comunicação entre processos na forma de mensagens, com funcionalidade similar à provida pela API System V.</p>
+
+<h4>Criação</h4>
+
+<p>mq_open cria uma nova fila de mensagem POSIX, identificada pelo nome, que deve iniciar com "/". Dois ou mais processos podem comunicar-se usando uma fila abrindo-a com o mesmo nome.</p>
+
+<pre><code>
+  mqd_t mq_open (const char *name, int oflag);
+
+  mqd_t mq_open (const char *name, int oflag, mode_t mode, struct mq_attr *attr);
+
+</code></pre>
+
+<h4>Envio</h4>
+
+<pre><code>
+  mqd_t mq_send (mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned msg_prio);
+
+  mqd_t mq_timedsend (mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned msg_prio, const struct timespec *abs_timeout);
+
+</code></pre>
+
+<h4>Recebimento</h4>
+
+<p>mq_receive e mq_timedreceive recebem msg. Mensagens têm como atributo um valor de prioridade. Assim, leitura sempre retorna mensagem mais antiga com a prioridade mais alta. Se msg_prio não é NULL, ele é ajustado com prioridade de mensagem recebida. O recebimento é bloqueante, exceto se O_NONBLOCK estiver associado à fila. Em mq_timedreceive, timeout indica o tempo máximo de espera por mensagem.</p>
+
+<p>POSIX Message Queues permitem geração de sinal ou ativaão de thread quando uma mensagem é inserida numa fila vazia.</p>
+
+<pre><code>
+  ssize_t mq_receive (mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned *msg_prio);
+
+  ssize_t mq_timedreceive (mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned *msg_prio, const struct timespec *abs_timeout);
+
+  /* Usado para fechar uma fila de mensagens */
+  int mq_close (mqd_t mqdes);
+
+
+</code></pre>
+
+<h3>Suporte a filas de mensagem em sistemas Linux</h3>
+
+<p>Manutenção das filas System V está limitada quanto ao número de filas existentes e quanto ao número de mensagens e número e bytes em cada fila. Em sistemas Linux, informações pelo SO através do diretório <b>/proc</b> mostram os limites definidos para os dois tipos de filas de mensagem. Parâmetro também podem ser observados e ajustados com o comando <b>sysctl</b>.</p>
+
+<p>Limites de consumo de recursos com as filas de mensagens também podem ser consultados e ajustados com <b>getrlimit</b>/<b>setrlimit</b>.</p>
+
+<h2>Semáforos</h2>
+
+<p>Semáforos são estruturas para sincronização de atividades entre processos. Primitivas para suas manupulações, contudo, não permitem o envio de dados, mas servem apenas para consultar e alterar o estado (valor) de um contador associado a um semáforo.</p>
+
+<p>Basicamente, as operações sobre um semáforo consistem em consulta, incremento ou decremento do seu contador. Essas operações devem ser feitas de maneira atômica. Além disso, podem resultar no bloqueio do processo que as realiza. Deste modo, semáforos e primitivas para suas manipulações são tipicamente oferecidas pelo SO.</p>
+
+<p>Considerando os atributos de um semáforo, tem-se um contador e uma fila para processos bloqueados, além de informações para controle de permissão e dados de contabilização de uso. Particularmente, semáforos sysV têm duas filas: 1 para os que aguardam poder decrementar o contador e outro para que aguardam seu valor ficar 0.</p>
+
+<p>Os valores que podem ser assumidos pelo contador de um semáforo podem variar de acordo com a lógica das aplicações que o utilizam. De maneira geral, smáforos podem ser dos tipos binário e de contagem. Semáforos binários são tipicamente usados para garantir a exlusão mútua no acesso a algum recuso compartilhado. Já os semáforos de contagem comumente indicam números de recursos disponíveis.</p>
+
+<p>Duas APIs proveem suporte à manipulação de semáforos.</p>
+
+<h3>Semáforos System V</h3>
+
+<p>semget cria um <b>conjunto de semáforos</b>, ou retorna o identificador de um conjunto existente, identificado pelo campo key. Um novo conjunto é criado se key é IPC_PRIVATE ou se IPC_CREATE está especificado em semflg e ainda não há um conjunto de semáforos com a chave especificada. A quantidade de semáforos associados ao identificador criado é especificada em nsems.</p>
+
+<pre><code>
+  int semget(key_t key, int nsems, int semflg);
+
+</code></pre>
+
+<p>Operações de controle sobre os semáforos são feitas com a chamada semctl, que permite, entre outras coisas, ajustar ou consultar o valor do contador associado ao semáforo semnum, usando o comando (cmd) SETVAL.</p>
+
+<pre><code>
+  int semctl(int semid, int semnum, int cmd, ...);
+
+</code></pre>
+
+
+
+<hr>
+
+<p>Por que fechar os arquivos antes de executar o exec?</p>
+<p>O que é o System V?</p>

@@ -1,0 +1,49 @@
+provas:
+  - date: 2017-10-17
+    content: SO2 - P1
+  - date: 2017-10-19
+    content: REDES - P1
+  - date: 2017-10-20
+    content: PAA - P1
+  - date: 2017-10-20
+    content: CG - P1
+  - date: 2017-10-30
+    content: IA - P1
+  - date: 2017-11-09
+    content: REDES - P2
+  - date: 2017-12-05
+    content: SO2 - P2
+  - date: 2017-12-07
+    content: REDES - P3
+  - date: 2017-12-11
+    content: IA - P2
+  - date: 2017-12-12
+    content: PAA - P2
+  - date: 2017-12-15
+    content: CG - P2
+
+trabalhos:
+  - date: 2017-10-10
+    content: CC2 - T1
+  - date: 2017-10-15
+    content: CC2 - T2
+  - date: 2017-10-23
+    content: IA - T1
+  - date: 2017-10-26
+    content: REDES - T1
+  - date: 2017-11-10
+    content: CG - T1
+  - date: 2017-12-10
+    content: CC2 - T3
+  - date: 2017-12-11
+    content: MDS - Trabalho Final
+  - date: 2017-12-14
+    content: REDES - T2 e T3
+  - date: 2017-12-15
+    content: PAA - Trabalho Final
+  - date: 2017-12-22
+    content: CG - T2
+
+outros:
+  - date: 2017-10-16
+    content: MDS - Inicio das apresentações

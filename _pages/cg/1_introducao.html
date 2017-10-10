@@ -1,0 +1,104 @@
+---
+title: "CG - Introdução"
+layout: default
+---
+<h1 class="ui header">1. Introdução</h1>
+
+<div class="ui inverted segment">
+O homem consegue absorver e transmitir um número
+muito maior de informações quando estas se encontram sob a forma de imagens.
+</div>
+
+<h2>Aplicações</h2>
+
+<ul>
+  <li>CAD (Computer Aided Design): auxilia projetistas a desenvolver suas ideias de forma mais rápida.</li>
+  <li>CAM (Computer Aided Manufacturing): complemento do CAD.</li>
+  <li>Animações e Simulações</li>
+  <li>Editoração Eletrônica</li>
+  <li>Visualização</li>
+  <li>Jogos</li>
+</ul>
+
+<h2>História</h2>
+
+<h2>Conceitos</h2>
+
+[IMAGEM]
+
+<h3>Síntese de Imagens (Rendering)</h3>
+
+<p>Algoritmos produzem imagens digitais a partir de dados e modelos computacionais de objetos, luzes e câmera.</p>
+
+<h3>Processamento de Imagens</h3>
+
+<p>Modificar uma imagem para melhorar sua qualidade, eliminando ruídos e realçando características que facilitem o seu entendimento.</p>
+
+<h3>Visão Computacional</h3>
+
+<p>Processa imagens visando obter informações sobre objetos presentes nela. Ou seja, interpretam o que está na imagem extraindo dela informações não puramente visuais.</p>
+
+<h3>Realidade Aumentada</h3>
+
+<p>Os sistemas de realidade aumentada que misturam elementos virtuais em imagens reais são exemplos mais marcantes desta nova classe de aplicações da Computação Gráfica.</p>
+
+<h3>Sistema Gráfico</h3>
+
+<p>Um sistema gráfico desenha primitivas geométricas do tipo ponto, linhas e polígonos e/ou imagens digitais nos elementos de interface denominados de canvas ou forms.</p>
+
+<h3>Sistema de Interface com o Usuário</h3>
+
+<p>Gerencia os elementos do tipo de janelas, menus e botões.</p>
+
+<h2>OpenGL</h2>
+
+<p>O OpenGL oferece uma interace entre o software e o hardware gráfico. Tem um conjunto de funçoes para especificar os objetos e operações, produzindo imagens de alta qualidade.</p>
+
+<p>O OpenGL provê controle direto sobre operações gráficas fundamentais em 2D e 3D, incluindo a especificação de parâmetros como matrizes de transformação e coeficientes de iluminação, métodos de antialiasing e operações sobre pixels, mas não provê mecanismos para descrever ou modelar objetos geométricos complexos.</p>
+
+<h2>Hardware Gráfico</h2>
+[IMAGEM]
+<p>Dispositivos gráficos de saída podem ser de natureza digital ou analógica.</p>
+
+<p><b>Vector graphics:</b> desenham figuras traçando sequências de segmentos de reta (vetores).</p>
+
+<p><b>Raster graphics (gráficos de varredura/matriciais):</b> desenham figuras pelo preenchimento de uma matriz de pontos (pixels).</p>
+
+<h3>Resolução</h3>
+<p class="duvida"> qual a diferença entre as resoluções? como de fato eu determino cada uma delas?</p>
+
+<h4>Resolução Gráfica</h4>
+<p>Alguma nomeclaturas:</p>
+<ul>
+  <li><b>ndh:</b> número de posições endereçáveis (dots) horizontais</li>
+  <li><b>ndv:</b> número de posições endereçáveis (dots) verticais</li>
+  <li><b>width: </b> largura do retângulo de visualização (mm)</li>
+  <li><b>height:</b> altura do retângulo de visualização (mm)</li>
+</ul>
+
+<h4>Resolução Física</h4>
+<ol>
+  <li>Resolução horizontal: $$ res\_H = {ndh \over width} $$</li>
+  <li>Tamanho ponto horizontal: $$ dot\_size\_H = {width \over ndh}$$</li>
+  <li>Resolução vertical: $$res\_V = {ndv \over height}$$</li>
+  <li>Tamanho ponto vertical: $$ dot\_size\_V = {height \over ndv} $$</li>
+  <li>Total de pontos endereçaveis: $$ total\_nro\_dots = ndh * ndv $$</li>
+  <li>Resolução de área: $$ area\_res = {total\_nro\_dots \over {width * height}} $$</li>
+  <li>Razão de aspecto gráfica: $$ aspect\_ratio = {dot\_size\_V \over dot\_size\_H} $$</li>
+  <li>Razão de aspecto físico: $$ physical\_aspect\_ratio = {height \over width} $$</li>
+</ol>
+
+<p>Dispositivos de visualização podem ter mesma resolução gráfica com resoluções físicas muito diferentes. O ideal é ter a razão de aspecto gráfico próximo a 1.</p>
+
+<h2>Sistema de Coordenadas</h2>
+
+<h4>Sistema de Coordenadas Físico</h4>
+<ul>
+  <li><b>pcx: </b> distância física de x a partir do extremo esquerdo do retângulo de visualização</li>
+  <li><b>pcy: </b> distância física de y a partir do extremo inferior do retângulo de visualização</li>
+</ul>
+
+<p>Para tranformar de coordenadas físicas para coordenadas dos dispositivos: </p>
+<p>$$ dcx = {trunc (pcx * {(ndh - 1) \over width})} $$</p>
+
+<h2>Sistema Gráfico</h2>

@@ -1,0 +1,47 @@
+---
+title: "SO2-Gerenciamento de Memória"
+layout: default
+---
+<h1 class="ui header">5. Gerenciamento de Memória</h1>
+
+<h2>Introducao</h2>
+
+<p>Espaço de endereçamento: text -> rodata -> bss (variáveis estáticas) -> heap -> stack -> share libs -> SO.</p>
+
+<p>Localidade temporal e espacial</p>
+
+<p>O endenreço formado pelo CS e o desolocamento precida ser trduzido para um endereço virtual base.</p>
+
+<p><b>Tradução de endereço</b></p>
+
+<p>Os ajustes de áreas de memória  -> execve</p>
+
+<p>Arquivo ELF -> dividido em segmentos</p>
+
+<p>Utilitários: readelf, ...</p>
+
+<h2>ELF</h2>
+
+<p>Loader, responsável por carregar o código de um aquivo executável.</p>
+
+<p><b>Hexdump</b></p>
+
+<p>Readelf: ponto de entrada é o endereço da main</p>
+
+<h2>Malloc e Free</h2>
+
+<p>O espaço lógico de um prcesso.</p>
+
+<p>No task structu exite o mm, que mapeia as áreas de memória</p>
+
+<ul>
+  <li>.text</li>
+  <li>.rodata</li>
+  <li>.bss</li>
+  <li>.heap: alocação dinâmica.</li>
+  <li>.stack</li>
+  <li>shared libs</li>
+  <li>SO</li>
+</ul>
+
+<p>setrlimit/getrlimit</p>

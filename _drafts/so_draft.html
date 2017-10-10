@@ -1,0 +1,30 @@
+<h2>O que é um aquivo?</h2>
+
+<p>Do ponto de vista de um processo, o SO mantém um vetor de arquivos abertos. Para cada arquivo há informaçoes sobre:</p>
+
+<p>Para o processo um arquivo é uma sequência de bytes.</p>
+
+<p>Para o SO, um arquivo é metadados (permissões, owner ....) + conjunto de blocos do disco. O SO converte operações em bytes em operações que lidam com o conjunto blocos.</p>
+
+<p>Como funcoina um disco?</p>
+
+<p>O disco é um dipositivo de bloco</p>
+
+<p>O SO ve o disco como alguma geometria, definida pelo controlador de disco.</p>
+
+<p>No processo de formatação do disco, o SO identifica a geometria do disco, cria estruturas para mapeamento de setores com relação aos arquivos/diretórios.</p>
+
+<p>O SO sempre pega o bloco inteiro, para isso aloca paginas para isso (por isso o tamanho de um bloco = tamanho de uma pagina = 4 kb)</p>
+
+<p>A escrita no arquivo é feita on demand. Fica armazeda em algum buffer, dps vai ser gravado de fato.</p>
+
+<h2>Dispositivos E/S</h2>
+
+<h2>Sistema de Arquivo e Diretórios</h2>
+
+
+
+
+<h2>IPC</h2>
+
+<p>TLV: Type, lenght, value</p>

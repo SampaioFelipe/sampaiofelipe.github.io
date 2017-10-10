@@ -1,0 +1,189 @@
+---
+title: "SO2-Chamadas de Sistema"
+layout: default
+---
+<h1 class="ui header">4. Chamadas de Sistema</h1>
+
+<h3>Introdução</h3>
+
+<p><b>Chamadas de Sistema</b> (system call / syscalls) são os nomes dados às solicitações dos serviços oferecidos por um sitema operacional aos programas. Serviços típicos de um SO incluem aqueles que oferecem acesso a dispositivos, como as operações de entrada e saída (I/O) e de acesso ao sistema de arquivos, e mecanismos para criação, gerenciamento e comunicação entre processos.</p>
+
+<p>Com as chamadas de sistema, o SO serve de intermediário para as ações que requerem privilégio de execução, como as instruções para acesso ao barramento (in e out) e aquelas usadas para o controle de interrupção (cli e sti). Além disso, ao oferecer os serviços, o SO pode <b>promover a melhor utilização compartilhada dos recursos, de forma eficiente, segura e justa</b>.</p>
+
+<p>As chamadas de sistema normalmente não são invocadas diretamente, mas através de funções definidas numa interface em C. Isso favorece a portabilidade dos programas.</p>
+
+<p>Essas funções em alto nível (wrapper functions) fazem ajustes necessários e realizam o acesso ao <i>kernel</i> de forma adequada à plataforma d hardware disponível. Normalmente, a implementação dessas funções apenas faz uma cópia dos parâmetros passados para registradores e invoca uma syscall via uma instrução de interrupção ou via instruções desenvolvidas pelos processadores para cada chamada explícita ao kernel. Cabe a essas funções de alto nível decidir qual mecanismo de chamada será utilizado para alterar o modo de execução do processador para o anel 0 (modo kernel), desviando o fluxo de execução para a rotina de serviço apropriada.</p>
+
+<p>Ao fazer uma chamada de sistema, o ponteiro da pilha é substituído por um ponteiro para uma área específica para o nível de execução mais privilegiado (modo kernel).</p>
+
+<p>O <b>valor de retorno</b> das chamadas de sistema bem sucedidas, em geral, é 0 (zero). Quando não bem sucedidas, a maior parte das chamadas de sistema retorna um valor de erro negativo. Neste caso, a função equivalente em C da chamada de sistema copia o valor absoluto do código de erro na variável errno(3) e retorna o valor -1 para o programa que executou a chamada. Funções da biblioteca C, como <b>perror</b> e <b>strerror</b>, podem ser usadas nos programas para a tradução de um código de erro numa mensagem apropriada.</p>
+
+<p>A implementação das funções de acesso às chamadas de sistema é feita pela biblioteca <b>libc</b>, ou <b>glibc</b>, em sistemas GNU/Linux. A biblioteca glibc ainda permite o acesso direto às chamadas de sistema, sem fazer a intermediação típica das chamadas (wrapping). Para tanto, é implementada uma função <b>chamada syscall</b>, que permite especificar o número da chamada de sistema e os parâmetros relevantes. A função syscall é útil principalmente quando se deseja usar uma chamada de sistema ainda não implementada pela versão da glibc disponível na distribuição Linux em uso.</p>
+
+<p>Um outro aspecto interessante das interfaces de chamada de sistema é a otimização do acesso em algumas chamadas de sistema frequentes e que envolvem apenas a leitura de informações mantidas pelo kernel. No Linux, as implementações de chamadas de sistema que evitam a mudança do modo de execução do processador para o kernel space eram tratadas na biblioteca vsyscalls e passaram a ser implementadas na biblioteca vdso (Virtual Dynamic Shared Object). Ambas são mapeadas para o espaço de endereçamento de todos os processos.</p>
+
+<p>De maneira resumida, quando um processo (ou uma de suas threads) faz uma chamada de sistema, o SO entra em ação através de um desvio do ponteiro de instruções do processador. Do mesmo modo que no tratamento de interrupções, a instrução int vai gerar o salvamento do valor atual do ponteiro de instruções (registradores CS e EIP) antes de alterar seu valor. Isso é feito pelo próprio processador, tipicamente copiando seus valores na pilha do processo (ou thread) atual.</p>
+
+<p>Usando agora o número da interrupção (informado pelo controlador de interrupção - IO APIC), da exceção, ou da instrução int, o processador (SO não entrou em ação ainda) consulta o vetor de interrupções (IDT - Interrupt Description Table) para obter um novo valor para os FLAGS e para CS e EIP. Pronto, processador volta ao ciclo de busca e execução de instruções, agora desviado para a rotina de tratamento.</p>
+
+<p>Do modo equivalente, na chamada de sistema via instruções syscall / sysenter, a execução dessas instruções pelo processador faz com que o os valores de  CS e EIP sejam salvos e sejam substituídos pelo endereço da rotina de entrada do SO. O endereço a ser atribuído a CS e EIP, contudo, agora é obtido a partir de registradores internos da CPU, cujos valores foram preenchidos pelo SO. Ou seja, normalmente na fase inicial (boot), o SO carrega sua rotina de tratamento das chamadas de sistema para a memória e ajusta seu endereço no vetor de interrupções na memória e nos registradores de endereço específicos. Assim, sempre que uma chamada de sistema é feita, seja através da instrução de interrupção ou das instruções syscall / sysenter, o SO entra em ação porque o valor dos registradores [FLAGS,] CS e EIP são salvos e alterados para o endereço do SO (de sua rotina de tratamento).</p>
+
+<h3>Linux System Calls</h3>
+
+<table class="ui inverted green celled table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Descricao</th>
+      <th>Retorno</th>
+      <th>Observações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>fork()</td>
+      <td>Cria um processo filho realizando uma cópia do processo pai (ver <b>cowfork</b>).</td>
+      <td><b>pid_t</b>: Quando sucesso, retorna o PID do processo filho no processo processo pai e 0 no processo filho. Se falhar retornar -1, nehum filho é criado e <b>errno</b> é configurado apropriadamente.</td>
+      <td>O termino de um filho sempre gera um sinal SIGCHLD.</td>
+    </tr>
+
+    <tr>
+      <td>getpid()</td>
+      <td>Retorna o ID do processo que está realizando a chamada.</td>
+      <td>pid_t</td>
+      <td>Temos a função getppid() que retorna o ID do processo pai.</td>
+    </tr>
+
+    <tr>
+      <td>wait()</td>
+      <td>Utilizado para para esperar uma mudança no estado de um processo filho e obter informação sobre qual filho sofreu essa alteração de estado. Essa chamada suspende a execução do processo que a chamou até que um de seus filhos termine.</td>
+      <td><b>pid_t</b>: Se sucesso, retorna o ID do processo filho que terminou; se erro, retorna -1.</td>
+      <td>Equivalente a waitpid(-1, &status, 0);</td>
+    </tr>
+
+    <tr>
+      <td>waitpid()</td>
+      <td>Suspende a execução do processo até que o filho especificado pelo seu argumento pid sofra uma mudança de estado.</td>
+      <td><b>pid_t</b></td>
+      <td>Por padrão, essa chamada espera que o filho termine sua execução, porém isso pode ser mudado via argumento.</td>
+    </tr>
+
+    <tr>
+      <td>kill()</td>
+      <td>Envia um sinal a qualquer <a data-tooltip="um grupo de processos é...">grupo de processos</a>.</td>
+      <td><b>int</b>: Se sucesso (pelo menos um sinal foi enviado), zero é retornado. Caso contrario, retorna -1 e a variavel <b>errno</b> é configurada apropriadamente.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>execve</td>
+      <td>Executa um programa apontado pelo argumento *filename. filename deve ser um executável em binário ou um script.</td>
+      <td>Se sucesso, não retorna nada, caso contrário retorna -1 e errno é configurado.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>vfork()</td>
+      <td>Cria um processo filho e bloqueia o pai. vfork() é um caso especial do clone(). É usado para criar um novo processo sem copiar as tabelas de página do processo pai.</td>
+      <td></td>
+      <td></td>
+    </tr>
+
+
+
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>wait</p>
+<p>All of these system calls are used to wait for state changes in a
+       child  of  the  calling process, and obtain information about the
+       child whose state has changed.  A state change is  considered  to
+       be:  the  child terminated; the child was stopped by a signal; or
+       the child was resumed by a signal.  In the case of  a  terminated
+       child,  performing  a  wait  allows  the  system  to  release the
+       resources associated with the child; if a wait is not  performed,
+       then  the terminated child remains in a "zombie" state (see NOTES
+       below)</p>
+
+<p>Comando ps jf</p>
+
+<p>Se o pai de um processo termina e o processo ainda está em execução, o proesso filho continua sua execução e seu pai se torna o processo init (pid = 1)(?)</p>
+
+<p>Mesmo usando ponteiros, cada processo possui seu próprio espaço de endereçamento</p>
+
+<h3>Linux Library Calls</h3>
+
+
+<table class="ui inverted green celled table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Descricao</th>
+      <th>Retorno</th>
+      <th>Observações</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>exit(int status)</td>
+      <td>Causa a terminação normal de um processo e o valor do status é retornado ao pai.</td>
+      <td>void</td>
+      <td>Essa função difere da syscall _exit(int status)</td>
+    </tr>
+
+    <tr>
+      <td>sleep()</td>
+      <td></td>
+      <td></td>
+      <td>sando sleep() no filho, pai fica parado esperando; no pai, filho termina e fica "zombie" até que o pai espere (wait) por ele.</td>
+    </tr>
+
+    <tr>
+      <td>perror()</td>
+      <td>Produz uma menssagem na saída padrão de erro descrevendo o erro encontrado durante a ultima chamada de sistema ou função de biblioteca. Primeiro, o argumento string passado é printado na tela, seguido de dois pontos e uma linha em branco. Em seguida há uma mensagem de erro correspondente ao valor corrente de <b>errno</b> e uma nova linha.</td>
+      <td>void</td>
+      <td>Quando uma syscall falha, normalmente ela irá retornar -1 e setar a variável errno com um valor que corresponde ao erro. Se uma chamada falhar e não for seguida imedatamente pela chamada a perror(), o valor de errno deve ser salvado.</td>
+    </tr>
+
+    <tr>
+      <td>fflush()</td>
+      <td>Para streams de saida, o fflush() forca uma escrita de todo o dado armazenado no buffer no user-space da saida dada ou atualiza o stream. Para streams de entrada, discarta qualquer dado no buffer que tenha sido produzido pelo dispositivo/arquivo, mas que ainda não foi consumido pela aplicação.</td>
+      <td>0 se sucesso, EOF caso contrário.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>Família exec()</td>
+      <td>Familia de funções front-end da syscall execve(). Essas funções substitui a imagem corrente do processo com uma nova imagem.</td>
+      <td>Retorna apenas se um erro ocorrer. Se isso acontecer, ele retorna o valor -1 e errno passa a indicar o erro gerado.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>system()</td>
+      <td>Executa um comando shell. Usa um fork() para criar um processo filho que executa o comando shell especificado usando execl().</td>
+      <td>Se sucesso, o retorno é o valor de termino do processo filho.</td>
+      <td></td>
+    </tr>
+
+
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Perguntas pendentes:</h3>
+<p>No código do fork p5, quando o pai termina antes do filho, após esse termino o processo filho se torna filho de systemd e não do init, pq?</p>
+
+<p>Em man vfork() é falado que o fork é implementado usando o copy-on-write... -> Parece que o que acontece é o seguinte, o fork não faz uma cópia da memória do pai, mas sim uma cópia da tabela de páginas do pai (cada um possui seu próprio espaço de endereçamento). Já no vfork, ambos possuem o mesmo espaço de endereçamento, se o filho alterar algum dado, isso refletirá no pai (antigamente o fork não realizava o copy-on-write, por isso a criação do vfork).</p>

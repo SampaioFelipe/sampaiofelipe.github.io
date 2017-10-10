@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+{% include head.html %}
+<body>
+	{% include navbar.html %}
+	<div class="pusher">
+		<main class="ui main text container">
+			{{ content }}
+		</main>
+		{% include dimmer.html %}
+	</div>
+	{% include footer.html %}
+</body>
+
+<script type="text/javascript">
+	$('.ui.dropdown')
+		.dropdown()
+	;
+
+	$('#pendencias').click(function () {
+		$('.pusher')
+			.dimmer('show')
+		;
+	})
+</script>
+
+</html>

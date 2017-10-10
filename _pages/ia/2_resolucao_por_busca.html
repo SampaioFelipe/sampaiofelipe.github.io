@@ -1,0 +1,189 @@
+---
+title: "AI - Resolução de Problemas por Busca"
+layout: default
+---
+<h1 class="ui header">2. Resolução de Problemas por Busca</h1>
+
+<p>A <b>resolução de problemas por busca</b> consiste em modelar um problema usando uma representação do mundo baseada em estados e aplicar algoritmos de busca sobre esses estados para encontrar uma solução para o problema.</p>
+
+<h2>Representação do Problema</h2>
+
+<p>A representação do problema envolve a deifnição de:</p>
+
+<ul>
+  <li><b>Estados:</b> representam o mundo</li>
+  <li><b>Ações:</b> provocam a alteração de um estado para outro</li>
+</ul>
+
+<p>As etapas de criação da representação do problema são:</p>
+
+<ol>
+  <li><b>Formulação do objetivo:</b> definir qual problema se deseja resolver. O objetivo é definido como um conjunto de estados do mundo nos quais esse objetivo é satisfeito.</li>
+
+  <li><b>Formulação do problema:</b> decidir quais ações e estados considerar, dado um objetivo.</li>
+</ol>
+
+<h2>Busca</h2>
+
+<p>A busca é um processo de encontrar uma solução de um problema como uma sequência de passos entre um estado inicial e um final (objetivo).</p>
+
+<p>Inicialmente assumimos que o ambiente (mundo) é:</p>
+
+<ul>
+  <li>Observável: o estado atual é conhecido</li>
+  <li>Discreto: dado um estado, apenas um número finito de ações podem ser realizadas</li>
+  <li>Conhecido: o estado atingível por cada ação é conhecido</li>
+  <li>Determinístico: cada ação leva apenas a um estado</li>
+</ul>
+
+<h2>Definição do Problema</h2>
+
+Um problema pode ser definido formalmente por 5 componentes:
+
+<table class="ui inverted green celled table">
+  <tbody>
+    <tr>
+      <td>Estado Inicial</td>
+      <td>Representa a situação inicial, de onde a busca será iniciada</td>
+    </tr>
+    <tr>
+      <td>Ações (operadores)</td>
+      <td>Descrição das possíveis ações aplicáveis a cada estado</td>
+    </tr>
+    <tr>
+      <td>Modelo de Transição</td>
+      <td>Descrição do resultado de cada ação (qual estado resultante da aplicação da ação no estado atual) </td>
+    </tr>
+    <tr>
+      <td>Teste Final</td>
+      <td>Condições que determinam se um estado é o objetivo</td>
+    </tr>
+    <tr>
+      <td>Custo do Caminho</td>
+      <td>Função que atribui um custo ao caminho, geralmente a soma dos custos de cada passo. Mede a qualidade da solução.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A solução de um problema é o caminho do estado inicial até um estado objetivo. Quando falamos em Solução Ótima, estamos no referindo ao caminho de menor custo possível entre todas as soluções.</p>
+
+<h2>Formulação do Problema</h2>
+
+<div class="ui inverted segment">
+  Arte da Resolução de Problemas: decidir o que entra na representação dos estados.
+</div>
+
+<p>Estados e ações não podem ser definidos com todos os detalhes da situação real. Estados e ações devem ser definidos com os componentes relevantes para a resolução do problema, por meio  do processo de abstração.</p>
+
+<div class="ui segment">
+  <h3>Exemplos</h3>
+  <h4>Quebra-Cabeça de 8 peças</h4>
+  <p>Tabuleiro de 3X3 com 8 peças numeradas e um vazia</p>
+
+  <div class="ui image">
+    <img src="{{ site.imageurl | append: 'ia/tabuleiro_8_pecas.png' }}">
+  </div>
+
+  <p>Definição do problema</p>
+
+  <table class="ui inverted celled table">
+    <tbody>
+      <tr>
+        <td>Estados</td>
+        <td>Cada estado especifica a localização de cada uma das peças (o próprio tabuleiro)</td>
+      </tr>
+      <tr>
+        <td>Estado inical</td>
+        <td>Configuração inicial do tabuleiro</td>
+      </tr>
+      <tr>
+        <td>Operadores</td>
+        <td>
+          <ul>
+            <li>Espaço em branco move à direita</li>
+            <li>Espaço em branco move à esquerda</li>
+            <li>Espaço em branco move para cima</li>
+            <li>Espaço em branco move para baixo</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>Objeitvo</td>
+        <td>Estado final, como na imagem a cima</td>
+      </tr>
+      <tr>
+        <td>Custo do Caminho</td>
+        <td>Cada passo tem custo 1</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Problema das 8 rainhas</h4>
+  <p>Colocar 8 rainhas em um tabuleiro de xadrez de forma que uma não possa atacar a outra.</p>
+
+  <p>Definição do problema</p>
+
+  <table class="ui inverted celled table">
+    <tbody>
+      <tr>
+        <td>Estados</td>
+        <td>Arranjo de 8 rainhas no tabuleiro, nenhuma sendo atacada</td>
+      </tr>
+      <tr>
+        <td>Estado inical</td>
+        <td>Tabuleiro vazio</td>
+      </tr>
+      <tr>
+        <td>Operadores</td>
+        <td>Adicionar uma rainha, em qualquer posição de modo que não seja atacada pelas outras</td>
+      </tr>
+      <tr>
+        <td>Objeitvo</td>
+        <td>8 rainhas no tabuleiro</td>
+      </tr>
+      <tr>
+        <td>Custo do Caminho</td>
+        <td>0, pois só interessa a situação final</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Formulação do Problema X Espaço de Busca</h2>
+
+<p>A formulação do problema faz uma grande diferença no tamanho do espaço de busca. Quando a formulação é definida, o espaço de estado também está sendo definido.</p>
+
+<p>Uma mudança na formulação pode mudar o espaço de busca, mudando a complexidade de aplicação do algoritmo.</p>
+
+<h2>Buscando a Solução</h2>
+<p>Após formular um problema, ele deve ser resolvido. Para resolvê-lo devemos determinar uma sequência de ações que partem o estado inicial até o estado objetivo.</p>
+
+<p>Algoritmos de busca considera diversas possibilidades de sequências de ações, para encontrar a solução basta buscar no espaço de estados.</p>
+
+<p>O processo de busca irá gerar uma Árvore de Busca como o estado inicial sendo o nó raiz (nós: estados, arcos: operadores, solução: caminho do npo inical ao nó final).</p>
+
+<p>A ideia principal é manter e estender um conjunto de soluções parciais (sequência de ações). Isso é realizado com a utilização das operações:</p>
+
+<ul>
+  <li><b>Expansão</b> de um nó: aplicação de todos os operadores permitidos nesse nó.</li>
+  <li><b>Geração</b> de um conjunto de nós: criação de nós resultantes da expansão de um nó.</li>
+</ul>
+
+<p><b>Processo</b></p>
+<ol>
+  <li>Testar se a raíz da arvore corresponde a um objetivo</li>
+  <li class="duvida" data-tooltip="Qual a diferença desse passo para o próximo?" data-inverted="">Expandir o estado corrente, gerando um novo conjunto de estados</li>
+  <li>Adicionar ramos saindo do nó expandido e criar novos nós, uma para cada estado gerado</li>
+  <li>Escolher um nó folha e repetir o processo até que a solução seja econtrada ou até que não existam mais nós a serem expandidos.</li>
+</ol>
+
+<h2>Algoritmos de Busca</h2>
+
+<p>O conjunto de nós folha da árvore de busca é chamado de fronteira ou de lista de nós abertos. Os algoritmos de busca possuem a mesma estrutura básica e variam de acordo com a estratégia de busca utilizado</p>
+
+<h3>Estatégias de busca</h3>
+<p>Determina o critério usado para selecionar o próximo nó a ser expandido no algoritmo de busca. As estratégias são implementadas por meio da forma de tratamento da lista de nós abertos.</p>
+
+<div class="ui image">
+  <img src="{{ site.imageurl | append: 'ia/estrategias_busca.png' }}">
+</div>
