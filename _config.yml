@@ -2,8 +2,8 @@ title: Resumo 2017-2
 email: sampaio.motion@gmail.com
 description: "Esse site tem o objetivo de reunir um resumo de todo o conteúdo das disciplinas do sexto semestre do curso de Ciência da Computação da UFSCar."
 include: ['_pages']
-baseurl: "/" # the subpath of your site, e.g. /blog
-url: "https://sampaiofelipe.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "." # the subpath of your site, e.g. /blog
+url: "https://sampaiofelipe.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 
 permalink: pretty
 
@@ -15,8 +15,6 @@ imageurl: /assets/images/
 theme: minima
 highlighter: rouge
 
-plugins:
-  - jekyll-feed
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

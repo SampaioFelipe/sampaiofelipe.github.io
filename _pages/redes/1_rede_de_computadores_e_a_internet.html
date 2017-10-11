@@ -14,7 +14,7 @@ layout: default
   <img src="{{ site.imageurl | append: 'redes/componentes_internet.png'}}" alt="">
 </div>
 
-<p><i>End systems</i> estão interconectados pela rede de <b><i>communication links</i></b> e <b><i>packets switches</i></b>. Diferentes links podem transmitir dados em diferentes taxas, como a <b>taxa de transmissão</b> de um link medida em <b>bits/seg</b>.</p>
+<p><i>End systems</i> estão interconectados pela rede de <b><i>links de comunicação</i></b> e <b><i>packets switches</i></b>. Diferentes links podem transmitir dados em diferentes taxas (<b>taxa de tranmissão</b> medida em <b>bits/seg</b>).</p>
 
 <p>Quando um <i>end system</i> tem dados para enviar para outro, ele segmenta esses dados e adiciona bytes de cabeçalho para cada um desses segmentos (<b>pacotes</b>). Cada pacote, então, é enviado pela rede ao dispositivo destino, que "remonta" os dados originais.</p>
 
@@ -174,13 +174,13 @@ $$ L {(bits)} \over R {(bits/sec)} $$
 
 <p>O núcleo da Internet é uma malha de switches de pacotes e links que interconectam os hosts da internet.</p>
 
-<h3>Roteamento de Pacotes</h3>
+<h3>Packet-switching</h3>
 
-<p>O host envia mensagens no formato de pacotes. Esses pacotes são redirecionados de um roteador para outro, através de links ao longodo caminho do host origem até o host destino. Cada pacote é transmitido na capacidade máxima do link.</p>
+<p>O host envia mensagens no formato de pacotes. Esses pacotes são redirecionados de um roteador para outro, através de links ao longo do caminho do host origem até o host destino. Cada pacote é transmitido na capacidade máxima do link.</p>
 
 <h4>Transmissão Store-and-Forward</h4>
 
-<p>Leva $L / R$ segundos para se transmitir um pacote de $L$-bits em um link a $R$ bps. Na transmissão store-and-forward o pacote inteiro deve chegar ao roteador antes de ser transmitido ao próximo link. Isso é feito realizando um armazenamento temporário do pacote em um buffer, quando o roteador receber o pacote inteiro, ele começa a transmití-lo.</p>
+<p>Leva $L / R$ segundos para se transmitir um pacote de $L$-bits em um link a $R$ bps. Na transmissão store-and-forward o pacote inteiro deve chegar ao roteador antes de ser transmitido ao próximo link. Isso é feito realizando um armazenamento temporário do pacote em um buffer, quando o roteador receber o pacote inteiro, ele começa a transmiti-lo ao próximo link.</p>
 
 [IMAGEM]
 
@@ -205,6 +205,7 @@ $$ L {(bits)} \over R {(bits/sec)} $$
 [IMAGEM]
 
 <h4>Multiplexação</h4>
+
 <ul>
   <li><b>FDM (frequency-division Multiplexing)</b></li>
   <li><b>TDM (time-division multiplexing)</b></li>
@@ -212,9 +213,92 @@ $$ L {(bits)} \over R {(bits/sec)} $$
 
 [IMAGEM]
 
-<h4>Packet Switchig vs Circuit Switching</h3>
+<h4>Packet Switchig vs Circuit Switching</h4>
+
+<p></p>
 
 <ul>
-  <li>Packet switching permite que mais usuários posam usar a rede</li>
-  <li>No packet switching há maior delay e perda de pacotes.</li>
+  <li>No packet switching há maior delay e perda de pacotes se comparado ao circuit switching (não é viável para serviços de tempo-real).</li>
+  <li>Packet switching oferece melhor compartilhamento da capacidade de transmição, mais simples, eficiente e com baixo custo de implementação.</li>
 </ul>
+
+<div class="ui orange inverted segment">
+  <h4>Por que o packet switching é mais eficiente?</h4>
+
+  <p>Suponha que usuários compartilham um link de 1 Mbps e que cada usuário alternar entre períodos de atividade, quando um usuário gerar dados numa taxa constante de 100 Kbps, e períodos de inatividade, quando não gera nenhum dado. Suponha também que um usuário fica ativo apenas 10% do tempo.</p>
+
+  <p>Com o <b>circuit switching</b>, 100 Kbps devem ser reservados para cadda usuário todo o tempo. Por exemplo, com o TDM, se um frame de um segundo é dividido em 10 espaços de tempo de 100 ms cada, então para cada usuário será alocado um espaço de tempo por frame. Por tanto, um link circuit-switched poderá suportar apenas 10 (${1\text{ Mbps}/ {100\text{ kbps}}}$) usuários simultaneamente.</p>
+
+  <p>Com o <b>packet switching</b>, a probabilidade de um usuário específico estar ativo é de 0.1 (10% do tempo). Se há 35 usuário, a probabilidade de que haja 11 ou mais usuários ativos ao mesmo tempo é de aproximadamente 0.0004 (resolução pela distribuição binomial). Quando há 10 ou menos usuários ativos (o que acontece 0.9996 das vezes), tráfego será menor ou igual a capacidade do link, essencialmente sem delay, como o circuit switching.</p>
+</div>
+
+<h3>Rede de Redes</h3>
+
+<p>Hosts estão conectados à Internet via <b>Provedores de Acesso</b>(ISPs - Internet Service Providers). ISPs de acesso por sua vez precisam estar interconectados (só assim um host qualquer poderá se comunicar com outro host qualquer). Isso resulta em uma rede de redes bastante complexa.</p>
+
+<p>Mas como fazer com que esses ISPs se interconectem? Uma possibilidade é fazer com que todos se conectem a todos, mas isso é inviável.</p>
+
+<p>Como acontece de fato: ISPs de acesso são conectados a um ISP global. Porém, se um ISP global é um negócio viável, haverão competidores entrando no mercado (multiplos ISPs globais). Tais competidores precisam estar conectados (IXP - Internet Exchange Providers). Redes regionais podem aparecem para conectar os ISPs de acesso aos ISPs globais e provedores de conteúdo (<b>content providers</b>) podem funcionar em sua própria rede para trazer serviços e conteúdo ao usuário final. </p>
+
+<img src="{{site.imageurl | append: 'redes/tiers.png'}}" class="ui centered image">
+
+<h2>Atraso, perda e vazão (throughput) em redes</h2>
+
+<img src="{{site.imageurl | append: 'redes/delay.png'}}" class="ui centered image">
+
+<h3>Tipos de Atraso</h3>
+
+<ul>
+  <li><b>Atraso de Processamento de pacote:</b> tempo exigido para examinar o pacote, valida-lo e determinar para onde redirecioná-lo (microsegundos).</li>
+  <li><b>Atraso de enfileiramento:</b> tempo de espera na fila para ser transmitido pelo link (de microsegundos à milisegundos).</li>
+  <li><b>Atraso de transmissão:</b> tempo para transmitir todos os bits do pacote pelo link (de microsegundos a milisegundos).
+    $$ d_{transmissão} = {L \text{(tamanho do pacote em bits)} \over R \text{(banda do link em bps)}}$$
+  </li>
+  <li><b>Atraso de propagação:</b> tempo para propagar um bit do início do link até um roteador. O bit se propaga na velocidade de propagação do link (depende da mídia física).
+    $$ d_{propagação} = {d \text{(distancia entre nós)} \over R \text{(velocidade do link)}}$$
+  </li>
+</ul>
+
+<p>O tempo nodal ($d_nodal$) é o atraso no envio de um pacote entre dois nós da rede (host ou roteador) subsequentes.</p>
+
+$$ d_{nodal} = {d_{processamento} + d_{enfileiramento} + d_{transmissao} + d_{propagação}} $$
+
+<h3>Atraso de Enfileiramento e Perda</h3>
+
+<p>Vamos considerar que $a$ (pacotes/seg) denota o taxa média de pacotes que chegam em um roteador , $L$ é a quantidade de bits de um pacote e $R$ a taxa de transmissão (bits/seg). Desta forma, a taxa média de bits que chega em um roteador pode ser calculada como $aL$ bits/seg. Portanto:</p>
+
+$$ \text{intensidade de tráfego} = { aL \over R} $$
+
+<p>Se a <b>intensidade for maior que 1</b>, a taxa média de de chegada de bits irá exceder a taxa com que esses bits podem ser transmitidos (e retirados da fila). Nessa situação a fila tende a crescer indefinidamente e o atraso de de enfileiramento tenderá ao infinito (nessa situação temos as perdas de pacotes, uma vez que a fila possui um limite).</p>
+
+<p>A fila de um roteador tem uma capacidade finita. Se um pacote, ao chegar no roteador, se depara com um fila cheia, o roteador o jogará fora (não que ele queira, mas não tá tendo espaço pra mais um) e o pacote se perderá.</p>
+
+<h3>Atraso fim-a-fim</h3>
+
+<p>Suponha que haja $N - 1$ roteadores entre o host fonte e o host destino. Considerando que a rede não está congestionada (o atraso de enfileiramento é despresível), o atraso acumulado pode ser calculado da seguinte forma:</p>
+$$ d_{end-end} = {N(d_{processamento} + d_{transmissão} + d_{propagação})} $$
+
+<div class="ui green inverted segment">
+  <h4>Programa traceroute</h4>
+  <p>Fornece medidas de atraso do host fonte aos roteadores ao longo do caminho de comunicação com o host destino.</p>
+  <p>Esse programa envia mutiplos pacotes especiais para o destino. Quando um roteador recebe um desses pacotes, ele envia de volta um mensagem curta contendo o nome e endereço do roteador.</p>
+</div>
+
+<h3>Vazão (Throughput)</h3>
+
+<p>Vazão é a taxa (bits/unidade de tempo) na qual os bits são transferidos entre transmissor/receptor.</p>
+
+<ul>
+  <li><b>Vazão instatânea:</b> taxa em um determinado instante.</li>
+  <li><b>Vazão média:</b> taxa num período longo de tempo.</li>
+</ul>
+
+<p>O caminho de comunicação entre hosts é composto de vários links interligados (por roteadores ou switches) e cada um desses links tem seu próprio valor de vazão. O link com a menor vazão é chamado de <b>link gargalo</b> e é no valor vazão que toda a comunicação se dará (como o fluxo de água flui em um cano).</p>
+
+<h2>Camadas de Protocolos e Seus Modelos de Serviço</h2>
+
+<h3>Arquitetura em Camadas</h3>
+
+<hr>
+<h2>Referências</h2>
+<p><i>Computer Networking: A Top-Down Approach, 6th edition J.F.Kurose, K.W. Ross</i></p>
