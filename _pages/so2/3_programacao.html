@@ -13,39 +13,54 @@ layout: default
 
 <h2>vi/vim</h2>
 
-<h2>GCC</h2>
-<p>Uso: <i>gcc [-Wall] prog.c [-o prog] [bib.o] [-Iinc_dir] [-Llib_dir] [-llink_bib]</i></p>
 
-<p>When you invoke GCC, it normally does preprocessing, compilation, assembly and linking.  The "overall options" allow you to stop this process at an intermediate stage.  For example, the -c option says not to run the linker.  Then the output consists of object files output by the assembler.</p>
+<h2>GCC</h2>
+<pre><code class="shell">
+  # Uso:
+  gcc [-Wall] prog.c [-o prog] [bib.o] [-Iinc_dir] [-Llib_dir] [-llink_bib]
+
+</code></pre>
 
 <h2>3.4 CPP - C preprocessor</h2>
 
 <p>O cpp é um processador de macros que é utilizado automaticamente pelo compilador C para transformar os programas antes da compilação.</p>
 
 <h2>3.5 Link e Bibliotecas</h2>
-<h3>DESCRIÇÃO AQUI</h3>
 
-sys/types.h
-sys/wait.h
-unistd.h
-stdio.h
-stdlib.h
-errno.h
+<h3>Exemplos de bibliotecas</h3>
+<pre><code>
+  sys/types.h
+  sys/wait.h
+  unistd.h
+  stdio.h
+  stdlib.h
+  errno.h
 
-{% highlight shell %}
-gcc ... -lbib # inclui biblioteca libbib.a  (*)
-gcc ... -Llib_dir # especifica caminho de busca
-{% endhighlight %}
+</code></pre>
 
-<p>Localização das bibliotecas:</p>
-<p>Link Estático: /usr/lib</p>
-<p>Link Dinâmico: /lib; /usr/lib; (/etc/ld.so.conf)</p>
-<p>Compilação com link dinâmico (shared objects) - default:</p>
+<pre><code>
+  gcc ... -lbib # inclui biblioteca libbib.a  (*)
+  gcc ... -Llib_dir # especifica caminho de busca
+
+</code></pre>
+
+<p class="destaque">Quando especificar o -l ou -L na compilação?</p>
+
+<p class="importante">Normalmente bibliotecas começam com <b>lib</b> no nome. Por isso tira-se esse prefixo no comando de linkagem, então <b>-libib</b> vai linkar com <b>libib</b></p>
+
+<p>Bibliotecas podem ser .a (archive) ou .so (shared object). A diferença entre elas é a possilidade de linkagem estática ou dinâmica. <span class="importante">Se uma linkagem for estática o código da biblioteca "gruda" no executável final e gera um arquivão, se for dinâmica ele só tem um link para a biblioteca e a <span class="duvida">chama por demanda</span></span> (a linkagem dinâmica é usada para otimização pois não precisa ficar replicando código).</p>
+
+<h3>Localização das bibliotecas:</h3>
+<p><b>Link Estático:</b> /usr/lib</p>
+<p><b>Link Dinâmico:</b> /lib; /usr/lib; (/etc/ld.so.conf)</p>
+
 <pre><code>
   gcc ... -static  // previne ligação com bibliotecas dinâmicas
-  gcc ... -shared  // produz objeto compartilhado que pode ser ”linkado” com outros objetos para formar um programa.
+  gcc ... -shared  // (default) produz objeto compartilhado que pode ser ”linkado” com outros objetos para formar um programa.
+
   ldd: exibe dependências de bibliotecas dinâmicas // man ldd
   ldconfig: configura ajustes para links dinâmicos // man ldconfig
+
 </code></pre>
 
 <h2>3.6 Make</h2>
@@ -56,8 +71,100 @@ gcc ... -Llib_dir # especifica caminho de busca
 <p>Executa comandos no makefile para atualizar um ou mais targets, tipicamente programas.</p>
 
 <pre><code>
-  target:  componentes
-  -><i>tab</i> regra
+  target: dependências
+  &lttab&gt regra
+
 </code></pre>
 
 <h2>3.7 Depuração</h2>
+
+<pre><code>
+  gcc -W__     // define nível de warnings.
+
+  gcc -g       //  gera programa instrumentado para depuração
+
+  gdb prog     // debugger
+
+</code></pre>
+
+<h2>3.8 Exemplo</h2>
+
+<pre><code class="makefile">
+  # Nome das regras
+  PROGS=p-s p-d p-o ansi pedantic
+
+  CC=gcc
+
+  FLAGS=-Wall
+
+  # Quando executa make sem para ele executa a primeira regra
+  # Nesse caso todas as regras com titulo em PROGS
+  all: $(PROGS)
+
+  clean:
+  	rm -f f1.o f2.o s1.o s2.o libstat.a libdyn.so p-d p-s p-o ansi pedantic
+
+  # geração do arquivo objeto com as funções deste arquivo
+  f1.o:	f1.c
+  	$(CC) $(FLAGS) -c f1.c -o f1.o # a opção -c faz com que o linker não seja executado
+
+  # geração do arquivo objeto com as funções deste arquivo
+  f2.o:	f2.c
+  	$(CC) $(FLAGS) -c f2.c -o f2.o
+
+  # geração da biblioteca para link estático a partir dos arquivos pré-compilados
+  libstat.a:	f1.o f2.o
+  	ar cr libstat.a f1.o f2.o
+
+  # -fpic
+  #		Generate position-independent code (PIC) suitable for use in a shared
+  #		library, if supported for the target machine.
+  # -fPIC
+  #		If supported for the target machine, emit position-independent code,
+  #		suitable for dynamic linking and avoiding any limit on the size of the
+  #		global offset table.
+
+  # geração do arquivo objeto com as funções deste arquivo, compilando com
+  # o parâmetro fPIC, para linkagem em biblioteca de link dinâmico
+  # PIC: Position-Independent Code
+  s1.o:	f1.c
+  	$(CC) $(FLAGS) -c -fPIC f1.c -o s1.o
+
+  # geração do arquivo objeto com as funções deste arquivo, compilando com
+  # o parâmetro fPIC, para linkagem em biblioteca de link dinâmico
+  s2.o:	f2.c
+  	$(CC) $(FLAGS) -c -fPIC f2.c -o s2.o
+
+  # geração da biblioteca de link dinâmico, juntando os arquivos
+  # pré-compilados com fPIC
+  libdyn.so:	s1.o s2.o
+  	$(CC) $(FLAGS) -shared -o libdyn.so s1.o s2.o
+
+  # geração do arquivo executável, fazendo o link a partir dos arquivo objetos
+  p-o:	p.c f1.o f2.o
+  	$(CC) $(FLAGS) p.c -o p-o f1.o f2.o
+
+  # geração do arquivo executável, fazendo o link a partir da biblioteca
+  # compilada para link estático
+  p-s:	p.c libstat.a
+  	# $(CC) p.c -o p-s -L. -lstat -static-libgcc
+  	$(CC) $(FLAGS) p.c -o p-s -L. -lstat -static
+
+
+  # geração do arquivo executável, fazendo o link a partir da biblioteca
+  # compilada para link dinâmico
+  p-d:	p.c libdyn.so
+  	@ # $(CC) p.c -o p-d -L. -ldyn -W1,-rpath,.
+  	@ echo Ajustes: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+  	$(CC) $(FLAGS) p.c -o p-d -L. -ldyn
+
+
+  # teste de compilação usando sintaxe da linguagem C padrão
+  ansi:	c90.c
+  	$(CC) $(FLAGS) c90.c -o ansi --ansi
+
+  # teste de compilação usando sintaxe da linguagem ISO C90
+  pedantic:	c90.c
+  	$(CC) $(FLAGS) c90.c -o pedantic --pedantic
+
+</code></pre>

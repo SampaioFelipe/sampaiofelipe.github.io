@@ -1,0 +1,159 @@
+---
+title: "Redes - Camada de Aplicação"
+layout: default
+---
+<h1 class="ui header">2. Camada de Aplicação</h1>
+
+<h2>Principios da Rede de Aplicações</h2>
+
+<h3>Criando uma aplicação de rede</h3>
+
+<p>Quando desenvolvemos um aplicativo, precisamos escrever um software que rode em multiplos sistemas. Para fazer isso não precisamos se preocupar com software que rode no núcleo da internet, como roteadores ou switches (na verdade nem conseguimos fazer aplicações para esses dispositivos). Isso possibilita que software possam ser desenvolvido de forma rápida.</p>
+
+<p>Troca de mensagens entre aplicações de rede se dão na camada de aplicação.</p>
+
+<h3>Arquiteturas de Aplicação</h3>
+
+<h4>Arquitetura Cliente-servidor</h4>
+
+<p><b>Servidor:</b> end-system sempre ativo, possui um endereço IP permanente e data centers para escalonamento.</p>
+
+<p><b>Cliente:</b> se comunica com o servidor, não está conectado a rede a todo momento, pode ter um endereço de IP dinâmico e não se comunica com outros clientes diretamente.</p>
+
+<h4>Arquitetura P2P</h4>
+
+<p>Comunicação entre pares de hosts conectados, chamdados de <i>peers</i>. Cada peer funciona como se fosse um servidor (provê dados ou serviços) e um cliente (solicita dados ou serviços) ao mesmo tempo.</p>
+
+<p>A arquitetura P2P possibilita uma "auto escalabilidade", pois novos peers trazem novos serviços assim como novas demandas pelos serviços.</p>
+
+<p>Como os hosts não estão sempre conectados e há mudanças nos endereços IP, o gerenciamenteo dessas redes se torna complexo.</p>
+
+<h3>Comunicação entre Processos</h3>
+
+<p>Processos são programas que estão em execução em um host. Dentro de um host, dois processos podem se comunicar usando técnicas de <b>interprocess communication</b> (definido pelo SO). Processos em diferentes hosts se comunicam por troca de mensagens.</p>
+
+<div class="ui inverted segment">
+  <p><b>Processo cliente:</b> processo que inicia a comunicação.</p>
+  <p><b>Processo servidor:</b> processo que espera ser contactado.</p>
+  <p>* aplicações com arquitetura P2P possue processos clientes e processos servidores.</p>
+</div>
+
+<h4>A Interface entre o Processo e a Rede</h4>
+
+<p>Um processo envia mensagens para a rede, e recebe mensagens dela, através de uma interface chamada <b>socket</b>. Um processo é análogo a uma casa e um socket é análogo a sua porta. Quando um processo envia uma mensagem para outro processo em outro host, despacha pelo socket (porta). Esse processo assume que haja uma infraestrutura de transporte do outro lado da sua porta que irá transportar sua mensagem até a porta de outro host.</p>
+
+<p>Um socket é a interface entre a camada de aplicação e a camada de transporte dentro de um host. O desenvolvedor da aplicação tem controle sobre tudo do lado da camada de aplicação do socket, porém não tem quase nenhum controle no lado da camada de transporte (podendo apenas especificar o protocolo de transporte e alguns parametros adicionais).</p>
+
+<h4>Endereçamento de Processos</h4>
+
+<p>Na internet cada host é indentificado por seu endereço IP. Entretanto, em um host pode haver muitos processos rodando ao mesmo tempo, fazendo com que apenas o endereço do host não seja suficiente para identficar um processo dentro dele.</p>
+
+<p>Para identificar um processo é necessário também incluir o <b>número da de porta</b> associado ao processo (ex: sevidor HTTP normalmente está associado a porta 80).</p>
+
+<h3>Serviços de Transporte Disponíveis para a Aplicação</h3>
+
+<ul>
+  <li><b>Integridade dos dados</b></li>
+  <li><b>Vazão</b></li>
+  <li><b>Timing</b></li>
+  <li><b>Segurança</b></li>
+</ul>
+
+<h3>Protocolos de Serviços de Tranporte Fornecidos pela Internet</h3>
+
+<h4>TCP (Transmission Control Protocol)</h4>
+
+<ul>
+  <li><b>Orientado a conexão:</b> requer que uma configuração entre clente e servidor (handshaking) antes de começar a  transmitir a mensagem.</li>
+  <li><b>Transferência confiável de dados:</b> os processos em comunicação podem confiar ao TCP a tarefa de entredar todos os dados enviados sem erros e na ordem certa.</li>
+  <li><b>Controle de fluxo:</b> o transmissor não irá sobrecarregar o receptor</li>
+  <li><b>Controle de Congestionamento:</b> suprime o transmissor quando a rede está congestionada.</li>
+</ul>
+
+<h4>UDP (User Datagram Protocol)</h4>
+
+<p>Protocolo mais simples, como o mínimo de serviços fornecido. Transmissão de dados não confiável, não há garantias de que o outro lado esteja escutando (não há o handshaking) nem de que todos os dados tenham sido entregues. O UDP também não lida com a ordem das mensagens.</p>
+
+<h4>TCP Seguro</h4>
+
+<p>Tanto TCP quanto UDP não fornecem encriptação, dessa forma, senhas enviadas como texto, por exemplo, podem ser capturadas sem muita dificuldade.</p>
+
+<p>Para fornecer um nível de seguRança no TCP, surgiu o SSL (Secure Socket Layer), que fornece conexões TCP encriptadas, integridade de dados e autenticação.</p>
+
+<p>O SSL não é outro protocolo de transporte, o SSL está na camada de aplicação. Um aplicativo usa uma biblioteca SSL que, então, "conversa" com o TCP.</p>
+
+<h2>Web e HTTP</h2>
+
+<h3>Visão geral do HTTP (HyperText Transfer Protocol)</h3>
+
+<p>O HTTP é um protocolo da camada de aplicação, e é o coração da web. HTTP é implementado em dois programas: um programa cliente e um programa servidor. O programa cliente (browser por exemplo) conversa com o programa servidor trocando mensagens HTTP. O HTTP define a estrutura dessas mensagens e como o cliente e o servidor trocam mensagens.</p>
+
+<div class="ui red inverted segment">
+  <h4>Diferença entre URI, URL e URN</h4>
+</div>
+
+<p>Quando um usuário faz uma requisição de uma página web (request), o browser envia mensagens de requisição HTTP dos objetos da página ao servidor HTTP. O servidor recebe a requisição e responde com uma mensagem HTTP response que contém os objetos.</p>
+
+<p>O HTTP não possue estados, isto é, o servidor não mantém informações sobre requisições anteriores. Ele também utiliza TCP como protocolo de transporte.</p>
+
+<h3>Conexões HTTP</h3>
+
+<h4>Conexão Não Persistente</h4>
+
+<ul>
+  <li>Um único objeto enviado por conexão TCP (a conexão é fechada após o envio o objeto do servidor ao clente)</li>
+  <li>Fazer download de multiplos objetos requer multiplas conexões.</li>
+</ul>
+
+<div class="ui green inverted segment">
+  <h4>RTT - Round Trip Time</h4>
+  <p>RTT é o tempo para um pacote viajar do cliente ao servidor e voltar</p>
+</div>
+
+<p><b>Tempo do HTTP Response:</b></p>
+
+<ul>
+  <li>Um RTT para inciar a conexão TCP</li>
+  <li>Um RTT para o HTTP Request e primeiros bytes da resposta chegar</li>
+  <li>Tempo de transmissão do arquivo</li>
+</ul>
+
+<p>Conclusão: Tempo de resposta na conexão não permanente é 2RTT + Tempo de Transmissão do arquivo por obejeto.</p>
+
+<h4>Conexão Persistente</h4>
+
+<ul>
+  <li>Multiplos objetos podem ser enviados em uma única conexão TCP.</li>
+  <li>O servidor deixa a conexão aberta depois de enviar a resposta.</li>
+  <li>As mensagens HTTP subsequentes são enviadas por essa conexão aberta.</li>
+  <li>Tempo de resposta é pequeno quanto um RTT para todos os objetos referenciados.</li>
+</ul>
+
+<h3>Formato das Mensagens HTTP</h3>
+
+<p>Há dois tipos de mensagens HTTP: request e response.</p>
+
+<h4>Mensagens HTTP Request</h4>
+
+<pre><code class="http">
+  GET /index.html HTTP/1.1\r\n
+  Host: www-net.cs.umass.edu\r\n
+  User-Agent: Firefox/3.6.10\r\n
+  Accept: text/html,application/xhtml+xml\r\n
+  Accept-Language: en-us,en;q=0.5\r\n
+  Accept-Encoding: gzip,deflate\r\n
+  Accept-Charset: ISO-8859-1,utf-8;q=0.7\r\n
+  Keep-Alive: 115\r\n
+  Connection: keep-alive\r\n
+  \r\n
+</code></pre>
+
+<h2>E-mail</h2>
+
+<h2>DNS</h2>
+
+<h2>Aplicações P2P</h2>
+
+<h2>Streaming de Videos e Redes de Distribuição de Conteúdo</h2>
+
+<h2>Programação com Sockets</h2>

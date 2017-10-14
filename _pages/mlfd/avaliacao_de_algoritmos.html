@@ -1,0 +1,72 @@
+---
+title: "MLFD - Avaliação de Algoritmos de Fluxo de Dados"
+layout: default
+---
+<h1 class="ui header">Avaliação de Algoritmos de Fluxo de Dados</h1>
+
+<h2>Avaliação do contexto "batch"</h2>
+
+<p>O procedimento de avaliação define quais eemplos são usados para treinamento e quais são usados para teste.</p>
+
+<ul>
+  <li>Conjuntos pequenos (até 1000 exemplos): o objetivo é extrair o máximo dos exmplos</li>
+</ul>
+
+<p>Essa validação ainda é algo novo no contexto de fluxo de dados.</p>
+
+<h2>Procedimentos de Avaliação</h2>
+
+<h3>Holdout</h3>
+
+<p>Extensão do processo usado no contexto batch.</p>
+
+<p>Um conunto de exemplos para testes é separado e o modelo corrente é aplicado a esse conjunto a intervalos de tempos regulares.</p>
+
+<ul>
+  <li><b>Conjuntos Estacionários</b></li>
+  <li><b>Conuntos Não Estacionários</b></li>
+</ul>
+
+<h3>Predictive Sequencial (Presequential)</h3>
+
+<p>O erro do modelo é calculado a partir da sequência de exemplos.</p>
+
+<p>Prequential error:</p>
+
+$$ S = \sum_{i=1}^n L(y_i,\bar{y_i}) $$
+
+<h2>Comparação entre estimadores de erro usando um algoritmo e um conjunto de dados</h2>
+
+<p>A avaliação prequential fornece uma curva que mostra a evolução do processo de aprendizado.</p>
+
+<p>Avaliação holdout fornece uma curva semelhante aplicando o modelo corrente a intervalos regulares no conjunto.</p>
+
+<p>As duas estimaticas podem ser afetadas pela ordem dos exemplos.</p>
+
+<h2>Mecanismo de Esquecimento para Prequential</h2>
+
+<p>A estimativa de erro usando todo o fluxo pode sofrer influência das primeiras estimativas, quando o modelo foi gerado com poucas instâncias.</p>
+
+<h2>Análise Comparativa entre dois algoritmos</h2>
+
+<h2>Geradores de Dados Sintéticos</h2>
+
+<h3>Random Tree Generator</h3>
+
+<h3>Random RBF Generator</h3>
+
+<h3>LED Generatoor</h3>
+
+<h3>Wavform Generator</h3>
+
+<h3>Function Generator</h3>
+
+<h2>Configuração de Experimentos</h2>
+
+<p>Na avaliação em fluxo de dados, há interesse em três dimensões:</p>
+
+<ul>
+  <li>Acurácia</li>
+  <li>Espaço necessário ou memória</li>
+  <li>Tempo necessário para trinamento e predição</li>
+</ul>

@@ -16,7 +16,7 @@ layout: default
 
 <p>Temos que identificar a operação mais importante (custosa), chamada de <b>operação básica</b>, em nosso algoritmo e computar a quantidade de vezes que essa operação é executada (em função ao tamanho $n$ da entrada).</p>
 
-<h3>Ordem de Grandeza</h3>
+<h3>Ordem de Crescimento</h3>
 
 <table class="ui inverted blue celled table">
   <thead>
@@ -39,18 +39,120 @@ layout: default
 
 <h2>Notações Assintóticas e Classes Básicas de Eficiência</h2>
 
-<p>Para comparar e ranquear as ordens de grandezas dos algoritmos, nós usamos três notações: $O$ (big oh), (big omega) e (big teta). Nas proximas seções usaremos a notação $t(n)$ e $g(n)$ (funções não negativas definidas no conjunto dos números naturais) para representar o tempo de execução do algoritmo e para comparar com a função de tempo de execução, respectivamente.</p>
+<p>Para comparar e ranquear as ordens de crescimentos dos algoritmos, nós usamos três notações: $O$ (big oh), (big omega) e (big teta). Nas proximas seções usaremos a notação $t(n)$ e $g(n)$ (funções não negativas definidas no conjunto dos números naturais) para representar o tempo de execução do algoritmo e para comparar com a função de tempo de execução, respectivamente.</p>
 
 <h3>Introdução Informal</h3>
 
-<p>Informalmente, $O(g(n))$ é o conjunto de todas as funções com ordem de grandeza inferior ou igual a $g(n)$.</p>
+<p>Informalmente, $O(g(n))$ é o conjunto de todas as funções com ordem de crescimento inferior ou igual a $g(n)$.</p>
 
-<p>$\Omega(g(n))$ representa o conjunto de todas as funções com ordem de grandeza superior ou igual a $g(n)$.</p>
+<p>$\Omega(g(n))$ representa o conjunto de todas as funções com ordem de crescimento superior ou igual a $g(n)$.</p>
 
-<p>Finalmente, $\Theta(g(n))$ é o conjunto de todas as funções que possuem a mesma ordem de grandeza de $g(n)$.</p>
+<p>Finalmente, $\Theta(g(n))$ é o conjunto de todas as funções que possuem a mesma ordem de crescimento de $g(n)$.</p>
 
 <h3>Notação $O$</h3>
 
+<div class="ui segment">
+  <h4>Definição</h4>
+  <p>Uma função $t(n)$ é considerada $O(g(n))$, denotado por $t(n) \in O(g(n))$, se $t(n)$ é limitada por cima por algum multiplo de $g(n)$ para todo $n$ grande, ou seja, se existe alguma constante positiva $c$ e algum inteiro não negativo $n_0$ tal que:</p>
+
+  $$ t(n) \leq cg(n)  \quad \forall n \geq n_0 $$
+</div>
+
+[IMAGE]
+
+<p>Por exemplo, vamos provar formalmente que $100n + 5 \in O(n)$:</p>
+
+$$ 100n + 5 \leq 100n + 5n \quad (\forall n \geq 1) = 105n$$
+
+<p>Dessa forma temos que $100n + 5 \leq 105n$. Pela definição acima, podemos tomar $c=105$, $n_0=1$ e teremos $g(n) = n$. Portanto $100n + 5 \in O(n)$</p>
+
 <h3>Notação $\Omega$</h3>
 
+<div class="ui segment">
+  <h4>Definição</h4>
+  <p>Uma função $t(n)$ está em $\Omega(g(n))$, denotado por $t(n) \in \Omega(g(n))$, se $t(n)$ é limitada inferiormente por um multiplo de $g(n)$ para todo $n$ grande, isto é, se exite alguma constante $c$ e algum inteiro não negativo $n_0$ tal que:</p>
+
+  $$ t(n) \geq cg(n)  \quad \forall n \geq n_0 $$
+
+</div>
+
+[IMAGE]
+
+<p>Vamos provar que $n^3 \in \Omega(n^2)$:</p>
+
+$$ n^3 \geq n^2 \quad \forall n \geq 0 $$
+
+<p>Tomando $c = 1$ e $n_0 = 0$, pela definição dada podemos concluir então que $g(n) = n^2$. Portanto $n^3 \in \Omega(n^2)$.</p>
+
 <h3>Notação $\Theta$</h3>
+
+<div class="ui segment">
+  <h4>Definição</h4>
+  <p>Uma função $t(n)$ está em $\Theta(g(n))$, denotado por $t(n) \in \Theta(g(n))$, se $t(n)$ é limitada superiormente e inferiormente por multiplos positivos de $g(n)$ para todo $n$ grande, ou seja, se existe constantes positivas $c_1$ e $c_2$ e algum inteiro não negativo $n_0$ tal que:</p>
+  $$ c_2g(n) \leq t(n) \leq c_1g(n) \quad \forall n \geq n_0 $$
+
+</div>
+
+<p>Provar que uma função pertence a essa classe é uma tarefa um pouco mais complicada que as anteriores. Por exemplo, vamos provar que $\frac{1}{2}n(n-1) \in \Theta(n^2)$. Para fazer a prova vamos primeiro provar o lado direito da inequação:</p>
+
+$$ \frac{1}{2}n(n-1) = \frac{1}{2}n^2 - \frac{1}{2}n \leq  \frac{1}{2}n^2 \quad \forall n \geq 0 $$
+
+<p>Em seguida, provamos o lado esquerdo da inequação:</p>
+
+$$ \frac{1}{2}n(n-1) = \frac{1}{2}n^2 - \frac{1}{2}n \geq \frac{1}{2}n^2 - \frac{1}{2}n\frac{1}{2}n = \frac{1}{4}n^2 \quad \forall n \geq 2 $$
+
+<p>Podemos então selecionar $c_2 = \frac{1}{4}$, $c_1 = \frac{1}{2}$ e $n_0 = 2$.</p>
+
+<h3>Propriedade Útil Envolvendo as notações Assintóticas</h3>
+
+<div class="ui segment">
+  <h4>Teorema</h4>
+  <p>Se $t_1(n) \in O(g_1(n))$ e $t_2 \in O(g_2(n))$, então:</p>
+  $$ t_1(n) + t_2(n) \in O(max\{g_1(n), g_2(n)\}) $$
+</div>
+
+<p>Isso quer dizer que a eficiência de um algoritmo é determinada pela parte com a maior ordem de crescimento.</p>
+
+<h3>Usando limites para Comparação entre Ordem de Crescimento</h3>
+
+<p>Embora a definição formal das notações assintóticas apresentadas anteriormente são indispensáveis para demonstrar suas propriedades, elas são raramente usadas para comparação da ordens de crescimento de duas funções. Uma forma conveniente é calcular o limite da razão entre as funções.</p>
+
+$$ \lim_{n\to\infty} \frac{t(n)}{g(n)} =
+  \begin{cases}
+      0, \text{então } t(n) < g(n) \\
+      c, \text{então } t(n) = g(n)\\
+      \infty, \text{então } t(n) > g(n)
+  \end{cases}$$
+
+<h2>Análise Matemática de Algoritmos Não Recursivos</h2>
+
+<h3>Plano Geral</h3>
+<ol>
+  <li>Decida qual parâmetro, ou parametros, indica o tamanho da entrada.</li>
+  <li>Identifique a operação básica do algoritmo (via de regra, está localizada dentro de loops internos).</li>
+  <li>Verifique se o número de vezes que a operação é executada depende apenas do tamanho da entrada. Se também depender de uma propriedade adicional, o tanto o pior caso, quanto o melhor caso e caso médio devem ser investigados.</li>
+  <li>Construa uma expressão que represente a soma do número de vezes que a operação base é executada.</li>
+  <li>Usando regras e manipulações matemáticas, encontre uma fórmula fechada e estabeleça a ordem de crescimento.</li>
+</ol>
+
+<h3>Regras de soma mais utilizadas</h3>
+
+$$ \sum_{i=l}^{u} ca_i = c \sum_{i=l}^{u}a_i $$
+
+$$ \sum_{i=l}^{u}(a_i \pm b_i) = \sum_{i=l}^{u}a_i \pm  \sum_{i=l}^{u}b_i$$
+
+$$ \sum_{i=l}^{u} 1 = u - l + 1 \quad \text{onde} \quad l \leq u $$
+
+$$ \sum_{i=0}^{u} i = \sum_{i=1}^{u} i = \frac{n(n+1)}{2} \approx \frac{1}{2}n^2 \in \Theta(n^2)$$
+
+<h2>Análise Matemática de Algoritmos Recursivos</h2>
+
+<h3>Plano Geral</h3>
+
+<ol>
+  <li>Decida qual parâmetro, ou parametros, indica o tamanho da entrada.</li>
+  <li>Identifique a operação básica do algoritmo.</li>
+  <li>Verifique se o número de vezes que a operação é executada depende apenas do tamanho da entrada. Se também depender de uma propriedade adicional, o tanto o pior caso, quanto o melhor caso e caso médio devem ser investigados.</li>
+  <li>Construa uma relação de recorrência, com uma condição incial apropriada, para o número de vezes que a operação básica é executada</li>
+  <li>Resolva a recorrência or, pelo menos, determine a ordem de crescimento da solução.</li>
+</ol>

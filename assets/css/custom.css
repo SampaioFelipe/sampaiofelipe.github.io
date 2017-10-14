@@ -15,6 +15,17 @@ body {
   padding: 5em 0em;
 }
 
-.duvida{
-  color: #ff0000;
+
+.importante {
+  background-color: #21ba45;
+  color: white;
+}
+
+.duvida {
+  background-color: red;
+  color: white;
+}
+
+.destaque {
+  background-color: yellow;
 }

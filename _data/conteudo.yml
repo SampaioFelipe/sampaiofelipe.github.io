@@ -24,7 +24,7 @@ disciplinas:
           - titulo: Busca Informada
             url: ia/2_2_busca_informada
 
-  - nome: Metodologias e Desenvolvimento de Sistemas
+  - nome: Metodologias de Desenvolvimento de Sistemas
     alias: MDS
     color: yellow
 
@@ -47,6 +47,8 @@ disciplinas:
     conteudo:
       - titulo: Rede de Computadores e a Internet
         url: redes/1_rede_de_computadores_e_a_internet
+      - titulo: Camada de Aplicação
+        url: redes/2_camada_de_aplicacao
 
   - nome: Sistemas Operacionais
     alias: SO2
@@ -62,3 +64,5 @@ disciplinas:
         url: so2/6_gerenciamento_de_memoria
       - titulo: IPC - Interprocess Communication
         url: so2/7_interprocess_communication
+      - titulo: Lista 1 de Exercícios
+        url: so2/lista_1
