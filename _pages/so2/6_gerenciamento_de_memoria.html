@@ -6,23 +6,45 @@ layout: default
 
 <h2>Introducao</h2>
 
+<p>Em ambientes compartilhados, multitarefas, cada processo tem seu próprio espaço lógico de endereçamento (virtual), que é  mapeado para os endereços físicos de memória usando mecanismo da MMU do processador.</p>
+
+<p>Registradores de segmento (CS, DS, ES, FS, ...) podem ser usados para identificar diferentes áreas lógicas de um processo e, em tempo de execução, são convertidos pela MMU do processador em endereços base aos quais são somados os deslocamentos de endereço (EIP), de dado e da pilha (SS), por exemplo. O <b>endereço linear virtual</b> obtido é então convertido a endereços físicos através do mecanismo de paginação, em que a MMU novamente realiza uma tradução usando tabelas de páginas mantidas polo SO para cada processo.</p>
+
+<p>No funcionamento desse mecanismo de endereçamento indireto, cabe ao SO ajustar os endereços das estruturas de tradução de endereço em registradores apropriados do hardware cada vez que restaura o contexto de execução de um novo processo (ou thread).</p>
+
+<p>Esse gerenciamento começa na criação de um processo a partir de sua imagem em disco, quando é executada a chamada execve(2). Informações contidas em cabeçalhos de controle mantidos no arquivo executável (<b>ELF</b>, em sistemas Linux), permitem ao carregador do SO (<b>loader</b>) identificar as áreas de memória do processo sendo criado.</p>
+
+<p>Entre as áreas de memória de um processo associadas ao seu arquivo executável estao a área de código do programa (<b>.text</b>) e área de valores constantes (<b>.data</b>). Informações de controle nos cabeçalhos de um arquivo executável também indicam o espaço que deve ser alocado para variáveis estáticas que devem ser inicializadas com 0 (<b>.bss</b>) e quais são as bibliotecas compartilhadas necesárias. Alpem disso, o SO deve mapear uma área de dados para alocações dinâmica (<b>Heap</b>) e uma pilha (<b>Stack</b>), comumente usando tamanhos pré-definidos, mas que podem ser alterados sob demanda durante a execução do programa. As áreas de código do SO, relacionadas às chamadas de sistema e tratamentos de interrupção, por exemplo, também têm que ser mapeadas, de forma compartilhada, no espaço de endereçamento de todos os processos.</p>
+
+<p>Os utilitários <b>objdump</b>, <b>readelf</b> e <b>nm</b> permitem observar aspectos das seções definidas em arquivos executáveis, objetos ou bibliotecas.</p>
+
+<p>No sistema Linux, áreas de memória de um processo são identificadas pela estrutura <a href="http://elixir.free-electrons.com/linux/latest/source/include/linux/mm_types.h#L359">mm</a> dentro de sua task_struct. Cada página física da memória, por sua vez, é mapeada por uma estrutura <a href="http://elixir.free-electrons.com/linux/latest/source/include/linux/mm_types.h#L40">page</a>.</p>
+
+<hr>
+
 <p>Espaço de endereçamento: text -> rodata -> bss (variáveis estáticas) -> heap -> stack -> share libs -> SO.</p>
 
 <p>Localidade temporal e espacial</p>
 
-<p>O endenreço formado pelo CS e o desolocamento precida ser trduzido para um endereço virtual base.</p>
+<p>O endenreço formado pelo CS e o desolocamento precisa ser traduzido para um endereço virtual base.</p>
 
-<p><b>Tradução de endereço</b></p>
-
-<p>Os ajustes de áreas de memória  -> execve</p>
 
 <p>Arquivo ELF -> dividido em segmentos</p>
 
-<p>Utilitários: readelf, ...</p>
 
 <h2>ELF</h2>
 
-<p>Loader, responsável por carregar o código de um aquivo executável.</p>
+<p>Quando um programa está sendo carregado para execução, cabe ao <b>loader</b> do SO interpretar as informações de controle contidas nos cabeçalhos deste programa para fazer o ajuste apropriado das áreas de memória desse processo.</p>
+
+<p>Em sistemas Unix, o loader é responsável por carregar o código de um aquivo executável (está presente na chamada execve). As tarefas do <b>Loader</b> são:</p>
+
+<ul>
+  <li>Validação (permissões, requerimentos de memória)</li>
+  <li>Cópia da imagem do programa do disco para a memória principal</li>
+  <li>Cópia dos argumentos da linha de comando na pilha</li>
+  <li>Inicialização de registradores</li>
+  <li>Jump para o ponto de entrada do programa (_start)</li>
+</ul>
 
 <p><b>Hexdump</b></p>
 
@@ -32,7 +54,7 @@ layout: default
 
 <p>O espaço lógico de um prcesso.</p>
 
-<p>No task structu exite o mm, que mapeia as áreas de memória</p>
+<p>No task struct existe o mm, que mapeia as áreas de memória</p>
 
 <ul>
   <li>.text</li>

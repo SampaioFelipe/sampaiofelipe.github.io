@@ -146,7 +146,73 @@ layout: default
   Keep-Alive: 115\r\n
   Connection: keep-alive\r\n
   \r\n
+  Entity body
+
 </code></pre>
+
+<p>A primeira linha da requisição HTTP é chamada de <b>linha da requisição</b>, as linhas subsequentes são chamadas linhas de cabaçalho.</p>
+
+<p>Uma requisição poder ser de diversos tipos: GET, POST, HEAD, PUT e DELETE.</p>
+
+<div class="ui red inverted segment">
+  Detalhar os tipos de requisição
+</div>
+
+<h4>Mensagens HTTP Response</h4>
+
+<pre><code class="http">
+  HTTP/1.1 200 OK\r\n
+  Date: Sun, 26 Sep 2010 20:09:20 GMT\r\n
+  Server: Apache/2.0.52 (CentOS)\r\n
+  Last-Modified: Tue, 30 Oct 2007 17:00:02 GMT\r\n
+  ETag: "17dc6-a5c-bf716880"\r\n
+  Accept-Ranges: bytes\r\n
+  Content-Length: 2652\r\n
+  Keep-Alive: timeout=10, max=100\r\n
+  Connection: Keep-Alive\r\n
+  Content-Type: text/html; charset=ISO-8859-1\r\n
+  \r\n
+  Entity Body
+
+</code></pre>
+
+<p></p>
+
+<p>Na primeira linha da mensagem de resposta, temos o <b>status code</b> indicando os status da operação no servidor.</p>
+
+<div class="ui red inverted segment">
+  <h4>Status Codes mais Utilizados</h4>
+  <ul>
+    <li>200 OK</li>
+    <li>301 Moved Permanentely</li>
+    <li>400 Bad Request</li>
+    <li>404 Not Found</li>
+    <li>505 HTTP Version Not Supported</li>
+  </ul>
+</div>
+
+<div class="ui red inverted segment">
+  Experimento com o Telnet
+</div>
+
+<h3>Interação User-Server: Cookies</h3>
+
+<p>Cookies permitem que sites possam rastrear os usuários (mesmo que o servidor seja stateless). A tecnologia cookie possue 4 componentes: uma linha de cabeçalho de cookie no HTTP response, uma linha de cabeçalho cookie no HTTP request, um arquivo cookie mantido no dispositivo do usuário e gerenciado pelo browser do usuário, e um banco de dados no lado do servidor.</p>
+
+<h3>Web Caching</h3>
+
+<p>Um <b>web-chace</b>, também chamado de <b>servidor proxy</b>, é uma entidade que satisfaz requisições HTTP em nome de um servido Web original. O Web cache possui seu próprio disco de armazenamento e mantém cópias dos objetos pedidos recentemente.</p>
+
+<h3>O GET condicional</h3>
+
+<p><b>Objetivo:</b> não envia o objeto se o cache já tem a versão atualizada.</p>
+
+<p>No http request:</p>
+<pre><code class="http">If-modified-since: &ltdate&gt
+</code></pre>
+
+<p>No http response:</p>
+<pre><code class="http">HTTP/1.1 304 Not Modified</code></pre>
 
 <h2>E-mail</h2>
 

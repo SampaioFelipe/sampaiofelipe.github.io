@@ -257,7 +257,12 @@ layout: default
   int getrlimit(int resource, struct rlimit *rlim);
   int setrlimit(int resource, const struct rlimit *rlim);</code></pre>
 
-<p>ulimit -a e ulimit -t</p>
+  struct rlimit {
+    rlim_t rlim_cur;  /* Soft limit */
+    rlim_t rlim_max;  /* Hard limit (ceiling for rlim_cur) */
+  };
+
+<p class="duvida">ulimit -a e ulimit -t</p>
 
 <h2>Tratamento de Sinais</h2>
 
@@ -292,8 +297,6 @@ layout: default
 <p>Como a entrega de sinais é assíncrona, é possível haver reentrância de código usado na função de tratamento de sinal com outras atividades sendo realizadas no fluxo normal de execuçao do processo e de suas threads. Assim, há a preocupação com essa reentrância de código e com segurança devido ao sincronismo <b>(asynchronous safety)</b>. O código de tratamento de um sinal deve poder ser interrompido a qualquer momento sem causar estados inconsistentes no processo.</p>
 
 <hr>
-
-- colocar pthread_kill na tabela de library calls
 
 <p>Como o SO acha um processo? Cada processo está ligado a uma lista com todos os processos e outra com os processos no estado atual do processo.</p>
 
