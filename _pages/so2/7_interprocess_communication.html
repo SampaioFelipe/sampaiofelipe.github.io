@@ -27,7 +27,7 @@ layout: default
 
 <div class="ui red inverted segment">
   <h4>Por quê fazer a cópia para o kernel space na escrita?</h4>
-  <p>O SO trabalha com blocos, portanto, para compatibilizar as operações de escrita do processo em operações do bloco, é mantido no kernel space uma cópia do bloco. Quando o bloco inteiro ticer sido alterado, ele é então gravado no disco. Se o processo trabalhasse com blocos, isso não seria necessário, porém o processo trabalha com bytes.</p>
+  <p>O SO trabalha com blocos, portanto, para compatibilizar as operações de escrita do processo em operações do bloco, é mantido no kernel space uma cópia do bloco. Quando o bloco inteiro tiver sido alterado, ele é então gravado no disco. Se o processo trabalhasse com blocos, isso não seria necessário, porém o processo trabalha com bytes.</p>
 </div>
 
 <p>Por outro lado, há serviços do SO que podem permitir a comunicação entre processos usando estruturas baseadas em memória apenas. Diversas estruturas podem ser usadas para isso: pipes e fifos, filas, filas de mensagens, semáforos, sockets (unix domain) e arquivos mapeados em memória. Algumas dessas estruturas são consideradas mecanismos clássicos de IPC, como as filas de mensagens e os semáforos.</p>
@@ -63,7 +63,7 @@ layout: default
 
 <h2>Pipes e FIFOS</h2>
 
-<p>Também conhecidos como <b>named pipes</b> são mecanismos para comunicação entre processos, criados sob o demanda no espaço do kernel. Execeto pela forma de criação, pipe e fifo são equivalentes e correspondem a um buffer logicamente contíguo, com armazenamento sequencial de dados. Assim, pipes (e fifos) são usados tipicamente como um canal de dados unidirecional para comunicação entre processos.</p>
+<p>São mecanismos para comunicação entre processos, criados sob o demanda no espaço do kernel. Execeto pela forma de criação, pipe e fifo são equivalentes e correspondem a um buffer logicamente contíguo, com armazenamento sequencial de dados. Assim, pipes (e fifos) são usados tipicamente como um canal de dados unidirecional para comunicação entre processos.</p>
 
 <p>A criação de um pipe é feita com as chamadas pipe(2) e pipe2(2), que têm como parâmetro um vetor de 2 posições inteiras.</p>
 

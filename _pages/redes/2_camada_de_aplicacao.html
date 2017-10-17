@@ -207,11 +207,11 @@ layout: default
 
 <p><b>Objetivo:</b> não envia o objeto se o cache já tem a versão atualizada.</p>
 
-<p>No http request:</p>
+<p>No http request (especifica a data de versão em cache):</p>
 <pre><code class="http">If-modified-since: &ltdate&gt
 </code></pre>
 
-<p>No http response:</p>
+<p>No http response (não contém o objeto se a versão em cache já está atualizada):</p>
 <pre><code class="http">HTTP/1.1 304 Not Modified</code></pre>
 
 <h2>E-mail</h2>

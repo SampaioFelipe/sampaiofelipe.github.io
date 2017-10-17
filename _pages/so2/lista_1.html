@@ -11,7 +11,12 @@ layout: default
     1. O que é um Sistema Operacional? Quais são suas funções?
   </div>
   <div class="content">
-
+    <p>O SO pode ser visto de duas formas diferentes:</p>
+    <ul>
+      <li>Como um <b>Gerente de Recursos</b>: responsável por gerenciar a utilizaçao dos recursos (utilização da CPU, acesso a memória, interfaces de rede, I/O, vídeo, e afins) pelos os diversos programas que precisam utilizá-los.</li>
+      <li>Como uma <b>Máquina Virtual</b>: responsável por fornecer abstração dos recursos da máquina, de forma a disponibilizar ao usuário uma interface segura e facilitada para a utlização desses recursos. </li>
+    </ul>
+    <p>De forma geral, o SO é um software (um conjunto de instruções) responsável por facilitar a interação do usuário com os recursos que uma máquina oferece e por gerenciar, da forma mais justa e segura, a utilização desses recursos.</p>
   </div>
 
   <div class="title">
@@ -19,15 +24,84 @@ layout: default
     2. Descreva o modo de operação de um computador de acordo com a arquitetura de Von Neumann.
   </div>
   <div class="content">
-
+    <pre><code>
+      LOOP {
+        IR <- MEM[PC] // Registrador de Instrução (IR) recebe a instrução apontada pelo Contador de Programa (PC)
+        PC <- PC + 1 // PC aponta para a próxima instrução
+        EXEC IR // Executa a instrução que está em IR
+          INT ou EXCEÇÃO? // tratamento de interrupção ou exceção caso ocorra
+      }
+    </code></pre>
+    <p>Segundo a arquitetura de Von Neumann, a memória de um computador é utilizada para armazenar tanto dados quanto instruções.</p>
   </div>
 
   <div class="title">
     <i class="dropdown icon"></i>
-
+    3. De que maneira são representados os processos em um sistema operacional?
   </div>
   <div class="content">
+    <p>Os processos são representados como estruturas, no caso do Linux a struct task_struct definida em C, que armazenam informações (como identificador, estado dos registradores, mapeamento de memória, estutura de tratamento de sinais,arquivos abertos pelo processo, status de execução) essenciais para que o SO possa gerenciar processos. </p>
+  </div>
 
+  <div class="title">
+    <i class="dropdown icon"></i>
+    4. O que é contexto de um processo? Como se relaciona com a representação de processos feita pelo SO?
+  </div>
+  <div class="content">
+    <p>O contexto de um processo é seu estado, ou seja, o conjunto de informações mantidas pela estrutura do processo.</p>
+  </div>
+
+  <div class="title">
+    <i class="dropdown icon"></i>
+    5. Como ocorrem as trocas de contexto?
+  </div>
+  <div class="content">
+    <p>Após ocorrer um evento de troca de contexto (terminado o time slice do processo ou outro evento interno do SO, como decisão de deixar o processo esperando enquanto o SO está providenciando um recurso pedido) é lançada uma interrupção. A rotina de tratamento salva o estado corrente dos registradores (push cs, push eip, push EFLAGS), o SO então entra em ação, atualizando a estrutura do processo com o seu estado corrente. Determina qual processo ficará no lugar através de alguma polpitica de escalonamento.</p>
+    <p>Em seguida, carrega o estado do novo processo configurando os registradores do processador (retorna o estado do processado ao momento que estava quando esse processo foi interrompido anteriormente). Com tudo configurado, o SO sai de cena e deixa o processo tomar conta da CPU.</p>
+  </div>
+
+  <div class="title">
+    <i class="dropdown icon"></i>
+    6. Descreva estratégias usadas por sistemas operacionais para o compartilhamento do tempo de execução de um processador entre diversos processos.
+  </div>
+  <div class="content">
+    <p>Essas estratégias de compartilhamento de tempo são denominadas de políticas de escalonamento. De forma geral, podemos dividir os algoritmos de escalonamento em duas categorias: <b>não-preemptivos</b> e <b>preemptivos</b>.</p>
+    <p>Algoritmos <b>não-preemptivos</b> esperam que o processo termine sua execução, ou libere a CPU por livre e espontânea vontade, para dar espaço a outro processo. Algoritmos <b>preemptivos</b>, por sua vez, fazem com que o processo deixe a CPU a qualquer momento (de acordo com sua política).</p>
+    <p>Dentro dessas categorias temos diversas estratégias para a seleção de qual processo será o próximo a ser executado. Essas estratégias levam em conta o propósito do sistema.</p>
+  </div>
+
+  <div class="title">
+    <i class="dropdown icon"></i>
+    7.Descreva técnicas usadas pelo sistema operacional para interagir com os controladores de dispositivos.
+  </div>
+  <div class="content">
+    <p>A parte do SO responsável por interagir com controlador físico de dispositivo é chamada de device driver, que são softwares escritos pelos fabricantes do dispositivo.</p>
+    <p>O processador pode se comunicar com esses controladores através do endereçamento de um barramento direto com eles ou pelo endereçamento de espaços na memória reservados a esses dispositivos. </p>
+  </div>
+
+  <div class="title">
+    <i class="dropdown icon"></i>
+    8. O que são interrupções? Descreva os tipos existentes e os eventos aos quais estão associados.
+  </div>
+  <div class="content">
+    <p>Uma interrupção é uma "notificação" enviada ao processador, que indica que algum evento deve ser tratado.</p>
+    <p>Existem dois tipos de interrupções: internas, geradas em decorrência da execução de uma instrução, ou externas, geradas por controladores de dispositivos.</p>
+  </div>
+
+  <div class="title">
+    <i class="dropdown icon"></i>
+    9. Como ocorre o tratamento de uma interrupção? Quais ações são desempenhadas pelo processador e quais são realizadas pelo Sistema Operacional?
+  </div>
+  <div class="content">
+    <p></p>
+  </div>
+
+  <div class="title">
+    <i class="dropdown icon"></i>
+    9.
+  </div>
+  <div class="content">
+    <p></p>
   </div>
 
 </div>
