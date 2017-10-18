@@ -3,4 +3,117 @@ title: "PAA - Força Bruta e Busca Exaustiva"
 layout: default
 ---
 <h1 class="ui header">4. Força Bruta e Busca Exaustiva</h1>
-<h2></h2>
+
+<p>A força bruta é uma abordagem direta para a resolução problemas. Normalmente é baseada na definição do probema e dos conceitos envolvidos.</p>
+
+<p>A "força", no caso, é a força do computador em resolver o problema e não do desenvolvedor.</p>
+
+<h2>Ordenação por Força Bruta</h2>
+
+<h3>Selection Sort</h3>
+
+<pre><code>SelectionSort(A[0..n-1]) {
+  para i = 0 até i = n-2 faça {
+    min = i
+    para j = i + 1 até j = n - 1 faça {
+      se A[j] < A[min] então {
+        min = j
+      }
+      troca(A[i], A[min])
+    }
+  }
+}
+</code></pre>
+
+<p>A análise para esse algoritmo é como se segue. O tamanho da entrada é o número de elementos ($n$), a operação básica é a comparação $A[j] < A[min]$ (é essa operação que queremos contar quantas vezes é executada).</p>
+
+$$ T(n) = (n-1)*(n-2) $$
+$$ T(n) = n^2 - 3n + 2 $$
+$$ T(n) \in \Theta(n^2)$$
+
+<h3>Bubble Sort</h3>
+
+<pre><code>BubbleSort(A[0..n-1]){
+  para i = 0 até i = n-2 faça {
+    para j = 0 até j = n - 2 - i faça {
+      se A[j+1] < A[j] então {
+        troca(A[j], A[j+1])
+      }
+    }
+  }
+}
+</code></pre>
+
+<p>Podemos realizar a mesma análise do algoritmo anterior e concluiremos que o bubble sort é $\Theta(n^2)$.</p>
+
+<h2>Busca Sequencial e String Matching</h2>
+
+<h3>Busca Sequêncial</h3>
+
+<p>Dada uma lista de n elementos e uma chave k, queremos encontrar a posição da primeira ocorrência dessa chave na lista.</p>
+
+<pre><code>SequentialSearch(A[0..n], k){
+  A[n] = k
+  i = 0
+  enquanto A[i] != K faça {
+    i = i + 1
+  }
+  se i < n retorne i // encontrou na posição i
+  senão retorne -1 // não encontrou
+}
+</code></pre>
+
+<h3>String Matching</h3>
+
+<p>Dado um texto de n caracteres e uma palavra de m caracteres ($m \leq n$), o objetivo é encontrar uma substring do texto que case com a palavra.</p>
+
+<pre><code>StringMatch(T[0..n-1], P[0..m-1]) {
+  para i = 0 até i = n - m faça {
+    j = 0
+    enquanto j < m e P[j] = T[i+j] faça {
+      j = j + 1
+    }
+    se j = m retorne i
+  }
+  retorne -1
+}
+</code></pre>
+
+<p>Para o pior caso teríamos uma palavra no texto quase idêntica à chave oncorrendo várias vezes. Isso ocasionaria $n-m+1$ comparações o que faz com que o algoritmo seja $O(mn)$. Entretanto, para textos comuns o algoritmo é $O(n)$.</p>
+
+<h2>Closest-Pair e Convex-Hull pela Força Bruta</h2>
+
+<h3>Problema Closest-Pair</h3>
+
+<p>Esse problema se resume em encontrar os 2 pontos mais próximos dentro de um conjunto de n pontos.</p>
+
+<p>Esse problema está relacionado com a geometria computacional. Pontos podem ser aeronaves, agências de correios, sequências de DNA...</p>
+
+<img src="{{site.imageurl | append: 'paa/closest_pair_of_points.png'}}" class="ui centered medium image">
+
+<pre><code>ClosestPair(P[1..n]) { // P é uma lista de pontos
+  d = infinito
+  para i = 1 até i = n - 1 {
+    para j = i + 1 até j = n faça {
+      d = min(d,distacia(P[i], P[j]))
+    }
+  }
+}
+</code></pre>
+
+<h4>Análise do Algoritmo</h4>
+
+<p>A operação básica do algoritmo é calcular a distância entre pontos.</p>
+
+$$ T(n) = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} 1 = \sum_{i=1}^{n-1}(n-i)$$
+$$ T(n) = (n-1)n \in \Theta(n^2) $$
+
+<h3>Problema Convex-Hull</h3>
+
+<p><b>Definição:</b> um conjunto de pontos no plano é chamado de convexo se para qualquer 2 pontos p e q no conjunto, todo o segmento $\overline{pq}$ pertence ao conjunto,</p>
+
+<p><b>Definição:</b> O <b>convex hull</b> de um conjunto S de pontos é o menor conjunto convex contendo S.</p>
+
+<p><b>Teorema:</b> Um <b>convex hull</b> de qualquer conjunto S de n pontos (n &gt 2) sendo que nem todos estejam em uma mesma linha é um polígono convexo com vértices em aguns dos pontos de S.</p>
+
+<h2>Busca Exaustiva</h2>
