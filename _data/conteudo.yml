@@ -40,6 +40,10 @@ disciplinas:
         url: paa/3_fundamentos_analise_algoritmos
       - titulo: Força Bruta e Busca Exaustiva
         url: paa/4_forca_bruta
+      - titulo: Decremento e Conquista
+        url: paa/5_decremento_e_conquista
+      - titulo: Divisão e Conquista
+        url: paa/6_divisao_e_conquista
 
   - nome: Redes de Computadores
     alias: Redes

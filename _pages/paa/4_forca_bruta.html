@@ -117,3 +117,61 @@ $$ T(n) = (n-1)n \in \Theta(n^2) $$
 <p><b>Teorema:</b> Um <b>convex hull</b> de qualquer conjunto S de n pontos (n &gt 2) sendo que nem todos estejam em uma mesma linha é um polígono convexo com vértices em aguns dos pontos de S.</p>
 
 <h2>Busca Exaustiva</h2>
+
+<p>Muitos problemas importantes requerem encontrar um elemento com uma propriedade especial em um domínio que cresce exponencialmente dada uma instância com seu respectivo tamanho.</p>
+
+<p>Tipicamente, tais problemas aparecem/ocorrem em situações que envolvem objetos combinatoriais tais como permutações, combinações e subconjuntos de um dado conjunto.</p>
+
+<p><b>Definição:</b> busca exaustiva é simplesmente a aplicação da estratégia de força bruta a problemas de natureza combinatorial. Isso significa que, na prática, o algoritmo deve gerar cada elemento do domínio do problema, selecionar aqueles que satisfazem alguma condição e achar os elementos desejados.</p>
+
+<h3>Problema do Caxeiro Viajante (TSP)</h3>
+
+<p>Encontrar o percurso mais curto (menor custo) que percorra n cidades exatamente uma vez antes de retornar ao ponto inicial.</p>
+
+<h3>Problemas Knapsack</h3>
+
+<p>Dados n itens de pesos conhecidos $w_1,w_2,...,w_n$ e valores $v_1, v_2, ..., v_n$ e um saco com capacidade W, encontre o subsonjunto mais valioso de itens que caibam no saco.</p>
+
+<h3>Casamento/Pareamento</h3>
+
+<p>Imagine a situação de n pessoas procurando n empregos, ou n pessoas procurando casar com n outras pessoas.</p>
+
+<h3>Busca em Profundidade (DFS)</h3>
+
+<pre><code>DFS(G,s) {
+  P = Pilha vazia
+  P.push(s)
+  marca s como visitado
+  enquanto P é não vazia faça {
+    v = P.pop()
+    para cada vizinho w de v em G faça {
+      se w não foi visitado então {
+        P.push(w)
+        marca w como visitado
+      }
+    }
+  }
+}
+</code></pre>
+
+<p>Para a representação em matriz de adjacência, a complexidade temporal é $\Theta(|V|^2)$ e para a representação em lista de adjacência é $\Theta(|E|+|V|)$, onde |E| e |V| são os números de arestas e vertices, respectivamente.</p>
+
+<h3>Busca em Largura (BFS)</h3>
+
+<pre><code>BFS(G,s) {
+    Q = fila vazia
+    Q.enfilera(s)
+    marca s como visitado
+    enquanto Q é não vazia faça {
+      v = Q.desenfilera()
+      para cada vizinho w de v em G faça {
+        se w não foi visitado então {
+          Q.enfilera(w)
+          marca w como visitado
+        }
+      }
+    }
+}
+</code></pre>
+
+<p>Mesma complexidade temporal que o anterior.</p>

@@ -1,0 +1,125 @@
+---
+title: "PAA - Decrememento e Conquista"
+layout: default
+---
+<h1 class="ui header">5. Decremento e Conquista</h1>
+
+<p>Técnica baseada na exploração da relação entre a solução de uma dada instância de um problema e a solução de uma instância menor. Depois de descoberta a relação, a técnica pode ser aplicada tanto bottom up como top down. A abordagem Top Down leva naturalmente à uma solução recursiva enquanto que a Bottom Up normalmente gera soluções iterativas (abordagem incremental).</p>
+
+<p>Existem 3 grandes tipos de decremento e conquista:</p>
+
+<ul>
+  <li><b>Decremento por uma constante:</b> o tamanho de uma instânica é reduzido pela mesma constante em cada iteração. Normalmente a constante é 1.</li>
+  <li><b>Decremento por um fator constante:</b> o tamanho de uma instância é reduzido por um fator constante em cada iteração. Na maioria dos cados o fator é 2.</li>
+  <li><b>Decremento de tamanho variável:</b> o fator de redução varia de uma iteração para outra. Um exemplo é o algoritmo de Euclides para calcular o MDC.</li>
+</ul>
+
+<h2>Insertion Sort</h2>
+
+<pre><code>InsertionSort(A[0..n-1]) {
+  para i = 1 até i = n-1 faça {
+    v = A[i]
+    j = i - 1
+    enquanto j &gt= 0 e A[j] &gt v faça {
+      A[j + 1] = A[j]
+      j = j - 1
+    }
+    A[j + 1] = v
+  }
+}
+</code></pre>
+
+<p>A operação básica do algoritmo é a comparação $A[j] > v$. Analisando a complexidade, no pior caso (vetor em ordem decrescente) temos:</p>
+
+$$C_{pior}(n) = \sum_{i=1}^{n-1} \sum_{j=0}^{i-1} 1 = \sum_{i=1}^{n-1}i = \frac{(n-1)n}{2} \in \Theta(n^2)$$
+
+<p>No melhor caso (vetor já ordenado):</p>
+
+$$C_{melhor}(n) = \sum_{i=1}^{n-1}1 = n - 1 \in \Theta(n)$$
+
+<p>No caso médio:</p>
+
+$$C_{avg}(n) \approx \frac{n^2}{4} \in \Theta(n^2)$$
+
+<h2>Algoritmos para Geração de Objetos Combinatoriais</h2>
+
+<h3>Gerando Permutações</h3>
+
+<p>Resolvido o problema de n-1 permutações, basta inserir o valor n (ou indice n) em cada uma delas. Mas, como inserir?</p>
+
+<p>É possível gerar as permutações de n elementos sem ter que gerar explicitamente permutações para valores menores de n. Isso é possível se associarmos uma direção para cada elemento da permutação.</p>
+
+$$ \overrightarrow3 \overleftarrow2 \overrightarrow4 \overleftarrow1$$
+
+<p>Considere um ekemento k móvel. O elemento k é definido como sendo móvel se sua seta aponta para um número meno adjacente a ele. No exemplo acima, 3 aponta para 2 e 4 aponta para 1. Portanto 3 e 4 são móveis enquanto que 1 e 2 não.</p>
+
+<pre><code>JohnsonTrotter(n) {
+  inicializar a primeira permutação com todos os elementos apontando para esquerda
+  enquanto a última permutação tiver um elemento móvel faça {
+    ache o maior elemento móvel k
+    troque k com o elemento adjacente apontado por k
+    troque a direção de todos os elementos maiores que k
+    adicione a nova permutação à lista.
+  }
+}
+</code></pre>
+
+<p>Exemplo com n = 3, com o maior elemento móvel em negrito:</p>
+
+$$\overleftarrow1 \overleftarrow2 \overleftarrow{\boldsymbol 3} \quad
+  \overleftarrow1 \overleftarrow{\boldsymbol 3}  \overleftarrow2 \quad
+  \overleftarrow3 \overleftarrow1  \overleftarrow{\boldsymbol 2} \quad
+  \overrightarrow{\boldsymbol 3} \overleftarrow2 \overleftarrow1 \quad
+  \overleftarrow2 \overrightarrow{\boldsymbol 3} \overleftarrow1 \quad
+  \overleftarrow2 \overleftarrow1 \overrightarrow3
+$$
+
+<p>Esse algoritmo, porém, não gera permutações em ordem crescente (lexicográfica).</p>
+<h3>Gerando Subconjuntos</h3>
+
+<p>Considere todos os subconjuntos de $A = \{a_1, a_2, ..., a_n\}$ e suponha que possa ser dividido em 2 grupos: aqueles com $a_n$ e aqueles sem o $a_n$. O grupo de todos sem o $a_n$ na verdade são todos os subconjuntos $\{a_1, a_2, ..., a_{n-1}\}$.</p>
+
+<p>Com a lista dos subconjuntos que não contêm $a_n$, aí basta incluiir $a_n$ para se terr os subconjuntos $$\{a_1, a_2, ..., a_{n}\}$$.</p>
+
+<h2>Decremento por um Fator Constante</h2>
+
+<h3>Busca Binária</h3>
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Binary_Search_Depiction.svg/1200px-Binary_Search_Depiction.svg.png" class="ui centered image">
+
+<pre><code>BinarySearch(A[0..n-1], K) {
+  l = 0
+  r = n-1
+  enquanto l $lt= faça {
+    m = piso((l+r)/2)
+    se K = A[m] retorna m
+    senão se k &lt A[m] {
+      r = m - 1
+    }
+    senão {
+      l = m + 1
+    }
+  }
+
+}
+</code></pre>
+
+<h3>Problema da Moeda Falsa</h3>
+
+<p>Dentre um conjunto de n moedas todas similares, um é falsa (mais leve). Com uma balança pode comparar quaisquer 2 conjuntos de moedas.</p>
+
+<p>Uma solução é dividir n moedas em dois montes de $n/2$ moedas cada, deixando um moeda de fora desses montes caso n seja ímpar. Coloque os dois montes na balança. Se os montes possuem o mesmo peso, a moeda deixada de lado deve ser a falsa; caso contrário prosseguimos da mesma forma com o monte mais leve, que deverá conter a moeda falsa.</p>
+
+<h3>Multiplicação Russa</h3>
+
+<p>Sejam n e m 2 inteiros positivos, cujo produto desejamos calcular. Se n é par temos:</p>
+
+$$n*m = \frac{n}{2}2*m$$
+
+<p>Se n é ímpar, temos:</p>
+
+$$ n*m = \frac{n-1}{2}2*m + m $$
+
+<h2>Decremento por Tamanho Variável</h2>
+
+<p></p>
