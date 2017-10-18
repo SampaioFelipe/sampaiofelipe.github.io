@@ -379,6 +379,40 @@ layout: default
 
 <h2>Aplicações P2P</h2>
 
-<h2>Streaming de Videos e Redes de Distribuição de Conteúdo</h2>
+<p>A arquitetura P2P possui o mínimo (ou nenhuma) dependência de servidores <b><i>always-on</i></b>. Hosts arbitrários se comunicam diretamente. Os peers nem sempre estão conectados e seus endereços IP mudam.</p>
+
+<h3>Distribuição de arquivos</h3>
+
+<p>Quanto tempo levaria para distribuir um aquivo (de temanho F) de um único sevidor para N peers (capacidade de upload/download é um recurso limitado)?</p>
+
+<p>O servidor precisa enviada sequencialmente as N cópias. O tempo para enviar uma cópia é $\frac{F}{u_s}$ ($u_s$ é a capacidade de upload do servidor). Para enviar $N$ cópias, será $\frac{NF}{u_s}$.</p>
+
+<p>Cada cliente deve baixar uma cópia do arquivo, o tempo mínimo de download então será de $\frac{F}{d_{min}}$ ($d_{min}$ é a taxa mínima de download do cliente).</p>
+
+<p>Portanto, o tempo de distribuição de F para N clientes usando a abordagem cliente-servidor é:</p>
+
+$$ D_{cs} \geq max \Bigg\{ \frac{NF}{u_s}, \frac{F}{d_{min}}\Bigg\}$$
+
+<p>Na abordagem P2P, cada peer pode auxiliar o servidor na distribuição do arquivo. Calcular o tempo de distribuição na arquitetura P2P é um pouco mais complicado do que na arquitetura cliente-servidor, uma vez que o tempo de distribuição depende como cada peer distribui porções do arquivo a outros peers.</p>
+
+<p>No início, somente o servidor possui o arquivo. Para esse arquivo entrar na rede P2P, o servidor precisa mandá-lo pelo menos vez pelo seu link de acesso.</p>
+
+<p>Assim como na arquitetura cliente-servidor,  o peer com a taxa de download mais baixa não pode obter todos os F bits em menos de $\frac{F}{d_{min}}$ segundos.</p>
+
+<p>A capacidade total de upload do sistema é igual a taxa de uploade do servidor mais a taxa de upload de cada um dos peers, isso é $u_{total} = u_s + u_1 + ... + u_N$. O sistema deve entregar F bits para cada um dos N peers, portanto entregar $NF$ bits.</p>
+
+$$ D_{P2P} \geq max \Bigg\{ \frac{F}{u_s}, \frac{F}{d_{min}}, \frac{NF}{u_s + \sum_{i=1}^{N}u_i}\Bigg\}$$
+
+<h3>BitTorrent</h3>
+
+<p>Arquivos dividos em chunks de 256kb, cada peer no torrent envia e recebe arquivos em chunks.</p>
+
+<p>Quando um peer chega, ele obtem de um servidor (tracker) uma lista com os peers e começa com a troca de chunks do arquivo.</p>
+
+<p class="duvida">Tit-for-tat</p>
+
+<h2>Streaming de Videos e Redes de Distribuição de Conteúdo (CDN)</h2>
+
+<p>Algoritmo DASH: Dynamic, Adaptative Streaming over HTTP</p>
 
 <h2>Programação com Sockets</h2>
