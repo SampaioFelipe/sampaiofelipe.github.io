@@ -216,7 +216,166 @@ layout: default
 
 <h2>E-mail</h2>
 
+<p>O e-mail é um meio de comunicação assíncrona (pessoas enviam e leem mensagens quando conveniente, sem haver uma coordenação entre as pessoas envolvidas).</p>
+
+<h3>3 maiores Componentes</h3>
+<ul>
+  <li>Agentes Usuário</li>
+  <li>Servidores de E-mail</li>
+  <li><b>SMTP:</b> Simple Mail Transfer Protocol</li>
+</ul>
+
+<h3>Agente Usuário</h3>
+
+<p>Conhecido como o leitor de email, fornece uma interface para compor, editar e ler mensagens (ex: outlook, Thunderbird).</p>
+
+<p>Emails recebidos e enviados são armazenados no servidor</p>
+
+<h3>Servidores de Email</h3>
+
+<ul>
+  <li>Caixa de entrada: contpem as mensagens recebidas.</li>
+  <li>Fila de Mensagens: fila das mensagens que estão prestes a serem enviadas.</li>
+  <li>Protocolo SMTP: entre servidores de email para enviar mensagens.</li>
+</ul>
+
+<h3>SMTP</h3>
+
+<p>Utiliza o TCP pra tranferir o email de forma confiável (<b>porta 25</b>).</p>
+
+<p>Transferência direta: envia do servidor origem para o servidor destino.</p>
+
+<p>Possui 3 fases de tranferência</p>
+
+<ol>
+  <li>Handshaking</li>
+  <li>Transferência das mensagens</li>
+  <li class="duvida">Closure</li>
+</ol>
+
+<p>O envio é em texto ASCII e a resposta com status code e a frase do estatus (como o HTTP).</p>
+
+<p>O SMTP usa conexões persistentes, requer que a mensagem (cabeçalho e corpo) esteja em ASCII 7-bit. O Servidor SMTP usa <b>CRLF.CRLF</b> para determinar o fim da mensagem.</p>
+
+<h3>Formato da Mensagem</h3>
+
+<ul>
+  <li>Linhas do cabeçalho:
+    <ul>
+      <li>To:</li>
+      <li>From:</li>
+      <li>Subject:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Corpo da mensagem em caracteres ACII apenas.</p>
+
+<h3>Protocolos de Acesso ao Email</h3>
+
+<p>O SMTP cuida da etapa de entregar/armazenar emails no servidor de email. Existem protocolos para realizar o acesso a esses servidores</p>
+
+<ul>
+  <li><b>POP (Post Office Protocol):</b></li>
+  <li><b>IMAP (Internet Mail Acess Protocol)</b></li>
+  <li><b>HTTP</b></li>
+</ul>
+
+<h3>Protocolo POP3</h3>
+
+<ol>
+  <li>Fase de Autorização</li>
+  <li>Fase de Transação</li>
+  <li>Fase de <a href="#"></a>tualização</li>
+</ol>
+
+<p><b>Modos de operação:</b> download-and-delete e download-and-keep</p>
+
+<p class="duvida">Não mantém estado do usuário através de sessões.</p>
+
+<h3>IMAP</h3>
+
+<p>Mantém todas as mensagens em um local: no servidor. Permite que usuário organize as mensagens em pastas</p>
+
+<p>Mantém estado do usuário através de sesões.</p>
+
 <h2>DNS</h2>
+
+<p>Como mapear endereços IP em nomes e vice-versa?</p>
+
+<p><b>DNS (Domain Name System):</b> funciona como um banco de dados distribuído implementado em hierarquias de vários servidores de nomes. É um protocolo da camada de aplicação.</p>
+
+<h3>Serviços do DNS</h3>
+
+<p>A principal tarefa do DNS é fornecer um serviço de tradução de hostnames para endereços IP.</p>
+
+<p>O protocolo DNS roda sobre o protocolo UDP e usa a <b>porta 53</b>.</p>
+
+<p>Quando um usuário digita uma url no browser, o browser faz:</p>
+
+<ol>
+  <li>A mesma máquina do supario roda o lado cliente da aplicação DNS.</li>
+  <li>O browser extrai o hostname da url e o passa para o cliente de DNS</li>
+  <li>O cliente DNS envia uma query (consulta) contendo o hostname para o servidor DNS</li>
+  <li>O cliente DNS eventualmente recebe uma resposta com o endereço IP para o hostname</li>
+  <li>Uma vez que o browser recebe o endereço IP do DNS, ele pode iniciar uma conexão TCP com o servidor HTTP localizado na porta 80 daquele endereço IP.</li>
+</ol>
+
+<p>O DNS também oferece outros serviços como:</p>
+
+<p><b>Host Aliasing:</b> um mesmo host pode ter mais de um "apelido" (alias). O nome original é chamado de <b>canônico</b>.</p>
+
+<p><b>Aliasing de Servidores de Email</b></p>
+
+<p><b>Load Distribution:</b> distribuição de carga entre servidores replicados. Um mesmo hostname pode estar associado a uma lista de IPs, quando o cliente faz um consulta DNS o servidor responde com essa lista de IPs (rotacioando a ordem em cada resposta para distribuir a carga entre os servidores).</p>
+
+<h3>Como o DNS funciona?</h3>
+
+<h4>Banco de Dados distribuído e hierarquico</h4>
+
+<p>Devido a forma da internet de hoje, uma abordagem centralizada para o armazenamento do mapeamento de hostnames é inapropriado (único ponto de falha, volume do tráfego, distancia até o banco centralizado, manutenção complicada e impossibilidade de ser escalável.)</p>
+
+<p>Para lidar com esses problemas, o DNS utiliza vários servidores, organizados de uma forma hieráquica e distribuída ao redor do mundo. Há três classes de servidores DNS:</p>
+
+<ul>
+  <li><b>Root:</b> existem 13 servidores DNS Root (de A a M), a maioria localizado na América do Norte.</li>
+  <li><b>TLD (Top-level Domain):</b> responsáveis pelos domínios top-level como .com, .org, .net, .edu e .gov, e todos os domínios de países como .uk, .br e .jp.</li>
+  <li><b>Authoritative:</b> organizações possuem seus próprios servidores DNS, que fornecem o mapeamento de hostnames para IP para os hosts da organização.</li>
+</ul>
+
+<p>Existe um outro tipo de servidor DNS chamado de <b>Servidor de DNS Local</b>. Esse servidor local não pertence a hierarquia de servidores DNS em si, porém é essencial na arquitetura DNS. Cada ISP possui um servidor DNS local (também chamado de default name server). Quando um host se conecta a um SIP, o ISP fornece ao host o endereço IP de um ou mais de seus servidores DNS locais.</p>
+
+<p>Quando um host faz uma consulta DNS, essa consulta é enviada ao seu servidor de DNS local, que atua como um proxy, redirecionando a consulta para a hierarquia DNS.</p>
+
+<div class="ui red inverted segment">
+  <h4>Exemplo de Resolução de Nome</h4>
+  <p>Suponha que o host quer o IP de google.com. O host primeiramente enviará a consulta para seu servidor de DNS local. A consulta contém o hostname a ser traduzido. O servidor de DNS local redireciona a consulta para um servidor DNS root. O servidor DNS root identifica o sufixo .com e retorna al servidor local uma lista de IPs para os TLDs responsáveis pelo domínio .com (Servidor root responde: Vish, eu não conheço esse nome, mas pergunta pra esses servidores aqui que eles devem saber). O servidor local reenvia a consulta para um desses TLDs... Esse processo é executado até que se ache o servidor DNS que contém o mapeamento para o nome.</p>
+</div>
+
+<h4>Caching</h4>
+
+<p>Uma vez que um servidor DNS aprende um mapeamento, ele mantém esse mapeamento em cache.</p>
+
+<h3>Registros e Mensagens DNS</h3>
+
+<p>O banco de dados distribuído armazena <b>resources records (RR)</b></p>
+
+<p>Formato do <b>RR</b>: (Name, Value, Type, TTL).</p>
+
+<p>TLL é o tempo que o RR ficará no cache, determina quando ele será removido do cache. O significado de <b>Name</b> e <b>Value</b> depende de <b>Type</b>:</p>
+
+<ul>
+  <li><b>Type = A:</b> o nome é um hostname e o valor é o endereço IP para esse hostname</li>
+  <li><b>Type = NS:</b> o nome é um domínio e o valor é o hostname do servidor DNS autoritativo que sabe como obter o endereço IP para hosts desse domínio.</li>
+  <li><b>Type = CNAME:</b> valor é um hostname canonico para o alias em nome.</li>
+  <li><b>Type = MX:</b> valor é o nome canônico do servidor de email que tem como alias nome.</li>
+</ul>
+
+<p>Existem apenas dois tipos de mensagem DNS: query e reply, que possuem o mesmo formato.</p>
+
+[IMAGEM DO FORMATO DA MENSAGEM]
+
+<h3>Vulnerabilidades do DNS</h3>
 
 <h2>Aplicações P2P</h2>
 
