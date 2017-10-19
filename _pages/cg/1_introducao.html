@@ -88,9 +88,15 @@ muito maior de informações quando estas se encontram sob a forma de imagens.
   <li>Razão de aspecto físico: $$ physical\_aspect\_ratio = {height \over width} $$</li>
 </ol>
 
-<p>Dispositivos de visualização podem ter mesma resolução gráfica com resoluções físicas muito diferentes. O ideal é ter a razão de aspecto gráfico próximo a 1.</p>
+<p>Dispositivos de visualização podem ter mesma resolução gráfica com resoluções físicas muito diferentes. O ideal é ter a razão de aspecto gráfica (raG - relaçao entre tamanho de pixels verticais e horizontais) próximo a 1.</p>
 
 <h2>Sistema de Coordenadas</h2>
+<p>Qual o intervalo de variação de dcx, dcy em termos de nph e npv?</p>
+<p>Ndcx e ndcy são coordenadas do dispositivo normalizadas ($0 \leq ndcx, ndcy \leq 1$)</p>
+
+<img class="ui centered image"src="{{ site.imageurl | append: 'cg/sistema_coordenadas.png'}}" alt="">
+
+<p>Mapeamento linear = $round(ndcx * (nph - 1))$</p>
 
 <h4>Sistema de Coordenadas Físico</h4>
 <ul>
@@ -102,3 +108,14 @@ muito maior de informações quando estas se encontram sob a forma de imagens.
 <p>$$ dcx = {trunc (pcx * {(ndh - 1) \over width})} $$</p>
 
 <h2>Sistema Gráfico</h2>
+
+<img class="ui centered big image" src="{{site.imageurl | append: 'cg/sistema_grafico.png'}}" alt="">
+
+<h3>Frame Buffer</h3>
+<p>Implementado com memória VRAM(video random-access memeory)/DRAM(Dynamic random-access memory), que fornece acesso rápido para re-exibição e restauro.</p>
+
+<p>O frame buffer endereça cada pixel da tela. O número de bits para cada pixel determina a profundidade dos pixels.</p>
+
+<p>A profundidade determina o npumero de cores que o sistema consegue exibir (1 bit = 2 cores, 24 bits = sistema true color)</p>
+
+<p>O sistema RGB agrupa esses bits em 3 grupos, correspondentes ao valor das 3 cores primárias: Red, Green e Blue.</p>

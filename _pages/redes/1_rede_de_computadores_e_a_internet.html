@@ -14,17 +14,17 @@ layout: default
   <img src="{{ site.imageurl | append: 'redes/componentes_internet.png'}}" alt="">
 </div>
 
-<p><i>End systems</i> estão interconectados pela rede de <b><i>links de comunicação</i></b> e <b><i>packets switches</i></b>. Diferentes links podem transmitir dados em diferentes taxas (<b>taxa de tranmissão</b> medida em <b>bits/seg</b>).</p>
+<p class="importante"><i>End systems</i> estão interconectados pela rede de <b><i>links de comunicação</i></b> e <b><i>packets switches</i></b>. Diferentes links podem transmitir dados em diferentes taxas (<b>taxa de transmissão</b> medida em <b>bits/seg</b>).</p>
 
-<p>Quando um <i>end system</i> tem dados para enviar para outro, ele segmenta esses dados e adiciona bytes de cabeçalho para cada um desses segmentos (<b>pacotes</b>). Cada pacote, então, é enviado pela rede ao dispositivo destino, que "remonta" os dados originais.</p>
+<p class="importante">Quando um <i>end system</i> tem dados para enviar para outro, ele segmenta esses dados e adiciona bytes de cabeçalho para cada um desses segmentos (<b>pacotes</b>). Cada pacote, então, é enviado pela rede ao dispositivo destino, que "remonta" os dados originais.</p>
 
 <p>Um <b>switch de pacote</b> (roteadores, switches) recebem um pacote que chegou por um de seus links de entrada e redireciona-o para um de seus links de saída.</p>
 
 <p>A sequência de links e switches de pacotes por onde um pacote passou até chegar no seu destino é chamado de <b><i>route</i></b> ou <b><i>path</i></b>.</p>
 
-<p>Podemos fazer a seguinte analogia: pacotes são caminhões, links de comunicação são estradas e ruas, switches de pacotes são intersectções e os end systems são os prédios de onde as cargas saem e entram.</p>
+<p>Podemos fazer a seguinte analogia: pacotes são caminhões, links de comunicação são estradas e ruas, switches de pacotes são intersecções e os end systems são os prédios de onde as cargas saem e entram.</p>
 
-<p>End systems acessão a internet por meio de <b>Internet Service Providers (ISPs)</b>, incluindo os ISPs residenciais, como companias de telefonia locais, ISPs corporativos, ISPs de universidades, ... ISPs fornecem uma variedade de tipos de acesso a internet aos end systems.</p>
+<p>End systems acessam a internet por meio de <b>Internet Service Providers (ISPs)</b>, incluindo os ISPs residenciais, como companias de telefonia locais, ISPs corporativos, ISPs de universidades, ... ISPs fornecem uma variedade de tipos de acesso a internet aos end systems.</p>
 
 <p>Para poder fornecer internet, os ISPs precisam estar interconectados. Os ISPs de nível inferior são conectados através de ISPs nacionais e internacionais de nível superior. Um ISP de nível superior consiste de roteadores de alta velocidade interconectados com links de fibra ótica de alta velocidade.</p>
 
@@ -34,9 +34,9 @@ layout: default
 
 <h3>Service View</h3>
 
-<p>Diferente da visão anterior, podemos ver a internet como <i>uma infraestrutura que fornece serviços para aplicações.</i> Essas aplicações são ditas <b>aplicações distribuídas</b> pois envolvem multiplos dispositivos que trocam dados entre si.</p>
+<p>Diferente da visão anterior, podemos ver a internet como <b>uma infraestrutura que fornece serviços para aplicações.</b> Essas aplicações são ditas <b>aplicações distribuídas</b> pois envolvem multiplos dispositivos que trocam dados entre si.</p>
 
-<p>End systems ligados a internet fornecem uma <b>Application Programmin Interface (API)</b> que especifica como um programa executando em um end system ira se comunicar pela infraestrutura da internet com um outro programa destino que está sendo executado em outro dispositivo. A internet "possui" uma API que programas que enviam dados devem seguir para que a internet possa entregar os dados para o destino correto.</p>
+<p>End systems ligados a internet fornecem uma <b>Application Programming Interface (API)</b> que especifica como um programa executando em um end system irá se comunicar pela infraestrutura da internet com um outro programa destino que está sendo executado em outro dispositivo. A internet "possui" uma API que programas que enviam dados devem seguir para que a internet possa entregar os dados para o destino correto.</p>
 
 <h3>O que é um Protocolo?</h3>
 
@@ -54,7 +54,7 @@ layout: default
 
 <h2>A "borda" da Internet</h2>
 
-<p>Os end system tem esse nome porque residem na borda da internet. Esses dispositivos também podem ser chamados de hosts, pois "hospedam" aplicações (como um brwoser ou um servidor web). Esses Hosts são divididos em duas categorias: <b>clientes</b> e <b>servidores</b>.</p>
+<p>Os end system tem esse nome porque residem na borda da internet. Esses dispositivos também podem ser chamados de hosts, pois "hospedam" aplicações (como um browser ou um servidor web). Esses Hosts são divididos em duas categorias: <b>clientes</b> e <b>servidores</b>.</p>
 
 <h3>Redes de Acesso</h3>
 
@@ -77,7 +77,7 @@ layout: default
   <tbody>
     <tr>
       <td>DSL</td>
-      <td>Digital Subscriber Line: o acesso é obtido pelo mesmo local onde onde um companhia de telefonia fornece a linha de telefone. Cada cliente possui um modem DSL que traduz os dados digitais em tons de alta-frequência que são transmitidos pela linha telefonica até uma central. A linha consegue carregar tanto dados quanto o sinal telefonico simultaneamente em diferentes frequências. Devido a diferença entre as taxas de downstream e upstream, o acesso é dito <b>assimétrico</b>.</td>
+      <td>Digital Subscriber Line: o acesso é obtido pelo mesmo local onde uma companhia de telefonia fornece a linha de telefone. Cada cliente possui um modem DSL que traduz os dados digitais em tons de alta-frequência que são transmitidos pela linha telefonica até uma central. A linha consegue carregar tanto dados quanto o sinal telefônico simultaneamente em diferentes frequências. Devido a diferença entre as taxas de downstream e upstream, o acesso é dito <b>assimétrico</b>.</td>
       <td>24 Mbps</td>
       <td>2.5 Mbps</td>
     </tr>
@@ -117,7 +117,7 @@ layout: default
 
 <h4>Acesso Empresarial (e residencial): Ethernet e WiFi</h4>
 
-<p>Nas organiações e campos universitários, e recentemente em configurações residenciais, uma LAN (Local Area Network) é usada para conectar hosts aos roteadores de borda. Existem diversos tipos de tecnologia LAN, o <b>Ethernet</b> é o tecnologia mais usada (~ 100 Mbps de taxa de transmissão).</p>
+<p>Nas organizações e campi universitários, e recentemente em configurações residenciais, uma LAN (Local Area Network) é usada para conectar hosts aos roteadores de borda. Existem diversos tipos de tecnologia LAN, o <b>Ethernet</b> é a tecnologia mais usada (~ 100 Mbps de taxa de transmissão).</p>
 
 <p>Recentemente as pessoas estão acessando a internet por meio da <b>Wireless LAN</b> (WiFi - IEEE 802.11). -> Transmissão compartilhada de 54 Mbps.</p>
 
@@ -131,7 +131,7 @@ layout: default
   <li>Transmite o pacote por uma rede de acesso a uma <b>taxa de transmissão de</b> $R$ (taxa de transmissão = capacidade = largura de banda)</li>
 </ol>
 
-<p>O atraso (<i>delay</i>) na transmissão de um pacote é o tempo necessário para transmitir um pacote de $L$-bit por um link.</p>
+<p>O atraso (<i>delay</i>) na transmissão de um pacote é o tempo necessário para transmitir um pacote de $L$-bits por um link.</p>
 
 $$ L {(bits)} \over R {(bits/sec)} $$
 
@@ -188,15 +188,15 @@ $$ L {(bits)} \over R {(bits/sec)} $$
 
 <p>Se a taxa de chegada de bits exceder a taxa de transmissão do link por um período de tempo, os pacotes serão enfileirados, e ficarão aguardando até serem transmitidos.</p>
 
-<p>Se a quantidad de memória (do buffer) encher, novos pacotes serão descartados (perdidos).</p>
+<p>Se a quantidade de memória (do buffer) encher, novos pacotes serão descartados (perdidos).</p>
 
 [IMAGEM]
 
 <h4>Tabelas de Redirecionamento e Protocolos de Roteamento</h4>
 
-<p>Quando um pacote chega em um roteador, o roteador examina uma porção do endereço de destino do pacote (IP dest) e redireciona o pacote a um roteador adjacente. Mais especificamente, cada roteador possui uma tabela de redirecionamento que mapeia endereços de destino (ou porções do endereço) aos links de saída (exemplo do motorista de carro que não usa mapa e prefere perguntar por direções).</p>
+<p class="importante">Quando um pacote chega em um roteador, o roteador examina uma porção do endereço de destino do pacote (IP dest) e redireciona o pacote a um roteador adjacente. Mais especificamente, cada roteador possui uma tabela de redirecionamento que mapeia endereços de destino (ou porções do endereço) aos links de saída (exemplo do motorista de carro que não usa mapa e prefere perguntar por direções).</p>
 
-<p>Mas como essas tabelas sabem para onde um pacote deve ir? -> protocolos de roteamento atualizam automaticamente essas tabelas (captulo 4)</p>
+<p>Mas como essas tabelas sabem para onde um pacote deve ir? -> protocolos de roteamento atualizam automaticamente essas tabelas (capítulo 4)</p>
 
 <h3>Circuit Switching</h3>
 
@@ -215,11 +215,9 @@ $$ L {(bits)} \over R {(bits/sec)} $$
 
 <h4>Packet Switchig vs Circuit Switching</h4>
 
-<p></p>
-
 <ul>
   <li>No packet switching há maior delay e perda de pacotes se comparado ao circuit switching (não é viável para serviços de tempo-real).</li>
-  <li>Packet switching oferece melhor compartilhamento da capacidade de transmição, mais simples, eficiente e com baixo custo de implementação.</li>
+  <li>Packet switching oferece melhor compartilhamento da capacidade de transmissão, mais simples, eficiente e com baixo custo de implementação.</li>
 </ul>
 
 <div class="ui orange inverted segment">
@@ -227,7 +225,7 @@ $$ L {(bits)} \over R {(bits/sec)} $$
 
   <p>Suponha que usuários compartilham um link de 1 Mbps e que cada usuário alternar entre períodos de atividade, quando um usuário gerar dados numa taxa constante de 100 Kbps, e períodos de inatividade, quando não gera nenhum dado. Suponha também que um usuário fica ativo apenas 10% do tempo.</p>
 
-  <p>Com o <b>circuit switching</b>, 100 Kbps devem ser reservados para cadda usuário todo o tempo. Por exemplo, com o TDM, se um frame de um segundo é dividido em 10 espaços de tempo de 100 ms cada, então para cada usuário será alocado um espaço de tempo por frame. Por tanto, um link circuit-switched poderá suportar apenas 10 (${1\text{ Mbps}/ {100\text{ kbps}}}$) usuários simultaneamente.</p>
+  <p>Com o <b>circuit switching</b>, 100 Kbps devem ser reservados para cada usuário todo o tempo. Por exemplo, com o TDM, se um frame de um segundo é dividido em 10 espaços de tempo de 100 ms cada, então para cada usuário será alocado um espaço de tempo por frame. Por tanto, um link circuit-switched poderá suportar apenas 10 (${1\text{ Mbps}/ {100\text{ kbps}}}$) usuários simultaneamente.</p>
 
   <p>Com o <b>packet switching</b>, a probabilidade de um usuário específico estar ativo é de 0.1 (10% do tempo). Se há 35 usuário, a probabilidade de que haja 11 ou mais usuários ativos ao mesmo tempo é de aproximadamente 0.0004 (resolução pela distribuição binomial). Quando há 10 ou menos usuários ativos (o que acontece 0.9996 das vezes), tráfego será menor ou igual a capacidade do link, essencialmente sem delay, como o circuit switching.</p>
 </div>
@@ -249,17 +247,17 @@ $$ L {(bits)} \over R {(bits/sec)} $$
 <h3>Tipos de Atraso</h3>
 
 <ul>
-  <li><b>Atraso de Processamento de pacote:</b> tempo exigido para examinar o pacote, valida-lo e determinar para onde redirecioná-lo (microsegundos).</li>
+  <li><b>Atraso de Processamento de pacote:</b> tempo exigido para examinar o pacote, validá-lo e determinar para onde redirecioná-lo (microsegundos).</li>
   <li><b>Atraso de enfileiramento:</b> tempo de espera na fila para ser transmitido pelo link (de microsegundos à milisegundos).</li>
   <li><b>Atraso de transmissão:</b> tempo para transmitir todos os bits do pacote pelo link (de microsegundos a milisegundos).
     $$ d_{transmissão} = {L \text{(tamanho do pacote em bits)} \over R \text{(banda do link em bps)}}$$
   </li>
-  <li><b>Atraso de propagação:</b> tempo para propagar um bit do início do link até um roteador. O bit se propaga na velocidade de propagação do link (depende da mídia física).
+  <li><b>Atraso de propagação:</b> tempo para <span class="importante">propagar um bit</span> do início do link até um roteador. O bit se propaga na velocidade de propagação do link (depende da mídia física).
     $$ d_{propagação} = {d \text{(distancia entre nós)} \over R \text{(velocidade do link)}}$$
   </li>
 </ul>
 
-<p>O tempo nodal ($d_nodal$) é o atraso no envio de um pacote entre dois nós da rede (host ou roteador) subsequentes.</p>
+<p>O tempo nodal ($d_{nodal}$) é o atraso no envio de um pacote entre dois nós da rede (host ou roteador) subsequentes.</p>
 
 $$ d_{nodal} = {d_{processamento} + d_{enfileiramento} + d_{transmissao} + d_{propagação}} $$
 
@@ -269,7 +267,7 @@ $$ d_{nodal} = {d_{processamento} + d_{enfileiramento} + d_{transmissao} + d_{pr
 
 $$ \text{intensidade de tráfego} = { aL \over R} $$
 
-<p>Se a <b>intensidade for maior que 1</b>, a taxa média de de chegada de bits irá exceder a taxa com que esses bits podem ser transmitidos (e retirados da fila). Nessa situação a fila tende a crescer indefinidamente e o atraso de de enfileiramento tenderá ao infinito (nessa situação temos as perdas de pacotes, uma vez que a fila possui um limite).</p>
+<p class="importante">Se a <b>intensidade for maior que 1</b>, a taxa média de chegada de bits irá exceder a taxa com que esses bits podem ser transmitidos (e retirados da fila). Nessa situação a fila tende a crescer indefinidamente e o atraso de de enfileiramento tenderá ao infinito (nessa situação temos as perdas de pacotes, uma vez que a fila possui um limite).</p>
 
 <p>A fila de um roteador tem uma capacidade finita. Se um pacote, ao chegar no roteador, se depara com um fila cheia, o roteador o jogará fora (não que ele queira, mas não tá tendo espaço pra mais um) e o pacote se perderá.</p>
 
@@ -293,7 +291,7 @@ $$ d_{end-end} = {N(d_{processamento} + d_{transmissão} + d_{propagação})} $$
   <li><b>Vazão média:</b> taxa num período longo de tempo.</li>
 </ul>
 
-<p>O caminho de comunicação entre hosts é composto de vários links interligados (por roteadores ou switches) e cada um desses links tem seu próprio valor de vazão. O link com a menor vazão é chamado de <b>link gargalo</b> e é no valor vazão que toda a comunicação se dará (como o fluxo de água flui em um cano).</p>
+<p>O caminho de comunicação entre hosts é composto de vários links interligados (por roteadores ou switches) e cada um desses links tem seu próprio valor de vazão. <span class="importante">O link com a menor vazão é chamado de <b>link gargalo</b> e é no seu valor de vazão que toda a comunicação se dará (como o fluxo de água flui em um cano)</span>.</p>
 
 <h2>Camadas de Protocolos e Seus Modelos de Serviço</h2>
 
