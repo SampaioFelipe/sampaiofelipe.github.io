@@ -22,7 +22,7 @@ layout: default
 
 <h4>Arquitetura P2P</h4>
 
-<p>Comunicação entre pares de hosts conectados, chamdados de <i>peers</i>. Cada peer funciona como se fosse um servidor (provê dados ou serviços) e um cliente (solicita dados ou serviços) ao mesmo tempo.</p>
+<p>Comunicação entre pares de hosts conectados, chamadados de <i>peers</i>. Cada peer funciona como se fosse um servidor (provê dados ou serviços) e um cliente (solicita dados ou serviços) ao mesmo tempo.</p>
 
 <p>A arquitetura P2P possibilita uma "auto escalabilidade", pois novos peers trazem novos serviços assim como novas demandas pelos serviços.</p>
 
@@ -30,7 +30,7 @@ layout: default
 
 <h3>Comunicação entre Processos</h3>
 
-<p>Processos são programas que estão em execução em um host. Dentro de um host, dois processos podem se comunicar usando técnicas de <b>interprocess communication</b> (definido pelo SO). Processos em diferentes hosts se comunicam por troca de mensagens.</p>
+<p>Processos são programas que estão em execução em um host. Dentro de um host, dois processos podem se comunicar usando técnicas de <b>interprocess communication</b> (definido pelo SO). <span class="importante">Processos em diferentes hosts se comunicam por troca de mensagens</span>.</p>
 
 <div class="ui inverted segment">
   <p><b>Processo cliente:</b> processo que inicia a comunicação.</p>
@@ -40,15 +40,15 @@ layout: default
 
 <h4>A Interface entre o Processo e a Rede</h4>
 
-<p>Um processo envia mensagens para a rede, e recebe mensagens dela, através de uma interface chamada <b>socket</b>. Um processo é análogo a uma casa e um socket é análogo a sua porta. Quando um processo envia uma mensagem para outro processo em outro host, despacha pelo socket (porta). Esse processo assume que haja uma infraestrutura de transporte do outro lado da sua porta que irá transportar sua mensagem até a porta de outro host.</p>
+<p><span class="importante">Um processo envia mensagens para a rede, e recebe mensagens dela, através de uma interface chamada <b>socket</b></span>. Um processo é análogo a uma casa e um socket é análogo a sua porta. Quando um processo envia uma mensagem para outro processo em outro host, despacha pelo socket (porta). Esse processo assume que haja uma infraestrutura de transporte do outro lado da sua porta que irá transportar sua mensagem até a porta de outro host.</p>
 
 <p>Um socket é a interface entre a camada de aplicação e a camada de transporte dentro de um host. O desenvolvedor da aplicação tem controle sobre tudo do lado da camada de aplicação do socket, porém não tem quase nenhum controle no lado da camada de transporte (podendo apenas especificar o protocolo de transporte e alguns parametros adicionais).</p>
 
 <h4>Endereçamento de Processos</h4>
 
-<p>Na internet cada host é indentificado por seu endereço IP. Entretanto, em um host pode haver muitos processos rodando ao mesmo tempo, fazendo com que apenas o endereço do host não seja suficiente para identficar um processo dentro dele.</p>
+<p class="importante">Na internet cada host é indentificado por seu endereço IP. Entretanto, em um host pode haver muitos processos rodando ao mesmo tempo, fazendo com que apenas o endereço do host não seja suficiente para identficar um processo dentro dele.</p>
 
-<p>Para identificar um processo é necessário também incluir o <b>número da de porta</b> associado ao processo (ex: sevidor HTTP normalmente está associado a porta 80).</p>
+<p>Para identificar um processo é necessário também incluir o <b>número da porta</b> associado ao processo (ex: sevidor HTTP normalmente está associado a porta 80).</p>
 
 <h3>Serviços de Transporte Disponíveis para a Aplicação</h3>
 
@@ -64,21 +64,21 @@ layout: default
 <h4>TCP (Transmission Control Protocol)</h4>
 
 <ul>
-  <li><b>Orientado a conexão:</b> requer que uma configuração entre clente e servidor (handshaking) antes de começar a  transmitir a mensagem.</li>
-  <li><b>Transferência confiável de dados:</b> os processos em comunicação podem confiar ao TCP a tarefa de entredar todos os dados enviados sem erros e na ordem certa.</li>
+  <li><b>Orientado a conexão:</b> requer que uma configuração entre cliente e servidor (handshaking) antes de começar a  transmitir a mensagem.</li>
+  <li><b>Transferência confiável de dados:</b> os processos em comunicação podem confiar ao TCP a tarefa de entregar todos os dados enviados sem erros e na ordem certa.</li>
   <li><b>Controle de fluxo:</b> o transmissor não irá sobrecarregar o receptor</li>
   <li><b>Controle de Congestionamento:</b> suprime o transmissor quando a rede está congestionada.</li>
 </ul>
 
 <h4>UDP (User Datagram Protocol)</h4>
 
-<p>Protocolo mais simples, como o mínimo de serviços fornecido. Transmissão de dados não confiável, não há garantias de que o outro lado esteja escutando (não há o handshaking) nem de que todos os dados tenham sido entregues. O UDP também não lida com a ordem das mensagens.</p>
+<p>Protocolo mais simples, com o mínimo de serviços fornecido. Transmissão de dados não confiável, não há garantias de que o outro lado esteja escutando (não há o handshaking) nem de que todos os dados tenham sido entregues. O UDP também não lida com a ordem das mensagens.</p>
 
 <h4>TCP Seguro</h4>
 
-<p>Tanto TCP quanto UDP não fornecem encriptação, dessa forma, senhas enviadas como texto, por exemplo, podem ser capturadas sem muita dificuldade.</p>
+<p class="importante">Tanto TCP quanto UDP não fornecem encriptação, dessa forma, senhas enviadas como texto, por exemplo, podem ser capturadas sem muita dificuldade.</p>
 
-<p>Para fornecer um nível de seguRança no TCP, surgiu o SSL (Secure Socket Layer), que fornece conexões TCP encriptadas, integridade de dados e autenticação.</p>
+<p>Para fornecer um nível de segurança no TCP, surgiu o SSL (Secure Socket Layer), que fornece conexões TCP encriptadas, integridade de dados e autenticação.</p>
 
 <p>O SSL não é outro protocolo de transporte, o SSL está na camada de aplicação. Um aplicativo usa uma biblioteca SSL que, então, "conversa" com o TCP.</p>
 
@@ -101,7 +101,7 @@ layout: default
 <h4>Conexão Não Persistente</h4>
 
 <ul>
-  <li>Um único objeto enviado por conexão TCP (a conexão é fechada após o envio o objeto do servidor ao clente)</li>
+  <li>Um único objeto enviado por conexão TCP (a conexão é fechada após o envio do objeto do servidor ao clente)</li>
   <li>Fazer download de multiplos objetos requer multiplas conexões.</li>
 </ul>
 
@@ -234,7 +234,7 @@ layout: default
 <h3>Servidores de Email</h3>
 
 <ul>
-  <li>Caixa de entrada: contpem as mensagens recebidas.</li>
+  <li>Caixa de entrada: contém as mensagens recebidas.</li>
   <li>Fila de Mensagens: fila das mensagens que estão prestes a serem enviadas.</li>
   <li>Protocolo SMTP: entre servidores de email para enviar mensagens.</li>
 </ul>
@@ -286,7 +286,7 @@ layout: default
 <ol>
   <li>Fase de Autorização</li>
   <li>Fase de Transação</li>
-  <li>Fase de <a href="#"></a>tualização</li>
+  <li>Fase de atualização</li>
 </ol>
 
 <p><b>Modos de operação:</b> download-and-delete e download-and-keep</p>
@@ -297,7 +297,7 @@ layout: default
 
 <p>Mantém todas as mensagens em um local: no servidor. Permite que usuário organize as mensagens em pastas</p>
 
-<p>Mantém estado do usuário através de sesões.</p>
+<p>Mantém estado do usuário através de sessões.</p>
 
 <h2>DNS</h2>
 
@@ -311,10 +311,10 @@ layout: default
 
 <p>O protocolo DNS roda sobre o protocolo UDP e usa a <b>porta 53</b>.</p>
 
-<p>Quando um usuário digita uma url no browser, o browser faz:</p>
+<p>Quando um usuário digita uma url no browser:</p>
 
 <ol>
-  <li>A mesma máquina do supario roda o lado cliente da aplicação DNS.</li>
+  <li>A mesma máquina do usuário roda o lado cliente da aplicação DNS.</li>
   <li>O browser extrai o hostname da url e o passa para o cliente de DNS</li>
   <li>O cliente DNS envia uma query (consulta) contendo o hostname para o servidor DNS</li>
   <li>O cliente DNS eventualmente recebe uma resposta com o endereço IP para o hostname</li>
@@ -333,7 +333,7 @@ layout: default
 
 <h4>Banco de Dados distribuído e hierarquico</h4>
 
-<p>Devido a forma da internet de hoje, uma abordagem centralizada para o armazenamento do mapeamento de hostnames é inapropriado (único ponto de falha, volume do tráfego, distancia até o banco centralizado, manutenção complicada e impossibilidade de ser escalável.)</p>
+<p class="importante">Devido a forma da internet de hoje, uma abordagem centralizada para o armazenamento do mapeamento de hostnames é inapropriado (único ponto de falha, volume do tráfego, distância até o banco centralizado, manutenção complicada e impossibilidade de ser escalável.)</p>
 
 <p>Para lidar com esses problemas, o DNS utiliza vários servidores, organizados de uma forma hieráquica e distribuída ao redor do mundo. Há três classes de servidores DNS:</p>
 
@@ -343,13 +343,13 @@ layout: default
   <li><b>Authoritative:</b> organizações possuem seus próprios servidores DNS, que fornecem o mapeamento de hostnames para IP para os hosts da organização.</li>
 </ul>
 
-<p>Existe um outro tipo de servidor DNS chamado de <b>Servidor de DNS Local</b>. Esse servidor local não pertence a hierarquia de servidores DNS em si, porém é essencial na arquitetura DNS. Cada ISP possui um servidor DNS local (também chamado de default name server). Quando um host se conecta a um SIP, o ISP fornece ao host o endereço IP de um ou mais de seus servidores DNS locais.</p>
+<p class="importante">Existe um outro tipo de servidor DNS chamado de <b>Servidor de DNS Local</b>. Esse servidor local não pertence a hierarquia de servidores DNS em si, porém é essencial na arquitetura DNS. Cada ISP possui um servidor DNS local (também chamado de default name server). Quando um host se conecta a um ISP, o ISP fornece ao host o endereço IP de um ou mais de seus servidores DNS locais.</p>
 
 <p>Quando um host faz uma consulta DNS, essa consulta é enviada ao seu servidor de DNS local, que atua como um proxy, redirecionando a consulta para a hierarquia DNS.</p>
 
 <div class="ui red inverted segment">
   <h4>Exemplo de Resolução de Nome</h4>
-  <p>Suponha que o host quer o IP de google.com. O host primeiramente enviará a consulta para seu servidor de DNS local. A consulta contém o hostname a ser traduzido. O servidor de DNS local redireciona a consulta para um servidor DNS root. O servidor DNS root identifica o sufixo .com e retorna al servidor local uma lista de IPs para os TLDs responsáveis pelo domínio .com (Servidor root responde: Vish, eu não conheço esse nome, mas pergunta pra esses servidores aqui que eles devem saber). O servidor local reenvia a consulta para um desses TLDs... Esse processo é executado até que se ache o servidor DNS que contém o mapeamento para o nome.</p>
+  <p>Suponha que o host quer o IP de google.com. O host primeiramente enviará a consulta para seu servidor de DNS local. A consulta contém o hostname a ser traduzido. O servidor de DNS local redireciona a consulta para um servidor DNS root. O servidor DNS root identifica o sufixo .com e retorna ao servidor local uma lista de IPs para os TLDs responsáveis pelo domínio .com (Servidor root responde: Vish, eu não conheço esse nome, mas pergunta pra esses servidores aqui que eles devem saber). O servidor local reenvia a consulta para um desses TLDs... Esse processo é executado até que se ache o servidor DNS que contém o mapeamento para o nome.</p>
 </div>
 
 <h4>Caching</h4>
@@ -383,7 +383,7 @@ layout: default
 
 <h3>Distribuição de arquivos</h3>
 
-<p>Quanto tempo levaria para distribuir um aquivo (de temanho F) de um único sevidor para N peers (capacidade de upload/download é um recurso limitado)?</p>
+<p>Quanto tempo levaria para distribuir um aquivo (de tamanho F) de um único sevidor para N peers (capacidade de upload/download é um recurso limitado)?</p>
 
 <p>O servidor precisa enviada sequencialmente as N cópias. O tempo para enviar uma cópia é $\frac{F}{u_s}$ ($u_s$ é a capacidade de upload do servidor). Para enviar $N$ cópias, será $\frac{NF}{u_s}$.</p>
 

@@ -28,6 +28,13 @@ disciplinas:
     alias: MDS
     color: yellow
 
+  - nome: Machine Learning em Fluxo de Dados
+    alias: MLFD
+    color: cyan
+    conteudo:
+      - titulo: Introdução
+        url: mlfd/1_introducao
+
   - nome: Projeto e Análise de Algoritmos
     alias: PAA
     color: green

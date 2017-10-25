@@ -3,3 +3,107 @@ title: "PAA - Divisão e Conquista"
 layout: default
 ---
 <h1 class="ui header">6. Divisão e Conquista</h1>
+
+<p>Técnica de Dividir para Conquistar, é provavelmente a técnica de projeto de algorimos mais bem conhecida. Alguns dos mais eficientes algoritmos utilizam esta estratégia.</p>
+
+<p>Essa técnica segue o seguinte plano:</p>
+
+<ul>
+  <li>Um problema é dividido em vários subproblemas (idealmente de mesmo tamanho)</li>
+  <li>Os subproblemas são resolvidos (tipicamente de forma recursiva)</li>
+  <li>Se necessário, as soluções dos subproblemas são combinadas apra se obter a solução do problema original.</li>
+</ul>
+
+<p>Outra informação importante que não pode ser omitida é que a técnica de dividir para conquistar pode ser aplicada em computação paralela em que a computação dos subproblemas pode ser realizada sumultaneamente utilizando processadores específicos.</p>
+
+<p>O caso típico de dividr para comquistar é a divisão por 2. Porém, em um caso mais geral, um problema de tamanho $n$ pode ser dividido em $b$ instâncias de tamanho $n/b$, sendo que $a$ deles precisam ser resolvidos (com $a \geq 1 \quad e \quad b \gt 1$).</p>
+
+<p>Assumindo que $n$ é potência de b (apenas para efeitos de simplificação), temos:</p>
+
+$$ T(n) = aT(\frac{n}{b}) + f(n)$$
+
+<p>Onde $f(n)$ é a função responsável por contabilizar o tempo com a divisão do problema e combinar as soluções. Claro que a ordem de crescimento da solução $T(n)$ depende das constantes $a$ e $b$ e da ordem de crescimento da função $f(n)$. Utilizando o <b>Teorema Mestre</b> é possível simplificar a análise.</p>
+
+<div class="ui red inverted segment">
+  <h4>Teorema Mestre</h4>
+  <p>Considere a recorrência $ T(n) = aT(n/b) + f(n)$</p>
+  <p>Se $f(n) \in \Theta(n^d)$ onde $d \geq 0$ na recorrência acima, então:</p>
+  $$ T(n) \in \begin{cases}
+      \Theta(n^d) & se \quad a < b^d \\
+      \Theta(n^d \log n) & se \quad a = b^d\\
+      \Theta(n^{\log_b a}) & se \quad a > b^d
+  \end{cases} $$
+</div>
+
+<p>É importante observar que, se $a=1$, a recorrência resolve problemas pela estratégia de decremento por um fator constante.</p>
+
+<h2>Mergesort</h2>
+
+<pre><code>MergeSort(A[0..n-1]) {Viu
+  se n > 1 {
+    copia A[0..(n/2)-1] para B
+    copia A[(n/2)..n-1] C
+    Mergesort(B)
+    Mergesort(C)
+    combina(B,C,A)
+  }
+}
+
+combina(B[0..p-1], C[0..q-1], A[0..p + q -1]) {
+  i = 0, j = 0, k = 0
+  enquanto i &lt e j &lt q faça {
+    se (B[i] &lt = C[j]){
+      A[k] = B[i]
+      i = i + 1
+    } senão {
+      A[k] = C[j]
+      j = j + 1
+    }
+    k = k + 1
+  }
+  se i = p {
+    copia C[j..q-1] para A[k..p + q - 1]
+  } senão {
+    copia B[i..p-1] para A[k..p + q - 1]
+  }
+}
+</code></pre>
+
+<h2>Quicksort</h2>
+
+<p>Enquanto que o Mergesort "se preocupa" com a posição dos elementos no vetor, o Quicksort "se preocupa" com os valores de cada elemento.</p>
+
+<pre><code>Quicksort(A[l..r]) {
+  se l < r {
+    s = partição(A[l..r]) // s é o ponto de divisão
+    Quicksort(A[l..s-1])
+    Quicksort(A[s+1..r])
+  }
+}
+
+partiçaoHoare(A[l..r]) {
+  p = A[l]
+  i = l
+  j = r + 1
+  repita {
+    repita {
+      i = i + 1
+    } até A[i] &gt= p
+
+    repita {
+      j = j + 1
+    } até A[j] &lt= p
+    troca(A[i], A[j])
+  } até i &gt= j
+  troca(A[i], A[j]) // desfaz a ultima troca
+  troca(A[l], A[j])
+
+  retorna j
+}
+</code></pre>
+
+<p>Para o melhor caso, o algoritmo pertence a $\Theta(n\log n)$. Porém o algoritmo não apresenta o mesmo comportamento para o pior caso, onde o pivô é menor (ou maior) que todos os outros valores, fazendo com que haja $n-1$ partições</p>
+
+$$ C_{pior}(n) = (n + 1) + n + ... + 3 = \frac{(n+1)(n+2)}{2} - 3 \in \Theta(n^2) $$
+
+<h2>Multiplicação de Inteiros Grandes</h2>

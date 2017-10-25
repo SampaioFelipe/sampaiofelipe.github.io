@@ -1,12 +1,4 @@
 provas:
-  - date: 2017-10-17
-    content: SO2 - P1
-  - date: 2017-10-19
-    content: REDES - P1
-  - date: 2017-10-20
-    content: PAA - P1
-  - date: 2017-10-20
-    content: CG - P1
   - date: 2017-10-30
     content: IA - P1
   - date: 2017-11-09
@@ -23,16 +15,10 @@ provas:
     content: CG - P2
 
 trabalhos:
-  - date: 2017-10-10
-    content: CC2 - T1
-  - date: 2017-10-15
-    content: CC2 - T2
-  - date: 2017-10-23
-    content: IA - T1
-  - date: 2017-10-26
-    content: REDES - T1
   - date: 2017-10-29
     content: SO2 - Construção do Shell
+  - date: 2017-11-09
+    content: REDES - T1
   - date: 2017-11-10
     content: CG - T1
   - date: 2017-12-10
@@ -47,5 +33,5 @@ trabalhos:
     content: CG - T2
 
 outros:
-  - date: 2017-10-16
+  - date: 2017-10-30
     content: MDS - Inicio das apresentações
