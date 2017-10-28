@@ -4,7 +4,7 @@ layout: "default"
 ---
 <h1 class="ui header">2.2 Busca Informada (Heurística)</h1>
 
-<p>Estratégias de busca que consideram informação prévia sobre o problema, na forma de heurísticas. Os estados são avaliados em funão do seu conteúdo, considerando a situação específica que representam.</p>
+<p>Estratégias de busca que consideram informação prévia sobre o problema, na forma de heurísticas. Os estados são avaliados em função do seu conteúdo, considerando a situação específica que representam.</p>
 
 <p>A informação sobre o problema é usada no momento de selecionar qual o próximo nó a ser expandido.</p>
 
@@ -12,7 +12,7 @@ layout: "default"
 
 <p>São regras simples ("dicas") utilizadas para avaliar rapidamente uma situação específica. Nos métodos de busca são usadas para escolher os caminhos em um espaço de estados que tem mais chance de levar a uma solução, evitando a busca exaustiva.</p>
 
-<p>DEve ser expressas na forma de função, que vai ser aplicada a cada estado.</p>
+<p>Deve ser expressas na forma de função, que vai ser aplicada a cada estado.</p>
 
 <h4>Situações em que heurísticas são usadas em IA</h4>
 
@@ -47,21 +47,152 @@ layout: "default"
   <li><b>CLOSED:</b> nós já expandidos</li>
 </ul>
 
-<p>O próximo nó a ser expandido é escolhido com base no seu valor de avaliação, independente do nível ou do raamo em que se encontra esse nó.</p>
+<p>O próximo nó a ser expandido é escolhido com base no seu valor de avaliação, independente do nível ou do ramo em que se encontra esse nó.</p>
 
-[ALGORITMO + EXEMPLOS]
+<pre><code>
+  best_first_search(G) {
+    OPEN = G[start]
+    CLOSED = [];
+
+    while (OPEN != []) {
+      retire o próximo estado de OPEN, chame de X
+      if(X é um objetivo){
+        retorne o caminho da solução que leva a X;
+      }
+
+      processe X, gerando seus filhos;
+
+      for(cada filho de X) {
+        caso o filho não esteja em OPEN nem em CLOSED {
+          atribua um valor de avalidação a este estado
+          adicione-o a OPEN;
+        }
+
+        caso o filho já está em OPEN {
+          if(estado foi atingido com um valor de avaliação menor) {
+            de a esse estado um OPEN este valor menor
+          }
+        }
+
+        caso o filho já está em CLOSED {
+          if(estado foi atingido por um valor de avaliação menor) {
+            dê ao estado em CLOSED esse valor menor
+            mova esse estado de CLOSED para OPEN
+          }
+        }
+
+        coloque X em CLOSED
+        reordene os estados em OPEN de acordo com o valor de avaliação
+      }
+    }
+    return (falha) // caso OPEN está vazia, pois não achou o objetivo
+  }
+
+</code></pre>
+
 
 <h3>Estrutura de Dados para nós</h3>
 
-<p>Os algoritmos de busca realizam uma busca em grafos. Os nós dos grafos devem ser estruturas de dados que representam as informações necessárias para realizar a busca e para retornar a solução econtrada</p>
+<p>Os algoritmos de busca realizam uma busca em grafos. Os nós dos grafos devem ser estruturas de dados que representam as informações necessárias para realizar a busca e para retornar a solução econtrada.</p>
 
-<p>Componentes da ED:</p>
+<p>Componentes da estrutura de dados:</p>
 <ul>
   <li><b>Estado:</b> estado no espaço de estados a que o nó corresponde.</li>
   <li><b>Nó-pai:</b> o nó do grafo de busca que gerou esse nó</li>
   <li><b>Ação:</b> ação que foi aplicada ao pai para gerar esse nó</li>
   <li><b>Custo do caminho:</b> custo do caminho do estado inicial até o nó</li>
-  <li><b>Profundidade:</b> número de passos do caminho desde onó inicial até esse nó</li>
+  <li><b>Profundidade:</b> número de passos do caminho desde o nó inicial até esse nó</li>
 </ul>
 
 <p>Dependendo da implementação, os campos para os nós filhos podem ou não ser representados explícitamente.</p>
+
+<h3>Função de avaliação na Busca Best-First</h3>
+
+<p>No algoritmo Best-First a função de avaliação pode envolver duas medidas:</p>
+
+<ul>
+  <li>$g(n)$: custo do caminho da raíz até o nó n (conhecida a cada passo)</li>
+  <li>$h(n)$: (função heurística) estimativa de custo do caminho do nó n até o objetivo</li>
+</ul>
+
+<p><i><b>$h(n) = 0$</b> quando n é um objetivo.</i></p>
+
+<h4>Observações sobre a função Heurística</h4>
+
+<p>A função heurística é baseada nas informações do estado em que está sendo aplicada e não considera nenhum tipo de informação relacionada ao custo das operações.</p>
+
+<p>Na definição de uma função heurística é necessário considerar a eficácia da função e o custo para seu cálculo.</p>
+
+<p>Uma função heurística mais complexa pode avaliar o estado com mais precisão, mas se o seu cálculo for muito custoso, sua utilização pode ser inviável.</p>
+
+<p>Não existe procedimento sistemárico que possa ser seguido na sua definição. Tentamos aprender como definir uma função heurística para algum problema analisando exemplos conhecidos para outros problemas.</p>
+
+<h2>Algortimos de Busca pela Melhor Escolha</h2>
+
+<h3>Algoritmo de Busca Gulosa (Greedy)</h3>
+
+<p>Minimiza o custo estimado para atingir um objetivo. Expande primeiro o nó considerado mais perto do objetivo.</p>
+
+<p>Função de avaliação = Função Heurística</p>
+
+$$ f(n) = h(n) $$
+
+<h3>Algoritmo A</h3>
+
+<p>Minimiza o custo estimado do caminho que passa por um determinado nó. A função de avaliação é:</p>
+
+$$ f(n) = g(n) + h(n) $$
+
+<h3>Algoritmo A*</h3>
+
+<p>O algoritmo A* é o algoritmo A em que a função de avaliação é da forma $f(n) = g(n) + h(n)$ com uma função h admissível</p>
+
+<div class="ui red inverted segment">
+  <h4>Heurística Admissível</h4>
+  <p>Heurística Admissível é uma heurística que nunca superestima o custo de alcançar um objetivo, ou seja, $h(n)$ nunca ultrapassa o custo real do caminho de n até o objetivo.</p>
+</div>
+
+<h2>Algoritmos de Busca Local</h2>
+
+<p>Podem ser aplicados a qualquer problema. São mais adquados para problemas em que o caminho para a solução não importa. A solução é estado final.</p>
+
+<p>Os algoritmos de busca local usam apenas um estado corrente e em geral se movem apenas para os estados vizinhos desse estado.</p>
+
+<p>Vantagens:</p>
+
+<ul>
+  <li>Usam pouca memória</li>
+  <li>Geralmente encontram soluções razoáveis em grandes espaços de busca</li>
+</ul>
+
+<p>Limitações:</p>
+
+<ul>
+  <li>Movimentos são irrevogáveis (nunca volta a um estado anterior para tentar caminhos alternativos)</li>
+  <li>Pode levar a uma soluão sub-ótima ou não levar a uma solução.</li>
+</ul>
+
+<h3>Problemas de Otimização</h3>
+
+<p>Os algoritmos de busca local são adeequados para tratar problemas de otimização. O objetivo é encontrar o melohor estado de acordo com uma função ojetivo.</p>
+
+<h3>Algoritmo de Subida da Colina (Hill-Climbing)</h3>
+
+<p>Enquadra-se na categoria de algoritmos de busca local. Expande um nó e avalia seus descendentes (não armazena irmãos nem pais). Seleciona o melhor entre os descendentes para continuar. Para quando encontrar um nó melhor que todos os descendentes.</p>
+
+<pre><code>
+  hill_climbing() {
+    
+    no_corrente = estado inicial
+
+    repeat {
+      gere todos os filhos de no_corrente e avalie
+      Vizinho = sucessor de no_corrente com valor mais alto
+      if(valor de Vizinho <= valor de no_corrente) {
+        retorne no_corrente
+      }
+      no_corrente = Vizinho
+    }
+  }
+
+</code></pre>

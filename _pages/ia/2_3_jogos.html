@@ -1,0 +1,83 @@
+---
+title: "AI - Jogos"
+layout: "default"
+---
+<h1 class="ui header">2.3 Jogos</h1>
+
+<p>Jogos é uma área de aplicação para métodos de busca heurística. Jogos para dois jogadores são mais complicados que quebra-cabeças simples pois envolve um oponente "hostil" e desconhecido.</p>
+
+<p>Jogos apresentam situações interessantes para definir heurísticas. Algoritmos de buscadevem tratar a dificuldade adicional.</p>
+
+<h2>Classes de Jogos</h2>
+
+<p>Espaço de estados é suficientemente pequeno para se realizar uma busca exaustiva. O espaço de estados é gerado e as melhores jogadas são selecionadas com base em informações completas sobre cada uma delas.</p>
+
+<p>Jogos para os quais é impossível realizar uma busca exaustiva no espaço de estados. O espaço de estados é gerado parcialmente e, com o uso de heurísticas, as jogadas são avaliadas e escolhidas.</p>
+
+<h2>Algoritmo Minimax</h2>
+
+<p>Quando é aplicado a jogos simples, todo os espaço de estados é gerado. Assim, assume-se que o adversário usa o mesmo conhecimento sobre o espaçõ d estados.</p>
+
+<p>Jogadores:</p>
+<ul>
+  <li><b>MAX:</b> jogador que tenta vencer, maximizar vantagem</li>
+  <li><b>MIN:</b> jogador que tenta minimizar o score de MAX</li>
+</ul>
+
+<p>Rotular cada nível do espaço de busca de acordo com quem está jogando naquele momento. Atribuir a cada nó folha um dos valores: 1 se for vitória para MAX ou 0 se for vitória para MIN.</p>
+
+<p>Propagar esses valores das folhas em direção à raiz, de acordo co a regra:</p>
+
+<ul>
+  <li>Se o estado pai é um nó MAX, atribuir o valor máximo entre seus filhos filhos</li>
+  <li>Se o pai é um nó MIN, atribuir o valor mínimo entre seus filhos (o valor atribuído indica o melhor estado que cada jogador pode alcançar)</li>
+</ul>
+
+<p>Usar os valores propagados para fazer a escolha entre os movimentos possíveis.</p>
+
+<h3>Minimax com profundidade fixa</h3>
+
+<p>Geralmente, não é possível gerar todo o espaço de estados para um jogo. O espaço de estados é buscado até um número de níveis pré-definido. Como as folhas desse subgrafo não são estados finais do jogo, não é possível atribuir valores de vitória ou derrota. Atribui-se a cada nó o valor de uma função heurística e propaga os valores obtidos com essa função heurístrongtica.</p>
+
+<p>O valor que é propagado até a raiz não é uma indicação se a vitória pode ser alcançada. É o valor heurístico do melhor estado que pode ser alcançado em n movimento a partir do nó inicial. Heurísticas para jogos em geral medem a vantagem de um jogador sobre o outro.</p>
+
+<h4>Rotina Minimax com profundidade Fixa</h4>
+
+<ol>
+  <li>Definir previamente o número de níveis explorados (lookahead)</li>
+  <li>Gerar o espaço de busca até um nível pré-definido</li>
+  <li>Medir heurísticamente os estados das folhas</li>
+  <li>Propagar esses valores pelo grafo em direção à raiz, de acordo com a regra:
+    <ul>
+      <li>Se o nó é um nó MAX dê a ele o maior valor entre os valores de seus filhos</li>
+      <li>Se o nó pai é um nó MIN, dê a ele o menor valor entre os valores de seus filhos</li>
+    </ul>
+  </li>
+  <li>Usar os valores obtidospara escolher entre as jogadas para MAX</li>
+  <li>Espera a jogada de MIN</li>
+  <li>Rpetir o processo do início para a próxima jogada para MAX</li>
+</ol>
+
+<h2>Rotina Alfa-Beta</h2>
+
+<p>Na rotina Minimax, o número de estados do jogo que devem ser examinados é  exponencial com a profundidade da árvore. A rotina Alfa-Beta é um método de corte para melhorar a eficiência do minimax.</p>
+
+<p>Partes da árvore de busca pode ser eliminada. Retorna o mesmo resultado que a rotina minimax mas corta ramos da ávore que não podem influenciar a decisão final.</p>
+
+<ol>
+  <li>Faz busca inicial pelo métodos de depth-first</li>
+  <li>Utiliza valores alfa e beta:
+    <ul>
+      <li><b>Alfa:</b> associado com nós MAX, nunca decresce</li>
+      <li><b>Beta:</b> associado com nós MIN, nunca cresce</li>
+    </ul>
+  </li>
+  <li>Valores Alfa Beta de nós no mesmo caminho podem ser comparados</li>
+  <li>Ramos podem ser cortados dependendo do resultado dessa comparação</li>
+</ol>
+
+<h3>Critérios para terminar a busca</h3>
+
+<p><b>Corte Alfa:</b> interromper a busca abaixo de qualquer nó MIN tendo um valor BETA menor ou igual que o valor ALFA de qualquer um de seus ancestrais MAX.</p>
+
+<p><b>Corte BETA:</b> interromper a busca abaixo de qualquer nó MAX tendo um valor ALFA maior ou igual ao valor BETA de qualquer um de seus ancestrais MIN.</p>

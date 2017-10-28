@@ -23,6 +23,8 @@ disciplinas:
             url: ia/2_1_busca_desinformada
           - titulo: Busca Informada
             url: ia/2_2_busca_informada
+          - titulo: Jogos
+            url: ia/2_3_jogos
 
   - nome: Metodologias de Desenvolvimento de Sistemas
     alias: MDS
@@ -77,3 +79,11 @@ disciplinas:
         url: so2/7_interprocess_communication
       - titulo: Lista 1 de Exercícios
         url: so2/lista_1
+
+projetos:
+  - nome: Artificial Immune Systems
+    alias: AIS
+    color: black
+    conteudo:
+      - titulo: Introdução
+        url: ic/ais/1_introducao
