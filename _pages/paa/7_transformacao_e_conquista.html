@@ -1,0 +1,179 @@
+---
+title: "PAA - Transformação e Conquista"
+layout: default
+---
+<h1 class="ui header">7. Transformação e Conquista</h1>
+
+<p>Essa técnica funciona em dois estágios: a<b>fase de transformação</b>, onde problema é modificado (transformado em um problema) e a <b>fase de conquista</b>, onde o problema é resolvido.</p>
+
+<p>Há 3 variações principais que diferem pelo o que transformamos um problema:</p>
+
+<ul>
+  <li><b>Simplificação de Instância:</b> tranforma em uma versão mais simples ou conveniente do mesmo problema (pré-ordenar é uma das simplifcações mais utilizadas)</li>
+  <li><b>Mudança de Representação:</b> transforma em uma representação diferente da mesma intstância</li>
+  <li><b>Redução do Problema:</b> tranforma a instância do problema em um problema diferente cujo o algoritmo é conhecido (ou mais eficiente)</li>
+</ul>
+
+<h2>Eliminação Gaussiana</h2>
+
+<p>Técnica utilizada para resolver n equações lineares com n variáveis.</p>
+
+$$ \begin{array}{rcl}
+ a_{11}x + a_{12}y = b_1 \\
+ a_{21}x + a_{22}y = b_2
+\end{array} $$
+
+<p>Cabe lembrar que se os coeficientes de uma equiação não são proporcionais aos da outra, o sistema tem uma solução única.</p>
+
+<p>A eliminação gaussiana é uma solução que objetiva transformar o problema em um equivalente (em que a solução é a mesma para ambos os problemas) utilizando uma matriz triangular superior.</p>
+
+<pre><code>ForwardElimination(A[1..n][1..n], b[1..n]) {
+  for i = 1 até n faça {
+    A[i][n+1] = b[i] // transforma em uma matriz aumentada
+  }
+
+  for i = 1 até n-1 faça {
+    for j = i + 1 até n faça {
+      for k = i até n + 1 faça {
+        A[j][k] = A[j][k] - A[i][k] * A[j][i] / A[i][i] // monta a matriz triangular superior
+      }
+    }
+  }
+}
+</code></pre>
+
+<p>Considerações: Se A[i][i] for zero ou tão pequeno quanto, não pode dividir (será necessário trocar com outra linha). O algoritmo é $\Theta(n^3)$.</p>
+
+<h3>Decomposição LU</h3>
+
+<p>Como resultado indireto da eliminação Gaussiana tem-se a decomposição LU. Na verdade, as implementações atuais já contemplam a decomposição LU no lugar do algorítmo anterior.</p>
+
+<p>O conceito é obter 2 matrizes, uma superior <b>(U)</b> e outra inferior <b>(L)</b>, de tal forma que o produto $LU$ seja igual a matriz original</p>
+
+<p>Exemplo</p>
+
+$$
+\begin{bmatrix}
+    1 & 0 & 0 \\
+    2 & 1 & 0 \\
+    \frac{1}{2} & \frac{1}{2} & 1
+\end{bmatrix}
+*
+\begin{bmatrix}
+    2 & -1 & 1 \\
+    0 & 0 & -3 \\
+    0 & 0 & 2
+\end{bmatrix}
+=
+\begin{bmatrix}
+    2 & -1 & 1 \\
+    4 & 1 & -1 \\
+    1 & 1 & 1
+\end{bmatrix}
+$$
+
+<p>Resolver o sistema $Ax = B$ é quivalente a resolver o $LUx = B$. Se considerarmos que $y = Ux$, então o sistema original será $Ly = B$. Resolver o sistema $Ly = B$ é bem mais fácil porque a matriz é triangular inferior. Depois, com y é possível obter x (tendo U como triangular superior).</p>
+
+<p>Dependendo da implementação é possível não ter nem que usar memória extra, pois as duas matrizes (L e U) podem ser armazenadas em uma só.</p>
+
+<h3>Matriz Inversa</h3>
+
+<h3>Determinante</h3>
+
+<h2>Heap e Heapsort</h2>
+
+<p>A estrutura de dados <b>Heap</b> é uma pilha parcialmente ordenada que serve para implementar filas com prioridades. Existem diversos algoritmos que utilizam heaps, como o algoritmo de Huffman e o de Dijkstra que serão explorados mais a fundo na aula de algoritmos gulosos.</p>
+
+<p>O Heap também serve como pilar para a implementação do algoritmo de ordenação chamado <b>Heapsort</b>.</p>
+
+<div class="ui inverted red segment">
+  <h4>Definição</h4>
+  <p>Um <b>heap</b> pode ser definido como uma árvore binária com chaves em seus nós, uma chave por nó, que fornece as seguintes condições:</p>
+  <ol>
+    <li><b>Propriedade de Forma:</b> uma árvore binária é essencialmente completa quando todos os seus níveis estão cheios exceto, possivelmente, o último nível, quando alguns elementos do lado direito podem não estar presentes.</li>
+    <li><b>Propriedade Heap:</b> a chave em cada nó é sempre maior ou igual as chaves em seus filhos.</li>
+  </ol>
+</div>
+
+<div class="ui inverted segment">
+  <h4>Representação em Lista</h4>
+  <ul>
+    <li>Os nós pais estarão nas $\lfloor n/2 \rfloor$ primeiras posições do vetor, enquanto que as folhas estarão nas últimas $\lceil n/2 \rceil$ posições.</li>
+    <li>Os filhos de um nó na posição i estarão nas posições $2i$ e $2i + 1$, e, correspondentemente, o pai de um nó na posição i estará na posição $\lfloor i/2 \rfloor$.</li>
+  </ul>
+</div>
+
+<h3>Construção de um Heap a partir de uma lista</h3>
+
+<pre><code>HeapBottomUp(H[1..n]) {
+  para i = n/2 até 1 faça {
+    k = i
+    v = H[k]
+    heap = falso
+    enquanto não heap E 2*k <= n faça {
+      j = 2 * k
+      se j < n então {
+        se H[j] < H[j + 1] então {
+          j = j + 1
+        }
+      }
+      se v >= H[j] então {
+        heap = verdadeiro
+      }
+      senão {
+        H[k] = H[j]
+        k = j
+      }
+    }
+    H[k] = v
+  }
+}
+</code></pre>
+
+<h4>Análise da complecidade</h4>
+
+<p>Vamos assumir, por simplicidade, que $n = 2^k - 1$, então a heap estará completa. Vamos assumir também que h é a altura da árvore ($h = \lfloor\log_2 n\rfloor$).</p>
+
+...
+
+<h3>Heapsort</h3>
+<p>O algoritmo do heapsort possui 2 fases:</p>
+<ol>
+  <li>Criar uma heap dado um vetor</li>
+  <li>Eliminar a raiz n-1 vezes</li>
+</ol>
+
+<p>Para eliminar a raiz da Heap:</p>
+<ol>
+  <li>Trocar a raiz com a última chave da Heap</li>
+  <li>Diminuir o tamanho da heap em 1 unidade</li>
+  <li>Heapficar a árvore</li>
+</ol>
+
+<h2>Regra de Horner e Exponenciação Binária</h2>
+
+<h3>Regra de Horner</h3>
+
+<p>A regra de Horner serve para calcular de forma eficiente um polinômio da forma:</p>
+
+$$ p(x) = a_{n}x^{n} + a_{n - 1}x^{n - 1} + \dots + a_{1}x + a_0 $$
+
+<p>Ao invés de se utilizar a fórmula em seu formato original, pode-se utilizar a representação em que o x é colocado sucessivamente em evidência:</p>
+
+$$ p(x) = (\dots(a_nx + a_{n-1})x + \dots)x + a_0 $$
+
+<p>A eficiência do algoritmo de Horner é muito elevada. Observe que ele requer n multiplicações, enquanto que se utilizarmos força bruta gastaremos n multiplicações apenas com o termo $a_nx^n$</p>
+
+<h3>Exponenciação Binária</h3>
+
+<p class="duvida">De forma quase que inacreditável, o algoritmo de Horner degenera para força bruta quando se precisa calcular $a^n$. É possível melhorar este desempenho se tratarmos o expoente n como um número binário: $n = b_l\dots b_i\dots b_0$.</p>
+
+<p>Basta que consideremos a expressão $x^n$ como sendo:</p>
+
+$$ p(x) = b_lx^l + \dots + b_ix^i + \dots + b_0 $$
+
+<p>com x = 2.</p>
+
+<h2>Redução do Problema</h2>
+
+<p>Se temos um problema X que pode ser reduzido (modificado, transformado) em um problema Y e o problema Y tem uma solução conhecida, então temos uma redução de problema.</p>

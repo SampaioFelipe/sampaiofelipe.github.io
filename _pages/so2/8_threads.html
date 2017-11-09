@@ -1,0 +1,19 @@
+---
+title: "SO2 - Threads "
+layout: default
+---
+<h1 class="ui header">8. Threads</h1>
+
+<p>Uma área de stack para cada thread. Na verdade tem uma pilha para cada anel de privilégio.</p>
+
+
+<p>Criar uma nova thread é criar uma nova task_struct, alocar um nova pila e criar um contexto inicial.</p>
+
+<p>clone(2) é a chamada de sistema responsável por criar uma thread. Não utilzamos pois é especifica do linux. Ao invés disso utilizamos o padrão POSIX pthread</p>
+
+<p>Real PID vs Effective PID</p>
+
+<h2></h2>
+
+<hr>
+<p>out of core programming</p>

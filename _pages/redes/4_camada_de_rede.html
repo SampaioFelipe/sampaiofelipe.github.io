@@ -1,0 +1,136 @@
+---
+title: "Redes - Camada de Rede"
+layout: default
+---
+<h1 class="ui header">2. Camada de Rede</h1>
+
+<h2>Introdução</h2>
+
+<p>Pra transportar um segmento de um host de origim a um host destino, o lado do transmissor encapsula os segmentos em <b>datagramas</b> e entrega os segmentos para a camada de transporte do lado do receptor. Protocolos da camada de rede está presente em cada host e roteador.</p>
+
+<h3>Forwarding e Rounting</h3>
+
+<p><b>Forwarding:</b> move pacotes da entrada do roteador para a saida apropriada.</p>
+
+<p><b>Routing:</b> determina a rota tomada pelo pacotes da origem ao destino.</p>
+
+<h3>Planos</h3>
+
+<p><b>Plano de Dados:</b> local, função por roteador. Determina como datagramas que chegaram na porta de entrada do roteador é encaminhada a porta de saída (função forwarding).</p>
+
+<p><b>Plano de Controle:</b> lógica da rede wide. Determina como datagramas são roteados entre roteadores ao longo do caminho fim a fim do host de origem ao host de destino. Duas abordagens: Algoritmos tradicionais de algoritmos (implementados nos roteadores) e <i>Software-Defined Networking</i>(SDN - implementados em servidores remotos).</p>
+
+<h3>Modelos de Serviço</h3>
+
+<p>Define as características do transporte de pacotes entre hosts. Exemplos de serviços para cada datagrama:</p>
+
+<ul>
+  <li><b>Entrega garantida</b></li>
+  <li><b>Entrega garantida com um limite de atraso.</b></li>
+</ul>
+
+<p>Exemplos de serviços para o fluxo de datagramas.</p>
+
+<ul>
+  <li><b>Ordem de entrega</b></li>
+  <li><b>Largura de banda garantida</b></li>
+  <li><b>Restrições nas mudanças dos espaços entre pacotes (jitter)</b></li>
+</ul>
+
+<h2>O que tem dentro de um Roteador?</h2>
+
+<ul>
+  <li><b>Plano de dados (hardware)</b>
+    <ul>
+      <li>Portas de Entrada</li>
+      <li>Switching Fabric</li>
+      <li>Portas de Saída</li>
+    </ul>
+  </li>
+  <li><b>Plano de Controle (software)</b>
+    <ul>
+      <li>Processador de Roteamento (executa os protocolos de roteamento)</li>
+    </ul>
+  </li>
+</ul>
+
+<img class="ui image" src="{{site.imageurl | append: 'redes/inside_roteador.png'}}">
+
+<h3>Processamento de Entrada</h3>
+
+<p></p>
+
+<p><b>Switching descentralizado:</b> usa os valores dos campos do cabeçalho, determina a porta de saída usando a tebela de forwarding na memória da porta de entrada.</p>
+
+<p><b>Forwarding baseado no destino:</b> utiliza apenas o endereço IP do destino</p>
+
+<p><b>Forwarding generalizado:</b> baseado em qualquer conjunto de campos do cabeçalho.</p>
+
+<img class="ui image" src="{{site.imageurl | append: 'redes/roteador_input_processing.png'}}" alt="">
+
+<p><b>Longest Prefix Matching:</b> quando olhar para a entrada da tabela de forwarding para um endereço dado, use o <b>prefixo mais longo</b> do endereço que bate com o dendereço de destino.</p>
+
+<pre>
+  Exemplo: 11001000 00010111 00010*** ********* -> Interface X
+</pre>
+
+<p>Geralmente o longest prefix matching é executado usando <b>Ternary Content Addressable Memories (TCAMs).</b></p>
+
+<h3>Switching</h3>
+
+<p>Tranfere pacotes do buffer de entrada para o buffer de saída apropriado.</p>
+
+<p><b>Taxa de switching:</b> taxa na qual pacotes podem ser tranferidos da entrada para a saída. Normalmente mensurado como um multiplo da taxa de <b>input/output line.</b></p>
+
+<p>Há três tipos de <i>switching fabric:</i></p>
+
+<img class="ui image" src="{{site.imageurl | append: 'redes/tipos_switching.png'}}" alt="">
+
+<h4>Switching via Memória</h4>
+
+<p>Primeira geração de roteadores, eram computadorestradicionais que realizavam as operações de switching sob o controle da CPU. Os pacotes eram copiados para a memória do sistema para serem redirecionados. A velocidade era limitada pela banda da memória.</p>
+
+<h4>Switching via Barramento</h4>
+
+<p>Datagramas da memória da porta de entrada para a memória da porta de saida através de um barramento compartilhado. A velocidade é limitada pela banda do barramento.</p>
+
+<h4>Switching via Rede interconectado</h4>
+
+<p><span class="duvida">overcome</span> as limitações da banda do barramento. redes banyan, crossbar, e outras interconexões inicialmente desenvolvidas para conectar processadores em multiprocessadores.</p>
+
+<p><b>Design avançado:</b> fragmenta o datagrama em células de tamanho fixo, faz o switch das células através do <i>fabric</i>.</p>
+
+<h4>Enfileiramento na porta de entrada</h4>
+
+<p>Se o <i>fabric</i> for mais lento do que as portas combinadas, enfileiramento pode ocorrer na fila de entrada.</p>
+
+<p><b>Bloqueio do Head-Of-Line (HOL):</b> datagrams enfileirados no inicio da fila previne que outros na fila se movam para frente.</p>
+
+<h3>Processamento de Saída</h3>
+
+<img class="ui image" src="{{site.imageurl | append: 'redes/roteador_output_processing.png'}}" alt="">
+
+<p class="duvida">O buffering ocorre quando datagramas chegam do <i>fabric</i> mais rápido do que a taxa de transmissão. Uma rotina de escalonamento escolhe entre os datagrams enfileirados para a transmissão.</p>
+
+<p>Datagramas podem ser perdidos devido ao congestionamento, <b class="duvida">lack of buffers</b>.</p>
+
+<h4>Quanto bufferizar?</h4>
+
+<p>RFC 3439 tem uma regra que diz que a média de buffering é igual ao RTT típico (250 ms) vezes a capacidade do link <b>C</b></p>
+
+<p class="duvida">Recomendações recentes dizem que, com <b>N</b> fluxos, o buffering ´e igual a:</p>
+
+$$ \frac{RTT * C}{\sqrt n} $$
+
+<h3>Mecanismos de Escalonamento</h3>
+
+<p>Escalonar = escolher o próximo pacote a ser enviado pelo link</p>
+
+<ul>
+  <li><b>FIFO (First-In-First-Out):</b> envia na ordem em que chegou</li>
+  <li><b>Prioridade:</b> envia o pacote da fila com maior prioridade (multiplas classes com diferentes prioridades)</li>
+  <li><b>Round Robin:</b> Multiplas classes. Ciclicamente escaneia as filas, enviando um pacote completo de cada classe (se disponível)</li>
+  <li><b>Weighted Fair Queing (WFQ):</b> Round Robin generalizado, cada classe adiquire um peso de serviço a cada ciclo</li>
+</ul>
+
+<h2>IP: Internet Protocol</h2>

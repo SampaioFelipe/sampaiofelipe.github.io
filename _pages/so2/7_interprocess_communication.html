@@ -109,6 +109,15 @@ layout: default
 
 <h2>Filas de Mensagem (Message Queues)</h2>
 
+<div class="ui red inverted segment">
+  <h4>Anotações</h4>
+  <p>O semáforo tem um contador e uma fila de processos. Operações de bloqueio e desbloqueio. Quando um processo tenta alterar o semaforo, se estiver livre, altera, caso contrario o processo é bloqueado até que seja liberado um espaço.</p>
+  <p>Região crítica é uma região de exclusão mútua, que manipula memória compartilhada.</p>
+  <p>É necessário liberar as filhas antes de o processo para, pois elas não são liberadas automaticamente</p>
+  <p>Comando ipcs</p>
+  <p>Memoria comprtilhada: aponta para um nova página (por isso termina em 000 = 2)</p>
+</div>
+
 <p>Diferentemente do pipes, que servem como um canal em memória para o fluco de dados entre processos, <b>filas de mensagem (message queues)</b> são um mecanismo de IPC que permite a troca de informações segmentadas. Usando as message queues, processos podem enviar e receber sequências de bytes trataddas separadamente.</p>
 
 <p>Associado a cada mensagem há um atributo que define o seu tipo ou prioridade. Assim, mensagens podem ser revebidas por ordem de envio ou selecionadas por seus atributos. Mantidas pelo SO, as mensagens precisam ser copiadas do <b>user space</b> para o <b>kernel space</b> no envio e vice-versa no recebimento. O mecanismo básico de direitos de acesso de sistemas UNIX se aplica a quem pode escrever e ler mensagnes de uma fila e removê-la.</p>
@@ -245,9 +254,14 @@ layout: default
 
 </code></pre>
 
+<h2>MMAP</h2>
 
+<p>Criação de mapeamento de áreas de memória no espaço de endereçamento de um processo.</p>
 
 <hr>
 
 <p>Por que fechar os arquivos antes de executar o exec?</p>
 <p>O que é o System V?</p>
+<p class="importante">Carregamento do .text por demanda</p>
+<p>comando strace</p>
+<p>comando ipcs</p>

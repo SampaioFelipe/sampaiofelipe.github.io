@@ -32,7 +32,7 @@ disciplinas:
 
   - nome: Machine Learning em Fluxo de Dados
     alias: MLFD
-    color: cyan
+    color: blue
     conteudo:
       - titulo: Introdução
         url: mlfd/1_introducao
@@ -53,6 +53,8 @@ disciplinas:
         url: paa/5_decremento_e_conquista
       - titulo: Divisão e Conquista
         url: paa/6_divisao_e_conquista
+      - titulo: Transformação e Conquista
+        url: paa/7_transformacao_e_conquista
 
   - nome: Redes de Computadores
     alias: Redes
@@ -62,6 +64,8 @@ disciplinas:
         url: redes/1_rede_de_computadores_e_a_internet
       - titulo: Camada de Aplicação
         url: redes/2_camada_de_aplicacao
+      - titulo: Camada de Rede
+        url: redes/4_camada_de_rede
 
   - nome: Sistemas Operacionais
     alias: SO2
@@ -77,6 +81,8 @@ disciplinas:
         url: so2/6_gerenciamento_de_memoria
       - titulo: IPC - Interprocess Communication
         url: so2/7_interprocess_communication
+      - titulo: Threads
+        url: so2/8_threads
       - titulo: Lista 1 de Exercícios
         url: so2/lista_1
 
