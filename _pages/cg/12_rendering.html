@@ -1,0 +1,81 @@
+---
+title: "Rendering"
+layout: default
+---
+
+<h1 class="ui header">12. Rendering</h1>
+
+<h2>Introdução</h2>
+
+<p>Processo de adiocionar realismo em uma imagem a apartir de uma descrição de cena.</p>
+
+<p>Adicionar a pré-imagem (wireframe) efeitos de textura...</p>
+
+<h2>Classificação dos Métodos de Renderização</h2>
+
+<h3>Modelos de Iluminação</h3>
+<ul>
+  <li>Modelo Local: somente as fontes de luz contribuem para iluminar o objeto. (considera uma constante de iluminação)</li>
+  <li>Modelo Global: as fontes de luz e a luz refletida por outros objetos da cena também contribuem para formar uma cena. (muito custoso)</li>
+</ul>
+
+<h3>Ordem de renderização</h3>
+
+<ul>
+  <li>Ordem da Imagem</li>
+  <li>Ordem do Objeto</li>
+</ul>
+
+<h2>Iluminação</h2>
+
+<p>O que acontece quando vemos um objeto?</p>
+
+<p>Uma fonte de luz é caracterizada por sua geometria, intensidade, distribuição espectral.</p>
+
+<h3>Geometria</h3>
+
+<ul>
+  <li>Pontual: dimensões despezíveis definida por uma posição.</li>
+  <li>Direcional: é uma fonte posicionada no infinito, especificada por um vetor unitário que define sua direcional.</li>
+  <li>Fontes de área: possuem uma superfície não despresível emissiva, um sistema de coordenadas é especificado...</li>
+</ul>
+
+<h3>Reflexão</h3>
+
+<ul>
+  <li>Reflexão Especular:
+  <ul>
+    <li>Reflexão direcionada.</li>
+    <li>O ângulo de incidência é igual ao ângulo de reflexão</li>
+    <li>Superfícies metálicas e espelhosas.</li>
+  </ul>
+  </li>
+  <li>Reflexão Difusa:
+    <ul>
+      <li>Reflexão uniforme em todas as direções.</li>
+      <li>Luz incidente é atenuada, reflete uniformemente em todas as direções.</li>
+      <li>Superfícies porosas, rugosas</li>
+    </ul>
+  </li>
+</ul>
+
+<p>A maior parte dos materiais possuem uma mistura de ambas.</p>
+
+<p>A componente difusa é que dar a cor ao objeto e a especularidade o seu brilho.</p>
+
+<h3>Modelos de Iluminação</h3>
+
+<h4>Modelo de reflexão difusa</h4>
+<p>lei de Lambert</p>
+<p>fator de atenuação: não será levado em conta no nosso modelo pois a fonte luminosa está bem distante</p>
+
+<h4>Modelo de reflexão especular</h4>
+
+<p>modelo de iluminação phong</p>
+
+<h2>Modelos de Tonalização</h2>
+
+<ul>
+  <li>Modelo Flat</li>
+  <li>Modelo Gouraud</li>
+</ul>

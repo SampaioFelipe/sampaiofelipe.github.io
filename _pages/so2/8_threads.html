@@ -4,16 +4,44 @@ layout: default
 ---
 <h1 class="ui header">8. Threads</h1>
 
+<p>Linhas de execução associadas a um processo</p>
+
 <p>Uma área de stack para cada thread. Na verdade tem uma pilha para cada anel de privilégio.</p>
 
-
-<p>Criar uma nova thread é criar uma nova task_struct, alocar um nova pila e criar um contexto inicial.</p>
-
-<p>clone(2) é a chamada de sistema responsável por criar uma thread. Não utilzamos pois é especifica do linux. Ao invés disso utilizamos o padrão POSIX pthread</p>
+<p>Criar uma nova thread é criar uma nova task_struct (entidade escalonável), alocar um nova pila e criar um contexto inicial. Depois que o SO criou uma thread, não interessa mais a diferença entre thread e processos, todos são considerados entidades escalonáveis.</p>
 
 <p>Real PID vs Effective PID</p>
 
-<h2></h2>
+<p>Decomposição funcional:</p>
+
+<p>Decomposição de domínio:</p>
+
+<p>Para cada thread existe um contexto (registradores do hardware) separado.</p>
+
+<h2>Threads POSIX</h2>
+
+<p>clone(2) é a chamada de sistema responsável por criar uma thread. Não utilzamos pois é especifica do linux. Ao invés disso utilizamos o padrão POSIX pthread</p>
+
+<p>pthread_create</p>
+
+<h2>Identificadores</h2>
+
+<p>pthread_once</p>
+
+<h2>Tratamento de Sinais</h2>
+
+<p>O padrão POSIX define que todas as threads compartilhem o mesmo PID. Quando é mandado um sinal para qual thread ele é enviado?</p>
+
+<h2>Uso da Pilha</h2>
+
+<p>Alteração do tamanho da pilha.</p>
 
 <hr>
 <p>out of core programming</p>
+<p>MPI: Message Program Interface -> distribuído</p>
+<p>UID 0 : Root</p>
+<p>Não existe relação de hierarquia entre threads de um processo.</p>
+<p>Typecast entre tipos ponteiro são irrelevantes, numa arquitetura 32-bits todos tem 4-bytes (em 64-bits, 8-bytes)</p>
+<p>Para compilar "-pthread", não precisa do l.</p>
+<p>Por padrão, todas as thread são joinable (isto é, qualquel outra thread pode dar join nela). Ao utilizar o detach (desassociação) ...</p>
+<p></p>

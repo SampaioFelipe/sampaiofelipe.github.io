@@ -9,6 +9,8 @@ disciplinas:
         url: cg/7_preenchimento_poligono
       - titulo: WebGl
         url: cg/10_webgl
+      - titulo: Cenas 3D
+        url: cg/11_cenas_3d
 
   - nome: Inteligência Artificial
     alias: IA
@@ -64,6 +66,8 @@ disciplinas:
         url: redes/1_rede_de_computadores_e_a_internet
       - titulo: Camada de Aplicação
         url: redes/2_camada_de_aplicacao
+      - titulo: Camada de Transporte
+        url: redes/3_camada_de_transporte
       - titulo: Camada de Rede
         url: redes/4_camada_de_rede
 

@@ -1,0 +1,134 @@
+---
+title: "Redes - Camada de Transporte"
+layout: default
+---
+<h1 class="ui header">3. Camada de Transporte</h1>
+
+<h2>Serviços da Camada de Transporte</h2>
+
+<ul>
+  <li>Fornece Comunicação Lógica entre processos de diferentes máquinas.</li>
+  <li>Protocolos de Transporte
+    <ul>
+      <li>Rodam nos hosts</li>
+      <li><b>Lado transmissor:</b> quebra a mensagem da aplicação em segmentos e passa para a camada de rede</li>
+      <li><b>Lado receptor:</b> remonta os segmentos em mensagens e passa para a aplicação</li>
+    </ul>
+  </li>
+</ul>
+
+<p>*<b>segmentos:</b> nome do pacote da camada de transporte.</p>
+
+<h3>Camada de Transporte vs Camada de Rede</h3>
+
+<p>Enquanto a Camada de Rede lida com a conexão lógica entre hosts, a Camada de Transporte lida com a comunicação entre processos.</p>
+
+<h3>Visão Geral da Camada de Transporte na Internet</h3>
+
+<p><b>UDP (User Datagram Protocol):</b> não confiável, entrega desordenada.</p>
+
+<p><b>TCP (Transmission Control Protocol):</b> confiável, entrega ordenada, controle de congestionamento, controle de fluxo, configuração prévia de conexão (handshaking).</p>
+
+<p>Serviços como garantias de atraso e largura de banda não são fornecidos pelos protocolos de transporte na Internet.</p>
+
+<h2>Multiplexação e Demultiplexação</h2>
+
+<p><b>Multplexação:</b> ocorre no transmissor, manipula dados de multiplos sockets e adiciona cabeçalho de transporte.</p>
+
+<p><b>Demultiplexação:</b> ocorre no receptor, utiliza as informações do cabeçalho para entregar os segmentos recebidos aos seus sockets correspondentes.</p>
+
+<p>Hosts usam o endereço IP e o número da Porta para direcionar segmentos a um socket específico. O host recebe um datagrama IP, cada datagrama tem um endereço IP de origem e destino, cada datagrama cerrega um segmento da camada de transporte e, cada segmento tem o número da porta de origem e destino.</p>
+
+<h3>Demultiplexação Connectionless</h3>
+
+<p>Um socket <b>UDP</b> precisa especificar um endereço IP de destino e uma porta de destino. Quando um host recebe um segmento UDP, ele checa a porta de destino e redireciona ao socket vinculado a porta de destino (datagramas IP com o mesmo número de porta mas diferentes IP de origem e/ou portas de origem serão direcionados ao mesmo socket do destino).</p>
+
+<h3>Demultiplexação Orientada a Conexão</h3>
+
+<p>Um socket <b>TCP</b> identificado por uma 4-tupla: (IP origem, Porta origem, IP destino, Porta destino).</p>
+
+<p>Demultiplexador: o receptor usa todos os 4 valores da tupla para direcionar o segmento ao socket apropriado. Servidores host podem suportar vários sockets TCP simultaneamente, cada socket identificado pela sua própria 4-tupla. Servidores web possuem differentes sockets para cada cliente conectado (HTTP não persistente terá diferentes sockets para cada requisição).</p>
+
+<h2>Transporte Connectionless (UDP)</h2>
+
+<p>Serviço <b>best effort</b>, segmentos UDP podem se perder e serem entregues fora de ordem à aplicação.</p>
+
+<p><b>Connectionless</b> significa que não há handshaking entre o transmissor UDP e o receptor. Cada segmento UDP é manipulado de forma independente dos demais.</p>
+
+<p>O UDP é usado em serviços de streamming (onde a perda é tolerável), DNS e SNMP. Para adicionar confiança na transferência UDP é necessário implementa-la no nível de aplicação.</p>
+
+<p><b>Por que usar UDP então?</b> sem o estabelecimento de conexão (que pode adicionar um certo atraso), é simples (não requer que estados de conexão), cabeçalho pequeno e sem controle de congestionamento (pode trafegar o mais rápido que conseguir).</p>
+
+<h3>Estrutura do Segmento UDP</h3>
+<h4>Cabeçalho UDP</h4>
+<p>*Cada linha possui 32 bits.</p>
+<table class="ui inverted celled structured unstackable table">
+  <tbody>
+    <tr>
+      <td>Source Port #</td>
+      <td>Dest Port #</td>
+    </tr>
+
+    <tr>
+      <td>Lenght</td>
+      <td>Checksum</td>
+    </tr>
+
+    <tr class="ui center aligned">
+      <td colspan="2">Dados da aplicação (payload)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Checksum</h4>
+
+<p>O objetivo do checksum é detectar erros (por exemplo, bits invertidos) no segmento.</p>
+
+<h2>Pricípios da Transferência Confiável de Dados</h2>
+
+<p>Um serviço de transferência confiável precisa fornecer um canal confiável de transferência de dados, onde há a garantia de de nenhum bit invertido ou perdido, e todos são entregues na ordem em que foram enviados.</p>
+
+<p>A tarefa de implementar um serviço desse é difícil devido ao fato de que a camada abaixo o protocolo pode ser não confiável. Por exemplo, o TCP é um protocolo de transferência confiável de dados que é implementado no topo de um protocolo de rede (IP) não confiável.</p>
+
+<h3>Construindo um Protocolo de Transmissão Confiável de Dados</h3>
+
+<h4>rdt 1.0: Transferência confiável sob um canal perfeitamente confiável</h4>
+
+<h4>rdt 2.0: Transferência confiável sob um canal com erros de bit</h4>
+
+<ul>
+  <li><b>ACK (acknowledgmet):</b> "Ok, entendi"</li>
+  <li><b>NAK (No acknowloedgment):</b> "Pode repetir?"</li>
+</ul>
+
+<p>Em redes, protocolos de transferência confiável baseados em retransmissão são conhecidos como <b>ARQ(Automatic Repeat Request).</b></p>
+
+<p>Funadamentalmente, três capacidades adicionais são requisitadas em um protocolo ARQ para lidar com a presença de erros de bits:</p>
+
+<ol>
+  <li><b>Detecção do Erro</b></li>
+  <li><b>Feedback do Receptor</b></li>
+  <li><b>Retransmissão</b></li>
+</ol>
+
+<p>O transmissor não enviará outra parte dos dados até que tenha certeza que o receptor tenha recebido corretamente (<b>protocolo stop-and-wait</b>).</p>
+
+<h4>rdt 2.1</h4>
+
+<p>As mensagens ACK e NAK podem estar corrompidas também.</p>
+
+<p>Para lidar com isso, podemos re-enviar o pacote (tratar qualquer resposta corrompida como um NAK) e colocar um número de sequência no pacote para que seja tratada a possível duplicata de pacotes.</p>
+
+<h4>rdt 2.2</h4>
+
+<p>Quando um pacote corrompido é recebido, o receptor envia um NAK. Podemos ter o mesmo resultado se, ao invés de enviar um NAK, enviarmos um ACK para o último pacote recebido corretamente. Um transmissor que recebe dois ACKs para o mesmo pacote sabe que o receptor não recebeu corretamente o pacote seguinte ao pacote que foi ACKed duas vezes.</p>
+
+<h4>rdt 3.0: Transferência confiável sob um canal com erros e perda de pacotes</h4>
+
+<p>A abordagem é fazer com que o transmissor espere por um tempo "resoável" pelo ACK. Retransmite se nenhum ACK for recebido durante o período de espera. Se o pacote não foi perdido, apenas demorou mais que o tempo de espera, a retransmissão será duplicada, mas o número de sequência consegui lidar com isso. O receptor deve especificar o número de sequência do pacote que está sendo ACKed.</p>
+
+<h3>Pipelined</h3>
+
+<p>O protocolo criado anteriormente é do tipo stop-and-wait, o que deixa a desejar no quesito performance.</p>
+
+<h3>Go-Back-N (GBN)</h3>

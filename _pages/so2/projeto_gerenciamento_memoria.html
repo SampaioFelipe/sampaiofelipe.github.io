@@ -1,0 +1,45 @@
+<h1>Como o código do linux está organizado?</h1>
+
+<ul>
+  <li><b>arch:</b> contém o código do kernel específico para cada arquitetura.</li>
+  <li><b>mm:</b> contém todo o código referente ao gerenciamento de memória. Código de gerenciamneto de memória específico para cada arquitetura pode ser encontrado em <b>/*/mm/</b>.</li>
+</ul>
+
+<p>The page fault handling code is in mm/memory.c and the memory mapping and page cache code is in mm/filemap.c. The buffer cache is implemented in mm/buffer.c and the swap cache in mm/swap_state.c and mm/swapfile.c.</p>
+
+<h1>Estruturas de Gerenciamento de Memória</h1>
+<p>Conteitos</p>
+http://www.xml.com/ldd/chapter/book/ch13.html
+http://duartes.org/gustavo/blog/post/how-the-kernel-manages-your-memory/
+
+zonas de memória: https://elixir.free-electrons.com/linux/latest/source/include/linux/mmzone.h
+
+troca de contexto:
+https://elixir.free-electrons.com/linux/latest/source/kernel/sched/core.c#L2750
+
+Manipulação da TLB (Translation Lookaside Buffer):
+https://elixir.free-electrons.com/linux/latest/source/arch/x86/mm/tlb.c
+
+kmap - kernel map:
+https://elixir.free-electrons.com/linux/latest/source/arch/arc/mm/highmem.c#L56
+https://www.kernel.org/doc/gorman/html/understand/understand012.html
+
+https://books.google.com.br/books?id=M7RHMACEkg4C&pg=PT436&lpg=PT436&dq=kmap+linux&source=bl&ots=s3E_NdiPZr&sig=A_tcuXG_8oj84zVi-oUtLqT8L5Q&hl=en&sa=X&ved=0ahUKEwi_zcWw5bzXAhVEkpAKHUtiBOcQ6AEIhQEwCA#v=onepage&q=kmap%20linux&f=false
+
+page:
+https://elixir.free-electrons.com/linux/latest/source/include/linux/mm_types.h#L42
+
+mm_struct:
+https://elixir.free-electrons.com/linux/latest/source/include/linux/mm_types.h#L362
+
+dup_mm (fork):
+https://elixir.free-electrons.com/linux/latest/source/kernel/fork.c#L1187
+
+copy_mm (fork):
+https://elixir.free-electrons.com/linux/latest/source/kernel/fork.c#L1222
+
+vm_region:
+http://elixir.free-electrons.com/linux/v4.14/source/include/linux/mm_types.h#L256
+
+clone_flags:
+http://elixir.free-electrons.com/linux/v4.14/source/include/uapi/linux/sched.h#L6

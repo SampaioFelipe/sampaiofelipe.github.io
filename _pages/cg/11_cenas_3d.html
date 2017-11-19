@@ -1,0 +1,36 @@
+---
+title: "Cenas 3D"
+layout: default
+---
+
+<h1 class="ui header">11. Cenas 3D</h1>
+
+<h2>Introdução</h2>
+
+<p>Em CG, gerar uma visão de uma cena tridimensional é similar ao ato de tirar uma fotografia.</p>
+
+<h3>Processo Físico</h3>
+
+<p>Os raios de luz atingem os objetos e são absorvidos ou refletidos. Também podemos considerar a lente da câmera como a lente de nossos olhos. Os raios que são refletidos/emitidos pelos objetos e hegam aos nossos olhos permitem que enxergamos o objeto. Dessa forma <b>a posião da câmera é a posição do observador da cena</b>.</p>
+
+<p>Os infinitos raios luminosos que chegam na lente da câmera/olho convergem para um único ponto, porém, antes disso os raios atingem um plano onde a imagem é formada (na câmera temos um sensor luminoso, nos ollhos esse plano é a retina).</p>
+
+<p>Passos para se tirar um fotografia:</p>
+
+<ol>
+  <li>Definir a posição da câmera</li>
+  <li>Apontar a câmera para uma direção</li>
+  <li>Girar a câmera em torno da linha de visão</li>
+  <li>Definir zoom óptico (mecânico) e/ou zoom digital</li>
+  <li>Acionar o botão</li>
+</ol>
+
+<h3>Câmeras Virtuais</h3>
+
+<p>Em CG emprega-se o conceito de câmeras virtuais.</p>
+
+<img class="ui centered image" src="{{site.imageurl | append: 'cg/camera_virtual.png'}}" alt="">
+
+<p>Geralmente o plano de projeção passa pelo pnto focal e é perpendicular a direção da projeção, assim como os planos de corte são perpendiculares a direção da projeção.</p>
+
+<h4>Especificando Câmera Virtual em OpenGl</h4>

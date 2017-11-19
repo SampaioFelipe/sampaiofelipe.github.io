@@ -1,0 +1,55 @@
+* Enginnering Sefl-Adaptive Systems through feedback Loops
+
+- Sistemas adaptáveis (provê ao usuário ferramentas que possibilitam alterações em algumas características) != Sistemas adaptativos (capaz de alterar suas próprias característcas autonomamente).
+
+- Ajustes de parâmteros internos (mudança da velocidade de um robô em certos terrenos)
+
+- Sistemas adaptativos são capazes de de lidar com a mudança contínua do ambiente e o surgimento de novos requisitos que eram desconhecidos durante o período de design.
+
+- A complexidade do desenvolvimento de softwares atuais estão fazendo com que engenheiros de software busquem inspiração em outras áreas relacionadas (robótica, IA, teoria do controle e biologia).
+
+- A capacidade de sistemas de ajustarem seu comportamento em resposta ao ambiente na forma de auto-adaptação tem se tornado bem promissor
+
+- Sistema decide de forma autonoma (ou com o mínimo de interferência) como se adaptar ou organizar para acomodar mudanças em seu contexto e ambiente.
+
+- Como não há a interferência humana, é necessário seguir objetivos de alto-nível (políticas) bem definidas
+
+- Sistemas Complexos -> Sistemas compostos por partes interconectadas que como um todo exibe uma ou mais propriedades não óbivias quando vistos individualmente (exemplo do cardume).
+
+- Os desevolvedores estão acostumados a desenvolver de acordo com requisitos e especificações, e não ao surgimento de novos requisitos e propriedades.
+
+- Sistemas adaptativos  podem se caracterizados por como eles operam ou são analisados e por multiplas dimensões de propriedades incluindo: centralizado ou descentralizado, top-down ou bottom-up, latência de feedback (lento x rapido), incerteza do ambiente (baixo x alto).
+
+- Um sistema top-down normalmente é centralizado e opera com a orientação  de um controlador central ou política, avalia seu próprio comportamento no ambiente atual e adapta-se se o monitoramento e a análise mandar. Esse tipo de sistema opera com uma representação interna de si mesmo e seus objetivos globais. Analisando os componentes desse sistema, pode-se compor e deduzir o comportamento do sistema todo.
+
+- Em contraste, sistemas cooperativo (ou auto organizados) são descentralizados, operam sem uma autoridade central, e é típicamente composta bottom-up de um grande npumero de componentes que interagem localmente de acordo com regras simples. O comportamento global do sistema surge dessas interações locais, é dificil deduzir propriedades do sistema global apenas analisando as propriedades locais. Não necessarioamente possuem uma representação dos objetivos globais, são inspirados biológicamente.
+
+- A maioria dos sistemas adaptativos caem no meio desses dois extremos (não uma linha definida que separa os dois polos). Um exemplo é a Web (rede), basicamente descentralizada como um sistema global, mas sub-redes são altamente centralizadas...
+
+* Loops de Feedback
+
+- Uma característica comum a todos os sistemas adaptativos é a capacidade de tomar decisões que irão alterar o seu comportamento em tempo de execução.
+
+- Essas decisões se baseiam nos dados coletados do ambiente e do próprio sistema. (ex: robô móvel atonomo deve constantemente verificar a presença de obstáculos em sua trajetória, caso encontre ele deverá adaptar seu comportamento com o objetivo de desviar; serviço de internet se adaptando ao tráfego...)
+
+- Loops de feedback fornecem um mecanismo genérico para a adaptação. Feedbacks positovos ocorrem quando uma mudança inicial é reforçada, amplificando a mudança. Feedbacks negativos contra-ataca perturbações.
+
+- Ambientes naturais produzem formas mais complexas de loops de feedback que não podem ser classificadas nem como positiva nem como negativa.
+
+- Um loop de feedback envolve 4 atividades chaves: coleta, análise, decisão e ação.
+
+- Sensores coletam dados do sistema em execução e seu contexto sobre o estado atual. Os dados acumulados são então limpos, filtrados e podados para finalmente serem armazenados para referência futura (formando um modelo acurado de estados passados). Analisa-se os dados para inferir tendencias e identficar sintomas. Em seguida, há uma tentativa de predizer o futuro para decidir como agir.
+
+- Em sistemas práticos há mais de um loop de feedback
+
+- Algumas questões que precisão ser respondidas na etapa de coleta: Qual a taxa de amostragem? Quão confiável são os dados dos sensores? Há um formato de evento comum entre os sensores? Os sensores fornecem informações suficientes para a identificação do sistema?
+
+- ...
+
+* Loops de Feedback na Engenharia de Controle
+
+* Loops de Feedback em Sistemas Naturais
+
+* Loops de Feedback na Engenharia de Software
+
+- 
