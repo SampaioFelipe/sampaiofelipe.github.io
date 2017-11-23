@@ -11,7 +11,36 @@
 <p>Conteitos</p>
 http://www.xml.com/ldd/chapter/book/ch13.html
 http://duartes.org/gustavo/blog/post/how-the-kernel-manages-your-memory/
+________________________________________________________________________________
+- The mm field in task_struct points to the memory descriptor, mm_struct, which is an executive summary of a program’s memory (http://elixir.free-electrons.com/linux/v4.14/source/include/linux/mm_types.h#L362).
 
+- vm_area_struct: http://elixir.free-electrons.com/linux/v4.14/source/include/linux/mm_types.h#L286
+- Depois que ocorre o pagefault
+- find_vma (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L2116)
+- do_anonymous_map (http://elixir.free-electrons.com/linux/v4.14/source/mm/memory.c#L3051)
+- do_swap_page (http://elixir.free-electrons.com/linux/v4.14/source/mm/memory.c#L2842)
+
+-- Stack
+- It is possible to exhaust the area mapping the stack by pushing more data than it can fit. This triggers a page fault that is handled in Linux by expand_stack() (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L2406), which in turn calls acct_stack_growth() (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L2177) to check whether it’s appropriate to grow the stack.
+
+- RLIMIT_STACK: if the maximum stack size has been reached, we have a stack overflow and the program receives a Segmentation Fault
+
+-- Memory Map Segment
+- do_mmap (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L1321)
+
+-- Heap
+- malloc
+- do_brk (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L180)
+- exit_mmap (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L2974)
+
+
+
+
+
+
+
+
+________________________________________________________________________________
 zonas de memória: https://elixir.free-electrons.com/linux/latest/source/include/linux/mmzone.h
 
 troca de contexto:
@@ -43,3 +72,6 @@ http://elixir.free-electrons.com/linux/v4.14/source/include/linux/mm_types.h#L25
 
 clone_flags:
 http://elixir.free-electrons.com/linux/v4.14/source/include/uapi/linux/sched.h#L6
+
+SYSCALL macro
+http://elixir.free-electrons.com/linux/latest/source/include/linux/syscalls.h#L198

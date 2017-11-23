@@ -57,6 +57,14 @@ disciplinas:
         url: paa/6_divisao_e_conquista
       - titulo: Transformação e Conquista
         url: paa/7_transformacao_e_conquista
+      - titulo: Trade-off entre Tempo e Espaço
+        url: paa/8_trade_off_tempo_espaco
+      - titulo: Programação Dinâmica
+        url: paa/9_programacao_dinamica
+      - titulo: Algoritmos Gulosos
+        url: paa/10_algoritmos_gulosos
+      - titulo: Melhoramentos Iterativos
+        url: paa/11_melhoramento_iterativo
 
   - nome: Redes de Computadores
     alias: Redes

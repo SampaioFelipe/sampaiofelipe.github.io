@@ -134,3 +134,78 @@ $$ \frac{RTT * C}{\sqrt n} $$
 </ul>
 
 <h2>IP: Internet Protocol</h2>
+
+<h3>Formato do datagrama IP</h3>
+
+<p>20 bytes de cabeçalho IP + 20 bytes de cabeçalho TCP = 40 bytes + tamanho do overhead da aplicação.</p>
+
+<h3>Fragmentação e Remontagem</h3>
+
+<p>Links de rede possuem MTU (max transfer size), datagramas IP muito grandes devem ser fragmentados na rede: um datagrama se torna vários datagramas menores, que são remontados somente no destino final. Bits do cabeçalho IP são usados para identificar e ordenar fragmentos.</p>
+
+<h3>Endereçamento IPv4</h3>
+
+<p>Endereço IP de 32-bits (4 bytes) que identifica uma interface de rede. Uma interface de rede é uma conexão entre host e roteador e um link físico.</p>
+
+<h4>Subnets</h4>
+
+<p>Subnet é representada pelo bits de maior ordem, enquanto que os bits de baixa ordem identificam os hosts desta subnet. Em uma subnet as interfaces dos dispositivos possuem a mesma parte do endereço da subnet em seu endereço ip. Os dispositivos em uma mesma subnet podem alcançar os outros sem a intervenção de um roteador. Representação: 198.100.1.0/24, onde "/24", conhecido como <b>subnet mask</b>, indica que os 24 bits mais a esquerda dos 32-bits define o endereço da subnet.</p>
+
+<h4>CIDR: Classless InterDomain Routing</h4>
+
+<p>A atribuição de endereços na Internet é conhecida como CIDR. O endereço de 32-bits é dividido em duas partes da formas <b>a.b.c.d/x</b>, onde x indica o número de bits na primeira parte do endereço.</p>
+
+<h4>Como conseguir um IP?</h4>
+
+<p><b>DHCP</b> (Dynamic Host Configuration Protocol): dinamicamente adquire um endereço de um servidor.</p>
+
+<p>Qunado um cliente chega em uma rede ele envia uma mensagem <b>broadcast</b> (todos na rede recebem - IP: 255.255.255.255) perguntando se tem algum servidor DHCP na rede. O servidor DHCP responde enviando um endereço IP disponível para o novo cliente. O cliente aceita e manda uma confirmação e em seguida o servidor DHCP manda um ACK dizendo que atribuiu o endereço ao cliente.</p>
+
+<p>O DHCP pode reornar mais do que apenas um endereço alocado na subnet: endereço do primeiro roteador mais proximo do cliente, o nome e endereço do servidor de DNS...</p>
+
+<h4>Como uma subnet adquire um endereço IP?</h4>
+
+<p>Do espaço de endereçamento de seu provedor ISP.</p>
+
+<h3>NAT: Network Address Translation</h3>
+
+<p>Todos os datagramas que deixam a rede local possuem o mesmo endereço IP NAT, com portas distintas. Datagramas com a origem ou destino nesse rede terá 10.0.0/24 como endereço (Tabela de Tradução NAT).</p>
+
+<h3>IPv6</h3>
+
+<h2>SDN: Software Defined Networks</h2>
+
+<p>OpenFlow</p>
+
+<h2>Plano de Controle</h2>
+
+<p>Há duas abordagens para estruturar um plano de controle de rede:</p>
+
+<ul>
+  <li>Controle por roteador (Tradicional)</li>
+  <li>Controle logicamente centralizado(SDN)</li>
+</ul>
+
+<h3>Protocolos de Roteamento</h3>
+
+<h4>Link State</h4>
+<p>Dijkstra</p>
+
+<h4>Distance Vector</h4>
+<p>Bellman-Ford Formulas</p>
+
+<h4>Roteamento intra-AS na Internet: OSPF</h4>
+<p>AS = Autonomous System</p>
+<p>Roteador Gateway: borda de sua AS, possue links para rotedores de outros AS's</p>
+
+<p>Interior Gateway Protocols (IGP)</p>
+
+<h4>Roteamento entre ISPs: BGP</h4>
+
+<p>BGP: Border Gateway Protocol</p>
+
+<h2>ICMP: Internet Control Message Protocol</h2>
+
+<p>Utilizado por hosts e roteadores para se comunicarem em nível de rede. Usado para reportar erros ou ecoar requests/reply (usado pelo ping)</p>
+
+<h2>Gerenciamento de Rede e SNMP</h2>

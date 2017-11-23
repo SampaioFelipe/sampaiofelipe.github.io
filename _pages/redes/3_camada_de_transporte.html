@@ -125,10 +125,98 @@ layout: default
 
 <h4>rdt 3.0: Transferência confiável sob um canal com erros e perda de pacotes</h4>
 
-<p>A abordagem é fazer com que o transmissor espere por um tempo "resoável" pelo ACK. Retransmite se nenhum ACK for recebido durante o período de espera. Se o pacote não foi perdido, apenas demorou mais que o tempo de espera, a retransmissão será duplicada, mas o número de sequência consegui lidar com isso. O receptor deve especificar o número de sequência do pacote que está sendo ACKed.</p>
+<p>A abordagem é fazer com que o transmissor espere por um tempo "resoável" pelo ACK. Retransmite se nenhum ACK for recebido durante o período de espera. Se o pacote não foi perdido, apenas demorou mais que o tempo de espera, a retransmissão será duplicada, mas o número de sequência consegue lidar com isso. O receptor deve especificar o número de sequência do pacote que está sendo ACKed.</p>
 
 <h3>Pipelined</h3>
 
-<p>O protocolo criado anteriormente é do tipo stop-and-wait, o que deixa a desejar no quesito performance.</p>
+<p>O protocolo criado anteriormente é do tipo stop-and-wait, o que deixa a desejar no quesito performance. A técnica de pipeline permite que o transmissor envie multiplos, "in flight", ainda não confirmados por um ACK.</p>
 
 <h3>Go-Back-N (GBN)</h3>
+
+<p>O transmissor pode ter N pacote não <b>ACKed</b> em pipeline. O receptor apenas envia <b>ack cumulativo</b>, se houver uma pacote faltante envia o pacote ack do ultimo pacote que chegou na ordem (<b>sliding window protocol</b>). O transmissor mantém um temporizador para o pacote não acked mais antigo, quando o temporizador expira, retransmite todos os pacotes não acked.</p>
+
+<h3>Selective Repeat</h3>
+
+<p>O transmissor pode ter até N pacotes não acked em pipeline. O receptor envia acks individuais para cada pacote. O transmissor mantém um temporizador para cada pacote não acked. Quando o tempo expirta, restransmite apenas o pacotes não acked.</p>
+
+<div class="ui segment red inverted">
+  <h4>Selective Repeat Dilemma</h4>
+</div>
+
+<h2>Transporte Orientado a Conexão: TCP</h2>
+
+<p>O TCP é denominado orientado a conexão porque antes de um processo conseguir enviar dados para outro, os dois processos devem realizar um "aperto de mãos" (handshaking) antes.</p>
+
+<p>Uma conexão TCP fornece um serviço "full-duplex" e "ponto a ponto".</p>
+
+<h3>Estrutura do Segmento TCP</h3>
+<p><b>Sequence Number</b>: numero de byte stream do primeiro byte no segmento de dados.</p>
+
+<p><b>Acknowledgment number</b>: número de seuência (em bytes) do próximo byte que está sendo esperado do outro lado (ACK cumulativo).</p>
+
+<h4>Cabeçalho TCP</h4>
+
+<h3>RTT Estimado e Timeout</h3>
+
+<p>O RTT (SampleRTT) de um segmento é a quantidade de tempo entre o envio do segmento e o recebimento de seu ACK. Ao invés de medir o SampleRTT para cada segmento transmitido, a maioria das implementações do TCP levam apenad uma medida SampleRTT por vez (estimado).</p>
+
+<p>Obviamente, o valor do SampleRTT irá flutuar de segmento para segmento quando lidando com congestionamento. Para estimar um RTT típico, é melhor calcular a média dos SampleRTT. O TCP mantém uma média, chamada <b>EstimatedRTT</b> dos valores do SampleRTT (<b>exponential weighted moving average</b>).</p>
+
+$$ EstimatedRTT = (1-\alpha) * EstimatedRTT + \alpha * SampleRTT $$
+
+<p>Recomenda-se utilizar $\alpha = 0.125$.</p>
+
+<p>O desvio de EstimatedRTT pode ser calculado como:</p>
+$$ DevRTT = (1-\beta) * DevRTT + \beta |SampleRTT - EstimatedRTT| $$
+
+<p>Recomenda-se utilizar $\beta = 0.25$</p>
+
+$$TimeoutInterval = EstimatedRTT + 4*DevRTT$$
+
+<h3>Transferência Confiável de Dados</h3>
+
+<p>TCP cria um rdt (reliable data transport) no topo do serviço não confiável IP.</p>
+
+<p>Retransmissões são disparadas por eventos de timeout e acks duplicados.</p>
+
+<h3>Controle de Fluxo</h3>
+
+<p>O receptor controla o transmissor, por tanto o transmissor não irá sobrecarregar o buffer do receptor por transmitir muitos pacotes rápido. O receptor adverte a quantidade de espaço livre em seu buffer incluindo o valor <b>rwnd</b> no cabeçalho TCP no segmento receptor->transmissor. O transmissor limita a quantidade de dados in-flight ao valor <b>rwnd</b> do receptor, garantindo que o buffer do receptor não seja sobrecarregado.</p>
+
+<h3>Gerenciamento de Conexão</h3>
+
+<p>Antes de trocar dados, o transmissor e o receptor realizam um <b>"handshaking"</b>: concorda com o estabelecimento da conexão (cada um sabe o outro aceitou o estabelecimento da conexão), concorda com os parâmetros da conexão.</p>
+
+<h4>3-way Handshake</h4>
+
+<ol>
+  <li>Cliente envia um segmento TCP (sem dados da camada de aplicação) com um de seus bits de flag ativo, o bit SYN (<b>segmento SYN</b>) e um número de sequência inicial escolhido aleatóriamente (client_isn).</li>
+  <li>Uma vez que o datagrama IP contendo o segmento TCP SYN chega no servidor, o servidor extrai o segmento TCP SYN, aloca buffers de TCP e variáveis para a conexão e envia um segmento ao cliente informando que a conexão foi estabelecida. Esse segmento contém 3 partes importantes: o bit SYN, o campo acknowledge é configurado com o <b>client_isn+1</b> e o servidor escolhe seu próprio número de sequência (server_isn) (<b>segmento SYNACK</b>)</li>
+  <li>Ao receber o segmento SYNACK, o cliente também aloca buffers e variáveis para a conexão. O cliente então envia ao servidor um outro segmento informando o servidor que recebeu a confirmação de estabelecimento de conexão. O bit SYN é configurado em 0, pois já foi estabelecida a conexão. Esse terceiro estágio do handshake já pode conter dado no payload do segmento.</li>
+</ol>
+
+<p>Tanto cliente quanto sevidor pode fechar uma conexão já estabelecida com o envio de um <b>segmento FIN</b>(com o bit FIN = 1). O lado requerendo o fechamento de conexão (X) entra no estado FIN_WAIT_1. Enquanto estiver nesse estado, fica esperando por um segmento TCP ACK do outro lado (Y) Quando recebe esse ACK, X entra no estado FIN_WAIT_2. Enquanto estiver nesse estado o lado X espera por um outro segmento, agora com o bit FIN = 1. Após o recebimento desse ultimo, X envia um ACK para Y e espera por um tempo determinado e fecha a conexão (esse tempo é utilizado para reenviar o ACK ao lado Y, caso este for perdido).</p>
+
+<h2>Princípios de Controle de Congestionamento</h2>
+
+<p>Informalmente, o congestionamento se dá quando há muitas fontes enviando muitos dados tão rápido que a rede não consegue lidar. Se manifesta com perdas de pacotes (sobrecarga dos buffers dos roteadores) e atrasos longos (enfileiramento nos buffers de roteadores).</p>
+
+<h2>Controle de Congestionamento do TCP</h2>
+
+<p><b>Abordagem:</b> transmissor aumenta a taxa de transmissão (tamanho da janela de congestionamento - cwnd), analisando o uso da largura de banda até que uma perda ocorra. Aumenta a cwnd em 1 a cada RTT até que uma perda seja detectada <b>(Aumento aditivo)</b>. Corta a cwnd pela metade após uma perda <b>(Decrescimento Multiplicativo)</b>.</p>
+
+<p>O algoritmo de Controle de Congestionamento do TCP possui 3 componentes principais: Ininicialização Lenta, Prevenção de Congestionamento e Recuperação Rápida.</p>
+
+<p><b>Inicialização Lenta:</b> quando uma conexão começa, aumenta a taxa exponencialmente até a primeira perda. Dobra cwnd a cada RTT.</p>
+
+<p>Quando uma perda é indicada por um timeout: cwnd é configurado para 1 MSS (maximum segment size), janela então cresce exponencialmente (como na inicialização) até um limite, depois cresce linearmente.</p>
+
+<p>Quando uma perda é indicada por 3 ACKs duplicados: ACKs duplicados indicam que a rede é capaz de entregar alguns segmentos, cwnd é cortado pela metade e começa a crescer linearmente.</p>
+
+<p><b>Quando o crescimento exponencial dá lugar ao crescimento linear?</b> quando cwnd chega na metade do tamanho da janela antes do timeout.</p>
+
+<h3>Throughput</h3>
+
+$$ avg = \frac{3}{4} \frac{W}{RTT} bytes/sec $$
+
+<p>W é o tamanho da janela.</p>

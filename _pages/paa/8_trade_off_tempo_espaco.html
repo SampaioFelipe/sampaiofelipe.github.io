@@ -1,0 +1,96 @@
+---
+title: "PAA - Trade-off entre Tempo e Espaço"
+layout: default
+---
+<h1 class="ui header">8. Trade-off entre Tempo e Espaço</h1>
+
+<p>Uma abordagem para desenvolver algoritmos é armazenar entradas preprocessadas no todo, ou em parte, para acelerar a resolução de problemas. Chamamos essa abordagem de <b>melhoramento de entrada</b>(pré-processamento).</p>
+
+<p>Outro tipo de abordagem que explora o trade-off do espaço-pelo-tempo simplesmente utiliza espaço extra para facilitar o acesso aos dados. Chamamos essa aboradagem de <b>pre-estruturação</b> (algum processamento é realizado antes do problema em si ser solucionado).</p>
+
+<h1>Ordenação por Contagem</h1>
+
+<p>Uma forma simples de se ordernar uma lista é contar, para cada elemento, o número de elementos menores que esse elemento e armazenar o resultado em uma tabela. Esses valores irão indicar a posição do elemento (por exemplo, se houver 10 elementos menores que um elemento X, X ficará na posição 11). Esse algoritmo é chamado de <b>Comparison-Counting Sort</b></p>
+
+<pre><code>comparisonCountingSort(A[0..n-1]) {
+  Count[0..n-1]
+
+  para i = 0 até i = n-1 faça {
+    Count[i] = 0
+  }
+
+  para i = 0 até i = n-2 faça {
+    para j = i + 1 até j = n - 1 faça {
+      se A[i] < A[j] então {
+        Count[j] = Count[j] + 1
+      }
+      senão{
+        Count[i] = Count[i] + 1
+      }
+    }
+  }
+
+  para i = 0 até i = n-1 faça {
+    S[Count[i]] = A[i]
+  }
+
+  retorna S
+}
+</code></pre>
+
+<p>A complexidade temporal pode ser calculada como:</p>
+$$ T(n) = \sum_{i=0}^{n-2}\sum_{i=0}^{n-1}1 = \sum_{i=0}^{n-2}[(n-1) - (i + 1) + 1] = \sum_{i=0}^{n-2}(n-1-i) = \frac{n(n-1)}{2} \in \Theta(n^2)$$
+
+<p>Essa tecnica funciona melhor em situações se sabemos que os elementos pertencem a um conjunto pequeno (limitado) de valores. Dessa forma podemos computar a frequência de ocorrência dos valores e associar a posicao do vetor de distribuição e a contagem anterior para determinar a posição no vetor.</p>
+
+<pre><code>DistributionCountingSort(A[0..n-1], l, u) {
+  // Ordena um vetor de inteiros dado um intervalo limitado [i,u] de possíveis valores
+  para i = 0 até i = u-l faça { // inicializa as frequências
+    D[j] = 0
+  }
+
+  para i = 0 até i = n-1 faça { // computa as frequências
+    D[A[i]-l] = D[A[i]-l] + 1
+  }
+
+  para i = 0 até i = u-l faça { // calcula a distribuição acumulada
+    D[i] = D[i + 1] + D[i]
+  }
+
+  para i = n - 1 até i = 0 faça {
+    j = A[i] - l
+    S[D[j]-1] = A[i]
+    D[j] = D[j] - 1
+  }
+}
+</code></pre>
+
+<p>A complexidade desse algoritmo é $O(n)$.</p>
+
+<h1>Otimização de Entrada em String Matching</h1>
+
+
+<h2>Algoritmo de Horspool</h2>
+
+<p>Começa-se com o último caracter do padrão e move-se da direita para a esquerda, comparando pares de caracteres do padrão e do texto. Se todos os caracteres do padrão combinarem, uma cadeia foi encontrada.</p>
+
+<p>Se ocorrer uma combinação mal sucedida, deve-se deslocar o padrão o máximo possível sem correr o risco de perder uma cadeia coincidente. A questão é identificar o máximo possível de tal forma que o risco de perder uma cadeia não exista.</p>
+
+<p>O algortimo de Horspool determina o tamanho do deslocamento olhando para o caractere c do texto que foi alinhado com o último caractere do padrão.</p>
+
+<h4>Casos:</h4>
+
+<ol>
+  <li>Se não há c no padrão, pode-se deslocar o padrão pelo seu comprimento total</li>
+  <li>Caso existam ocorrências do caractere c no padrão, mas não é o último, o deslocamento deve alinhar a ocorrência mais a direita do padrão com o c do texto.</li>
+  <li>Se acontecer de c ser o últmo caractere no padrão e não existirem outros c's dentre os m-1 outros caracteres, o deslocamento dever ser similar ao caso 1</li>
+  <li>Pode acontecer de c ser o último caractere no padrão e também existirem outros c's dentre os m-1 outros caracteres. Nesse caso, o deslocamento deve ser similar ao caso 2.</li>
+</ol>
+
+<p>Se o algoritmo tiver que verificar todos os caracteres do padrão a cada deslocamaneto, ele perderá sua eficiência. É nessa parte que entra a ideia de melhoramento da entrada de dados para evitar comparações repetitivas desnecessárias. Pode-se pré-calcular tamanhos de deslocamentos e armazená-los em uma tabela. Essa tabela será indexada por todos os caracteres possíveis que possam ser encontrados no texto e preenchida com tamanho de deslocamentos.</p>
+
+<p>A eficiência no pior caso é $O(n*m)$, para textos aleatórios a eificiência é $O(n)$.</p>
+
+<h2>Algoritmo Boyer-Moore</h2>
+
+<h1>Hashing</h1>
