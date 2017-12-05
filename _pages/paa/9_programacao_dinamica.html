@@ -3,3 +3,25 @@ title: "PAA - Programação Dinâmica"
 layout: default
 ---
 <h1 class="ui header">9. Programação Dinâmica</h1>
+
+<p>A palavra "programação" em seu nome vem de planejamento, e não de programação de computadores.</p>
+
+<p>A técnica de Programação Dinâmica é uma técnica para resolver problemas com a sobreposição de subproblemas. Tipicamente, esses subproblemas surgem de relações de recorrência que relacionam a solução de um problema com a solução de subproblemas menores.</p>
+
+<p><b>Princípio de optimalidade</b>: uma sequência ótima de decisões tem a propriedade de que quaisquer que sejam o estado e a decisão inicial, as decisões remanescentes constituem uma sequência ótima de decisões com relação ao estado decorrente da primeira decisão</p>
+
+<h2>O problema da Mochila e Funções de Memória</h2>
+
+<h3>Funções de Memória</h3>
+
+<p>Uma abordagem top-down direta para achar a solução ótima de um problema encaminha para um algoritmo que resolve subproblemas mais de uma vez, tornando-o ineficiente. A abordagem de programação dinamica, por outro lado, trabalha de forma bottom-up, preenche uma tabela com todas as soluções dos subproblemas menores, mas cada um é resolvido apenas uma única vez. Um aspecto não satisfatório dessa abordagem é que as soluções para alguns subproblemas podem não ser necessárias para a solução final. Como a abordagem top-down não apresenta esse comportamento é interessante pensarmos em uma solução que combine o bom dos dois mundos. O objetivo é desenvolver um método que resolva apenas os subproblemas que são necessários e apenas uma única vez. Esse método existe e é baseado na utilização de <b>funções de memória</b>.</p>
+
+<p>Inicialmente todas as posições da tabela são preenchidas com um simbolo especial (<b>null</b>) para indicar que aquela posição não foi calculada. Sendo assim, sempre que um novo valor precisa ser calculado, o método checa a entrada correspondente na tabela: se for null, apenas recupera a entrada da tabela, caso contrário computa através de uma chamda recursiva cujo resultado irá ser gravado na tabela.</p>
+
+<h2>Árvores Binárias Ótimas de Buscas</h2>
+
+<p>Se probabilidades de ocorrência dos elementos possíveis é conhecida é natural pensar em arvores que ótimas que minimizam as comparações para os elementos mais frequentes.</p>
+
+<h2 class="duvida">Algoritmos de Warshall e Floyd</h2>
+
+<p></p>

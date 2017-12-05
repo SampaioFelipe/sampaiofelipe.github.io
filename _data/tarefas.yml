@@ -1,37 +1,29 @@
 provas:
-  - date: 2017-11-23
-    content: REDES - P2
-  - date: 2017-12-12
-    content: SO2 - P2
-  - date: 2017-12-07
-    content: REDES - P3
+  - date: 2017-12-08
+    content: CG - P2
   - date: 2017-12-11
     content: IA - P2
   - date: 2017-12-12
-    content: PAA - P2
-  - date: 2017-12-08
-    content: CG - P2
+    content: SO2 - P2
+  - date: 2017-12-14
+    content: REDES - P3
 
 trabalhos:
-  - date: 2017-11-20
-    content: MDS - Seminário
-  - date: 2017-11-20
-    content: MDS - Entrega 4
-  - date: 2017-11-20
-    content: MDS - Entrega 5
-  - date: 2017-11-27
-    content: IA - T2
   - date: 2017-12-10
     content: CC2 - T3
+  - date: 2017-12-10
+    content: PAA - Entrega da Video-aula
   - date: 2017-12-11
     content: MDS - Trabalho Final
   - date: 2017-12-14
-    content: REDES - T2 e T3
-  - date: 2017-12-03
-    content: PAA - Trabalho Final
+    content: IA - T3
   - date: 2017-12-15
     content: CG - T2
+  - date: 2017-12-19
+    content: SO - Seminário
+  - date: 2017-12-21
+    content: REDES - T2 e T3
 
 outros:
-  - date: 2017-11-06
-    content: Exercício de Prod e Cons de SO2
+  - date: 2017-12-13
+    content: Prova da Raccoon

@@ -3,3 +3,95 @@ title: "PAA - Algoritmos Gulosos"
 layout: default
 ---
 <h1 class="ui header">10. Algoritmos Gulosos</h1>
+
+<p>A abordagem gulosa sugere contruir uma solução através de uma sequência de passos, cada uma expandindo uma solução parcial até que se complete a soluçãodo problema. Em cada passo, e esse é ponto central dessa técnica, a escolha feita deve ser:</p>
+
+<ul>
+  <li>Factível, ou seja, satisfaz as restrições do problema</li>
+  <li>Ótima localmente, isto é, deve ser a melhor escolha possível entre as demais possibilidades.</li>
+  <li>Irrevogável, uma vez realizada não pode ser mudado em passos seguintes.</li>
+</ul>
+
+<h2>Algoritmo de Prim</h2>
+
+<div class="ui red inverted segment">
+  <h4>Minimum Spanning Tree (Árvore Geradora Mínima)</h4>
+  <p>Uma spanning tree de um grafo é um subgrafo não cíclico que contém todos os vértices. Se o grafo tiver pesos em suas arestas, uma <b>árvore geradora mínima</b> é uma árvore geradora com a menor soma de pesos.</p>
+</div>
+
+<p>O algoritmo de Prim contrói uma árvore geradora mínima através de uma sequencia de expansões de subárvores.</p>
+
+<pre><code>Prim(G, w, r) {
+  foreach v in V{
+    custo(v) = inf
+    pai(v) = nil
+  }
+
+  custo(r) = 0 // raíz inicia com custo 0
+  Q = V // fila de prioridades inicial é todo o conjunto de vértices
+  S = {} // nós já finalizados
+
+  while(Q for não vazio) {
+    u = ExtraiMinimo(Q) // remove de Q o vértice de menor peso
+    S = S + {u} // coloca u no conjunto dos vértices finalizados
+
+    foreach v in N(u) {
+      if(v in Q and custo(v) > w(u,v)){
+        custo(v) = w(u,v)
+        pai(v) = u
+      }
+    }
+  }
+}
+</code></pre>
+
+<h2>Algoritmo de Kruskal</h2>
+
+<p>Outro algoritmo para achar a árvore geradora mínima de um grafo. Diferentemente de Prim, a solução de Kruskal não produz uma subarvore a cada iteração, e sim várias que ao final se conectarão para formar a solução.</p>
+
+<pre><code>Kruskal(G, w) {
+  A = {}
+
+  foreach v in V {
+    make_set(v) // cria um grupo contendo um único vértice
+  }
+
+  E = ordena as arestas em ordem decrescente
+
+  foreach e in E {
+    if(find_set(u) != find_set(v)){ // se os vertices não fazem parte de um mesmo grupo
+      A = A + {(u,v)}
+      union(u,v) // une os grupos dos vértices
+    }
+  }
+
+}
+</code></pre>
+
+<h2>Algoritmo de Dijkstra</h2>
+
+<p>O algoritmo de Dijkstra é utilizado para encontrar o caminho mínimo de um vértice a todos os outros vertices de um grafo.</p>
+
+<pre><code>Dijkstra(G, w, r) {
+  foreach v in V {
+    custo(v) = inf
+    pai(v) = nil
+  }
+
+  custo(r) = 0 // Custo do nó raiz é zero
+  Q = V // fila de prioridade
+
+  while(Q não vazio) {
+    u = ExtraiMinimo(Q)
+    S = S + {u}
+
+    foreach v in N(u) {
+      relax(u,v,w)
+    }
+  }
+}
+</code></pre>
+
+<h2>Árvores e Códigos de Huffman</h2>
+
+<p></p>

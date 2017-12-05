@@ -38,7 +38,18 @@ layout: default
 
 <h2>Sincronização de Threads</h2>
 
+<h2>Open MP</h2>
 
+<p>Pq multiplos cores? (link no moodle)</p>
+<p>Paralização de atividade</p>
+<p>Open MP: abstrair a programação paralela. É uma API que, através de MACROS (pragmas), o desenvolvedor possa dar dicas ao compilador partes do código que podem ser paralelizadas.</p>
+<p>Padrão de threads criadas: Números de cores</p>
+<p>Decomposição de domínio</p>
+
+<p>Construções workshared: sections e for.</p>
+<p>Métodos de Monte Carlo.</p>
+
+<p>Falácia da teoria dos grandes números</p>
 
 <hr>
 <p>out of core programming</p>
@@ -48,4 +59,6 @@ layout: default
 <p>Typecast entre tipos ponteiro são irrelevantes, numa arquitetura 32-bits todos tem 4-bytes (em 64-bits, 8-bytes)</p>
 <p>Para compilar "-pthread", não precisa do l.</p>
 <p>Por padrão, todas as thread são joinable (isto é, qualquer outra thread pode dar join nela). Ao utilizar o detach (desassociação) ...</p>
-<p></p>
+<p>Reentrância de código</p>
+<p>No linux, tudo o que é criado é uma task. Tanto threads e processos são tasks criados com a chamada clone.</p>
+<p>Operações atomicas -> como realizar? estruturas de bloqueio</p>

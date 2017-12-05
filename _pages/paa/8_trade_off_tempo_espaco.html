@@ -8,7 +8,7 @@ layout: default
 
 <p>Outro tipo de abordagem que explora o trade-off do espaço-pelo-tempo simplesmente utiliza espaço extra para facilitar o acesso aos dados. Chamamos essa aboradagem de <b>pre-estruturação</b> (algum processamento é realizado antes do problema em si ser solucionado).</p>
 
-<h1>Ordenação por Contagem</h1>
+<h2>Ordenação por Contagem</h2>
 
 <p>Uma forma simples de se ordernar uma lista é contar, para cada elemento, o número de elementos menores que esse elemento e armazenar o resultado em uma tabela. Esses valores irão indicar a posição do elemento (por exemplo, se houver 10 elementos menores que um elemento X, X ficará na posição 11). Esse algoritmo é chamado de <b>Comparison-Counting Sort</b></p>
 
@@ -67,10 +67,9 @@ $$ T(n) = \sum_{i=0}^{n-2}\sum_{i=0}^{n-1}1 = \sum_{i=0}^{n-2}[(n-1) - (i + 1) +
 
 <p>A complexidade desse algoritmo é $O(n)$.</p>
 
-<h1>Otimização de Entrada em String Matching</h1>
+<h2>Otimização de Entrada em String Matching</h2>
 
-
-<h2>Algoritmo de Horspool</h2>
+<h3>Algoritmo de Horspool</h3>
 
 <p>Começa-se com o último caracter do padrão e move-se da direita para a esquerda, comparando pares de caracteres do padrão e do texto. Se todos os caracteres do padrão combinarem, uma cadeia foi encontrada.</p>
 
@@ -89,8 +88,16 @@ $$ T(n) = \sum_{i=0}^{n-2}\sum_{i=0}^{n-1}1 = \sum_{i=0}^{n-2}[(n-1) - (i + 1) +
 
 <p>Se o algoritmo tiver que verificar todos os caracteres do padrão a cada deslocamaneto, ele perderá sua eficiência. É nessa parte que entra a ideia de melhoramento da entrada de dados para evitar comparações repetitivas desnecessárias. Pode-se pré-calcular tamanhos de deslocamentos e armazená-los em uma tabela. Essa tabela será indexada por todos os caracteres possíveis que possam ser encontrados no texto e preenchida com tamanho de deslocamentos.</p>
 
-<p>A eficiência no pior caso é $O(n*m)$, para textos aleatórios a eificiência é $O(n)$.</p>
+<p>Para cada caractere c podemos calcular o valor do deslocamento pela fórmula:</p>
 
-<h2>Algoritmo Boyer-Moore</h2>
+<div class="ui inverted segment">
+  <p>Se c não estiver dentre os m-1 primeiros caracteres do padrão, então <b>t(c) = comprimento m do padrão</b>. Caso contrário <b>t(c) = distância do c mais a direita dentre os m-1 caracteres do padrão e seu último caractere</b>.</p>
+</div>
 
-<h1>Hashing</h1>
+<p>A eficiência no pior caso é $O(n*m)$, para textos aleatórios a eficiência é $O(n)$.</p>
+
+<h3>Algoritmo Boyer-Moore</h3>
+
+<h2 class="duvida">Hashing</h2>
+
+<h2 class="duvida">Árvores B</h2>

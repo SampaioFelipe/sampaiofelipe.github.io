@@ -15,7 +15,7 @@ ________________________________________________________________________________
 - The mm field in task_struct points to the memory descriptor, mm_struct, which is an executive summary of a program’s memory (http://elixir.free-electrons.com/linux/v4.14/source/include/linux/mm_types.h#L362).
 
 - vm_area_struct: http://elixir.free-electrons.com/linux/v4.14/source/include/linux/mm_types.h#L286
-- Depois que ocorre o pagefault
+- Depois que ocorre o pagefault (partes não dependentes do hardware)
 - find_vma (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L2116)
 - do_anonymous_map (http://elixir.free-electrons.com/linux/v4.14/source/mm/memory.c#L3051)
 - do_swap_page (http://elixir.free-electrons.com/linux/v4.14/source/mm/memory.c#L2842)
@@ -32,9 +32,6 @@ ________________________________________________________________________________
 - malloc
 - do_brk (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L180)
 - exit_mmap (http://elixir.free-electrons.com/linux/v4.14/source/mm/mmap.c#L2974)
-
-
-
 
 
 
@@ -60,6 +57,8 @@ https://elixir.free-electrons.com/linux/latest/source/include/linux/mm_types.h#L
 
 mm_struct:
 https://elixir.free-electrons.com/linux/latest/source/include/linux/mm_types.h#L362
+
+*do_fork: verificar os flags de compartilhamento de memórias
 
 dup_mm (fork):
 https://elixir.free-electrons.com/linux/latest/source/kernel/fork.c#L1187
